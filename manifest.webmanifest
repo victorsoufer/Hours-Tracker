@@ -4,7 +4,7 @@
   "description": "Registre suas horas e acompanhe seus ganhos.",
   "start_url": "./",
   "display": "standalone",
-  "background_color": "#e8f0ff",
-  "theme_color": "#3877ff",
+  "background_color": "#10213d",
+  "theme_color": "#10213d",
   "icons": [{ "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }]
 }
