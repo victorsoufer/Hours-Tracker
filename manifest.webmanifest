@@ -1,0 +1,10 @@
+{
+  "name": "Horas — Controle de tempo",
+  "short_name": "Horas",
+  "description": "Registre suas horas e acompanhe seus ganhos.",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#e8f0ff",
+  "theme_color": "#3877ff",
+  "icons": [{ "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }]
+}
