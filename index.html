@@ -109,6 +109,8 @@ html{background:#10213d}body{padding-top:0;padding-bottom:0;background:linear-gr
 /* The avatar belongs to the far-right end of the greeting glass. */
 .profile-topbar{display:block!important}.profile-topbar .profile-greeting{position:relative;width:100%;padding-right:94px}.profile-topbar .profile-greeting .profile{position:absolute;right:15px;top:50%;transform:translateY(-50%);padding:0;margin:0;z-index:3}.profile-topbar>.profile{display:none!important}
 @media(max-width:560px){.profile-topbar .profile-greeting{padding-right:88px}.profile-topbar .profile-greeting .profile{right:15px}.estimate-fields input,.estimate-fields select,.estimate-fields input[type="date"],.estimate-fields input[type="number"]{text-align:center!important}.estimate-fields select{text-align-last:center!important}}
+/* iOS only zooms form controls rendered below 16px. Keep the compact box, not the tiny type. */
+@media(max-width:560px){.payment-widget .estimate-fields input,.payment-widget .estimate-fields select,.payment-widget .estimate-fields input[type="date"],.payment-widget .estimate-fields input[type="number"]{font-size:16px!important;-webkit-text-size-adjust:100%;text-size-adjust:100%}}
 </style>
 </head>
 <body>
