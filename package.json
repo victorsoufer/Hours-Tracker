@@ -4,10 +4,10 @@
   "version": "1.0.0",
   "description": "Horas — finanças, trabalho e investimentos. Frontend estático + função serverless (Vercel) para cotação B3 via brapi.dev.",
   "engines": {
-    "node": "20.x"
+    "node": "22.x"
   },
   "devDependencies": {
-    "@types/node": "^20.14.0",
+    "@types/node": "^22.10.0",
     "@vercel/node": "^3.2.0",
     "typescript": "^5.5.0"
   }
