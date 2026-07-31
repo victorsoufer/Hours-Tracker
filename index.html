@@ -319,8 +319,8 @@ const MOEDAS=['BRL','USD','EUR','GBP','JPY','CAD','AUD','CHF','ARS','MXN','CNY',
 /* ============ SUPABASE — autenticação + sincronização de dados na nuvem ============ */
 // a "anon key" do Supabase é feita pra ficar no cliente (não é secreta como o BRAPI_TOKEN) —
 // o acesso aos dados de cada pessoa é controlado por Row Level Security no banco, não pelo sigilo desta chave
-const SUPABASE_URL='COLOQUE_A_URL_DO_SEU_PROJETO_SUPABASE';
-const SUPABASE_ANON_KEY='COLOQUE_A_ANON_KEY_DO_SEU_PROJETO_SUPABASE';
+const SUPABASE_URL='https://qzfofsyllxikvyuvzsjm.supabase.co';
+const SUPABASE_ANON_KEY='sb_publishable_0U39ew4OTymLGrRrnbAMnA_SYD0p7Ma';
 const SUPABASE_CONFIGURADO=SUPABASE_URL.startsWith('https://')&&!SUPABASE_URL.includes('COLOQUE_A_URL');
 const sb=SUPABASE_CONFIGURADO&&window.supabase?window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY):null;
 let authMode='entrar';
@@ -392,7 +392,7 @@ function seed(){
 })();
 function save(){
  localStorage.setItem(KEY,JSON.stringify(state));
- if(SUPABASE_CONFIGURADO&&state.loggedIn)agendarSyncNuvem();
+ if(sb&&state.loggedIn)agendarSyncNuvem();
 }
 const $=sel=>document.querySelector(sel);
 const uid=()=>Math.random().toString(36).slice(2,10);
@@ -678,7 +678,7 @@ function login(){
   <div class="field-group"><label class="flabel">E-mail</label><input class="field" id="login-email" type="email" placeholder="voce@email.com" autocomplete="email"></div>
   <div class="field-group"><label class="flabel">Senha</label><input class="field" id="login-senha" type="password" placeholder="••••••••" autocomplete="${criar?'new-password':'current-password'}"></div>
   <button class="modal-save" onclick="${criar?'signUp()':'signIn()'}">${criar?'Criar conta':'Entrar'}</button>
-  ${SUPABASE_CONFIGURADO?'':'<p style="font-size:11px;text-align:center;margin:12px 0 0;color:var(--warning)">Sincronização na nuvem ainda não configurada — sessão local apenas, os dados ficam só neste aparelho.</p>'}
+  ${sb?'':`<p style="font-size:11px;text-align:center;margin:12px 0 0;color:var(--warning)">${SUPABASE_CONFIGURADO?'Não foi possível conectar à nuvem agora':'Sincronização na nuvem ainda não configurada'} — sessão local apenas, os dados ficam só neste aparelho.</p>`}
   <p style="font-size:12px;text-align:center;margin:18px 0 0;color:var(--muted)">${criar
    ?`Já tem conta? <a href="javascript:void(0)" style="color:var(--accent)" onclick="authMode='entrar';render()">Entrar</a>`
    :`<a href="javascript:void(0)" style="color:var(--accent)" onclick="esqueciSenha()">Esqueceu sua senha?</a> · <a href="javascript:void(0)" style="color:var(--accent)" onclick="authMode='criar';render()">Criar conta</a>`}</p>
@@ -687,7 +687,7 @@ function login(){
 async function signIn(){
  const email=$('#login-email').value.trim(),senha=$('#login-senha').value;
  if(!email||!senha){toast('Preencha e-mail e senha.');return}
- if(!SUPABASE_CONFIGURADO){state.loggedIn=true;render();toast('Sessão iniciada (local).');refreshMarketData(true);return}
+ if(!sb){state.loggedIn=true;render();toast('Sessão iniciada (local).');refreshMarketData(true);return}
  const {error}=await sb.auth.signInWithPassword({email,password:senha});
  if(error){toast(traduzErroAuth(error));return}
  state.profile.email=email;
@@ -698,7 +698,7 @@ async function signUp(){
  const email=$('#login-email').value.trim(),senha=$('#login-senha').value;
  if(!email||!senha){toast('Preencha e-mail e senha.');return}
  if(senha.length<6){toast('A senha precisa ter pelo menos 6 caracteres.');return}
- if(!SUPABASE_CONFIGURADO){state.loggedIn=true;render();toast('Conta criada (local).');return}
+ if(!sb){state.loggedIn=true;render();toast('Conta criada (local).');return}
  const {data,error}=await sb.auth.signUp({email,password:senha});
  if(error){toast(traduzErroAuth(error));return}
  state.profile.email=email;
@@ -722,7 +722,7 @@ function traduzErroAuth(error){
 async function esqueciSenha(){
  const email=$('#login-email').value.trim();
  if(!email){toast('Digite seu e-mail no campo acima primeiro.');return}
- if(!SUPABASE_CONFIGURADO){toast('Sincronização na nuvem ainda não configurada.');return}
+ if(!sb){toast('Sincronização na nuvem indisponível agora.');return}
  const {error}=await sb.auth.resetPasswordForEmail(email);
  toast(error?'Não foi possível enviar o e-mail.':'Enviamos um link de redefinição pro seu e-mail.');
 }
@@ -1414,7 +1414,7 @@ function ajustes(){
  `;
 }
 async function sair(){
- if(SUPABASE_CONFIGURADO)await sb.auth.signOut().catch(()=>{});
+ if(sb)await sb.auth.signOut().catch(()=>{});
  state.loggedIn=false;modal=null;render();
 }
 
@@ -1425,7 +1425,7 @@ function snapshotParaNuvem(){
  return resto;
 }
 async function uidAtual(){
- if(!SUPABASE_CONFIGURADO)return null;
+ if(!sb)return null;
  const {data}=await sb.auth.getSession();
  return (data&&data.session&&data.session.user&&data.session.user.id)||null;
 }
@@ -1448,7 +1448,7 @@ function agendarSyncNuvem(){
  _syncNuvemTimer=setTimeout(sincronizarParaNuvemAgora,1500);
 }
 async function restaurarSessaoSupabase(){
- if(!SUPABASE_CONFIGURADO)return;
+ if(!sb)return;
  const uid=await uidAtual();
  if(uid){
   await sincronizarDoServidor();
@@ -1604,7 +1604,7 @@ if(state.modalHTML)modal=state.modalHTML;
 render();
 if(modal)restaurarRascunhoModal();
 if(state.loggedIn)refreshMarketData(true);
-if(SUPABASE_CONFIGURADO)restaurarSessaoSupabase();
+if(sb)restaurarSessaoSupabase();
 if('serviceWorker' in navigator && location.protocol!=='file:')navigator.serviceWorker.register('./sw.js').catch(()=>{});
 </script>
 </body>
