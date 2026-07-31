@@ -462,12 +462,16 @@ async function refreshMarketData(silent){
  const b3=state.ativosCarteira.filter(a=>['acao','fii','bdr','etf'].includes(a.tipo)&&a.codigo);
  if(b3.length){
   try{
-   const token=state.prefs.brapiToken?`?token=${encodeURIComponent(state.prefs.brapiToken)}`:'';
    const codigos=[...new Set(b3.map(a=>a.codigo.toUpperCase()))].join(',');
-   const r=await fetch(`https://brapi.dev/api/quote/${codigos}${token}`);
+   const headers=state.prefs.brapiToken?{Authorization:`Bearer ${state.prefs.brapiToken}`}:{};
+   const r=await fetch(`https://brapi.dev/api/v2/stocks/quote?symbols=${encodeURIComponent(codigos)}`,{headers});
    if(r.ok){
     const d=await r.json();
-    const porCodigo={};(d.results||[]).forEach(res=>{if(res.regularMarketPrice!=null)porCodigo[res.symbol]=res.regularMarketPrice});
+    const porCodigo={};
+    (d.results||[]).forEach(res=>{
+     const preco=res.data&&res.data.regularMarketPrice;
+     if(preco!=null)porCodigo[(res.symbol||res.requestedSymbol||'').toUpperCase()]=preco;
+    });
     for(const a of b3){
      const precoBRL=porCodigo[a.codigo.toUpperCase()];
      if(precoBRL!=null)state.marketCache[a.id]={preco:convert(precoBRL,'BRL',principal),moeda:principal,atualizadoEm:Date.now()};
