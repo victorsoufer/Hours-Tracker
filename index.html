@@ -66,7 +66,8 @@ h1,h2,h3{font-family:var(--font)}
 .icon-btn{border:0;cursor:pointer;width:38px;height:38px;border-radius:var(--r-control);display:grid;place-items:center;color:var(--ink);background:var(--mat-thin);border:1px solid var(--border);backdrop-filter:blur(var(--blur-thin));-webkit-backdrop-filter:blur(var(--blur-thin))}
 .icon-btn svg{width:18px;height:18px}
 .avatar-btn{width:38px;height:38px;border-radius:13px;border:0;cursor:pointer;color:#fff;background:linear-gradient(135deg,var(--accent),var(--accent2));display:grid;place-items:center;font-weight:700;font-size:15px}
-svg{fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+svg{fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;width:1em;height:1em;flex:none}
+.chev svg,.modal-close svg{width:18px;height:18px}
 /* material */
 .glass{position:relative;background:var(--mat-thin);border:1px solid var(--border);border-radius:var(--r-card);backdrop-filter:blur(var(--blur-thin));-webkit-backdrop-filter:blur(var(--blur-thin));box-shadow:0 10px 30px rgba(10,20,15,.08)}
 .glass.specular::before{content:'';position:absolute;inset:0 0 auto 0;height:1px;border-radius:var(--r-card) var(--r-card) 0 0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.55),transparent)}
@@ -174,14 +175,14 @@ label.flabel{display:block;font-size:12px;font-weight:700;color:var(--muted);mar
 .cat-pick .ci{width:36px;height:36px;border-radius:12px;display:grid;place-items:center;color:#fff}
 .cat-pick .ci svg{width:17px;height:17px}
 .cat-pick span{font-size:10px;font-weight:600;text-align:center;line-height:1.15}
-.money-hero{display:flex;align-items:center;justify-content:center;gap:8px;padding:20px 16px;border-radius:20px;background:var(--mat-thin);border:1px solid var(--border);margin-bottom:14px}
+.money-hero{display:flex;align-items:baseline;justify-content:center;gap:7px;padding:20px 16px;border-radius:20px;background:var(--mat-thin);border:1px solid var(--border);margin-bottom:14px}
 .money-hero .cur{font-size:22px;font-weight:700;color:var(--muted)}
-.money-hero input{border:0;background:transparent;outline:none;font:800 34px var(--font);color:var(--ink);text-align:center;width:100%;font-variant-numeric:tabular-nums;-moz-appearance:textfield}
+.money-hero input{border:0;background:transparent;outline:none;font:800 34px var(--font);color:var(--ink);text-align:right;width:auto;max-width:65%;flex:0 1 auto;font-variant-numeric:tabular-nums;-moz-appearance:textfield}
 .money-hero input::-webkit-outer-spin-button,.money-hero input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
 .money-hero input::placeholder{color:color-mix(in srgb,var(--muted) 55%,transparent)}
 .money-compact{position:relative}
-.money-compact .cur{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--muted);font-weight:700;font-size:14px;pointer-events:none}
-.money-compact input{padding-left:30px;font-weight:800;font-variant-numeric:tabular-nums}
+.money-compact .cur{position:absolute;right:13px;top:50%;transform:translateY(-50%);color:var(--muted);font-weight:700;font-size:14px;pointer-events:none}
+.money-compact input{padding-right:38px;font-weight:800;font-variant-numeric:tabular-nums}
 .cat-manage-row{display:flex;align-items:center;gap:12px;padding:12px;border-radius:16px;background:var(--mat-thin);border:1px solid var(--border);margin-bottom:8px;cursor:pointer}
 .cat-manage-row .ci{width:36px;height:36px;border-radius:12px;display:grid;place-items:center;color:#fff;flex:none}
 .cat-manage-row .ci svg{width:16px;height:16px}
@@ -222,7 +223,8 @@ label.flabel{display:block;font-size:12px;font-weight:700;color:var(--muted);mar
 .acc-badge svg{width:20px;height:20px}
 .foreign{display:flex;flex-direction:column;align-items:flex-end}
 .foreign small{font-size:11px;color:var(--muted);font-weight:500}
-.fx-note{display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--muted);margin-top:2px}
+.fx-note{display:flex;align-items:center;gap:4px;font-size:11.5px;color:var(--muted);margin-top:2px}
+.fx-note svg{width:11px;height:11px;flex:none}
 .hr-nav{display:flex;align-items:center;gap:6px;margin-bottom:10px}
 .hr-nav b{flex:1;text-align:center;font-size:15px;font-weight:700}
 .weekdays,.days{display:grid;grid-template-columns:repeat(7,1fr);text-align:center;gap:4px}
@@ -319,6 +321,7 @@ function cat(id){return (state.categorias||CATEGORIAS).find(c=>c.id===id)||(stat
 function subcat(categoriaId,subId){const c=cat(categoriaId);return c&&c.subcategorias&&c.subcategorias.find(s=>s.id===subId)}
 const TIPOS_CONTA={normal:{nome:'Conta normal',icone:'bank'},poupanca:{nome:'Poupança',icone:'piggy'},emprestimo:{nome:'Empréstimo',icone:'arrows'},dinheiro:{nome:'Dinheiro',icone:'cash'},outros:{nome:'Outros',icone:'wallet2'}};
 const TIPOS_ATIVO={fii:'FII',acao:'Ação',fundo:'Fundo',cripto:'Criptomoeda',stock:'Stock',reit:'REIT',bdr:'BDR',etf:'ETF',etf_internacional:'ETF internacional',tesouro_direto:'Tesouro Direto',renda_fixa:'Renda fixa',outros:'Outros'};
+const ATIVO_CORES={fii:'#22B8CF',acao:'#5E8BFF',fundo:'#8D6E63',cripto:'#F5A623',stock:'#6366F1',reit:'#1FA971',bdr:'#A855F7',etf:'#EC4899',etf_internacional:'#F43F5E',tesouro_direto:'#1FA971',renda_fixa:'#64748B',outros:'#94A3B8'};
 const COTAVEIS=new Set(['fii','acao','cripto','stock','reit','bdr','etf','etf_internacional']);
 const CRYPTO_IDS={BTC:'bitcoin',ETH:'ethereum',USDT:'tether',BNB:'binancecoin',SOL:'solana',ADA:'cardano',XRP:'ripple',DOGE:'dogecoin',LTC:'litecoin',DOT:'polkadot'};
 const MOEDAS=['BRL','USD','EUR','GBP','JPY','CAD','AUD','CHF','ARS','MXN','CNY','INR'];
@@ -416,11 +419,11 @@ function modalShell(title,body,opts){
 const CURRENCY_SYMBOLS={BRL:'R$',USD:'$',EUR:'€',GBP:'£',JPY:'¥',CAD:'CA$',AUD:'A$',CHF:'CHF',ARS:'AR$',MXN:'MX$',CNY:'¥',INR:'₹'};
 function moneyHero(id,value){
  const v=(value===undefined||value===null||value==='')?'':value;
- return `<div class="money-hero"><span class="cur">${CURRENCY_SYMBOLS[state.prefs.currency]||state.prefs.currency}</span><input id="${id}" type="number" inputmode="decimal" step="0.01" placeholder="0,00" value="${v}"></div>`;
+ return `<div class="money-hero"><input id="${id}" size="8" type="number" inputmode="decimal" step="0.01" placeholder="0,00" value="${v}"><span class="cur">${CURRENCY_SYMBOLS[state.prefs.currency]||state.prefs.currency}</span></div>`;
 }
 function moneyCompact(id,value,label,attrs){
  const v=(value===undefined||value===null||value==='')?'':value;
- return `<div class="field-group"><label class="flabel">${esc(label)}</label><div class="money-compact"><span class="cur">${CURRENCY_SYMBOLS[state.prefs.currency]||state.prefs.currency}</span><input class="field" id="${id}" type="number" inputmode="decimal" step="0.01" placeholder="0,00" value="${v}" ${attrs||''}></div></div>`;
+ return `<div class="field-group"><label class="flabel">${esc(label)}</label><div class="money-compact"><input class="field" id="${id}" type="number" inputmode="decimal" step="0.01" placeholder="0,00" value="${v}" ${attrs||''}><span class="cur">${CURRENCY_SYMBOLS[state.prefs.currency]||state.prefs.currency}</span></div></div>`;
 }
 
 /* ============ CÂMBIO — Frankfurter.app, sem chave (01-PRD §3.7) ============ */
@@ -448,14 +451,15 @@ async function refreshMarketData(silent){
   const r=await fetch(`https://api.frankfurter.app/latest?from=${principal}`);
   if(r.ok){const d=await r.json();state.fx={base:d.base,rates:d.rates,updatedAt:Date.now()}}
  }catch(e){console.warn('câmbio ao vivo indisponível, usando tabela de apoio',e)}
+ // todo preço fica salvo em BRL — moeda única de referência da carteira; a conversão para a moeda principal acontece só na hora de exibir
  const cripto=state.ativosCarteira.filter(a=>a.tipo==='cripto'&&a.codigo&&CRYPTO_IDS[a.codigo.toUpperCase()]);
  if(cripto.length){
   try{
    const ids=[...new Set(cripto.map(a=>CRYPTO_IDS[a.codigo.toUpperCase()]))].join(',');
-   const r=await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${ids}&vs_currencies=${principal.toLowerCase()}`);
+   const r=await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${ids}&vs_currencies=brl`);
    if(r.ok){
     const d=await r.json();
-    for(const a of cripto){const cid=CRYPTO_IDS[a.codigo.toUpperCase()];const preco=d[cid]&&d[cid][principal.toLowerCase()];if(preco!=null)state.marketCache[a.id]={preco,moeda:principal,atualizadoEm:Date.now()}}
+    for(const a of cripto){const cid=CRYPTO_IDS[a.codigo.toUpperCase()];const precoBRL=d[cid]&&d[cid].brl;if(precoBRL!=null)state.marketCache[a.id]={preco:precoBRL,moeda:'BRL',atualizadoEm:Date.now()}}
    }
   }catch(e){console.warn('cotação cripto indisponível, mantendo cache',e)}
  }
@@ -474,7 +478,7 @@ async function refreshMarketData(silent){
     });
     for(const a of b3){
      const precoBRL=porCodigo[a.codigo.toUpperCase()];
-     if(precoBRL!=null)state.marketCache[a.id]={preco:convert(precoBRL,'BRL',principal),moeda:principal,atualizadoEm:Date.now()};
+     if(precoBRL!=null)state.marketCache[a.id]={preco:precoBRL,moeda:'BRL',atualizadoEm:Date.now()};
     }
    }
   }catch(e){console.warn('cotação B3 (brapi.dev) indisponível, mantendo cache/custo médio',e)}
@@ -566,6 +570,7 @@ function ativoPrecoAtual(ativo){
  if(mc&&mc.preco!=null)return mc.preco;
  return ativoCustoMedio(ativo.id); // sem cotação pública/ainda sem cache — usa custo médio (fallback manual, 01-PRD §3.4)
 }
+// toda a carteira é calculada em BRL (moeda de referência do mercado brasileiro) — a conversão para a moeda principal do usuário acontece só na exibição, via convert(valor,'BRL',...)
 function ativoValorMercado(ativo){return ativoQtd(ativo.id)*ativoPrecoAtual(ativo)}
 function valorTotalInvestido(){
  return state.movimentacoesAtivo.reduce((s,m)=>s+(m.tipo==='compra'?1:-1)*(m.quantidade*m.preco+(m.outrosCustos||0)),0);
@@ -579,6 +584,13 @@ function alocacaoCarteira(){
  return Object.entries(map).map(([tipo,valor],i)=>({tipo,nome:TIPOS_ATIVO[tipo],valor,pct:valor/total*100,cor:PALETA_GRAFICO[i%PALETA_GRAFICO.length]}));
 }
 const PALETA_GRAFICO=['#5E8BFF','#1FA971','#A855F7','#F5A623','#EC4899','#06B6D4','#8D6E63','#F43F5E'];
+// dinheiro em BRL exibido no "conceito de conta": convertido em negrito, nativo (BRL) embaixo — como uma conta em moeda estrangeira
+function moneyBRL(valorBRL){return money(convert(valorBRL,'BRL',state.prefs.currency))}
+function dualBRL(valorBRL){
+ const principal=state.prefs.currency;
+ if(principal==='BRL')return `<b>${money(valorBRL,'BRL')}</b>`;
+ return `<div class="foreign"><b>${money(convert(valorBRL,'BRL',principal))}</b><small>${money(valorBRL,'BRL')}</small></div>`;
+}
 
 /* ============ NAVEGAÇÃO / SHELL ============ */
 const TABS=[['geral','Geral'],['contas','Contas'],['calendario','Calendário'],['carteira','Carteira'],['transacoes','Transações']];
@@ -744,15 +756,20 @@ const WIDGET_DEFS={
  },
  evolucaoPatrimonio(){
   const pontos=evolucaoPatrimonioPontos(state.periodoCarteira||'12m');
-  return widgetShell({title:'Evolução do patrimônio',value:money(patrimonioCarteira()),pill:pillFor(ganhoCapital()>=0?'positivo':'negativo',money(ganhoCapital())),body:lineChart(pontos),onExpand:"goTab('carteira')"});
+  const ganhoBRL=ganhoCapital();
+  return widgetShell({title:'Evolução do patrimônio',value:moneyBRL(patrimonioCarteira()),pill:pillFor(ganhoBRL>=0?'positivo':'negativo',(ganhoBRL>=0?'+':'')+moneyBRL(ganhoBRL)),body:lineChart(pontos),onExpand:"goTab('carteira')"});
  },
  ativosCarteira(){
   const fatias=alocacaoCarteira();
   return widgetShell({title:'Ativos na carteira',body:fatias.length?donutWidget(fatias):emptyState('carteira','Registre uma compra na Carteira.'),onExpand:"goTab('carteira')"});
  },
  patrimonioInvestido(){
-  const pat=patrimonioCarteira(),inv=valorTotalInvestido();
-  return widgetShell({title:'Patrimônio total + investido',body:`<div style="display:flex;gap:18px;margin-top:4px"><div style="flex:1"><div class="t-caption">Patrimônio total</div><div style="font-size:22px;font-weight:800">${money(pat)}</div></div><div style="flex:1"><div class="t-caption">Valor investido</div><div style="font-size:22px;font-weight:800">${money(inv)}</div></div></div>`,onExpand:"goTab('carteira')"});
+  const patBRL=patrimonioCarteira(),invBRL=valorTotalInvestido();
+  const principal=state.prefs.currency;
+  const bloco=valorBRL=>principal==='BRL'
+   ?`<div style="font-size:22px;font-weight:800">${money(valorBRL,'BRL')}</div>`
+   :`<div style="font-size:22px;font-weight:800">${money(convert(valorBRL,'BRL',principal))}</div><div class="t-caption" style="margin-top:2px">${money(valorBRL,'BRL')}</div>`;
+  return widgetShell({title:'Patrimônio total + investido',body:`<div style="display:flex;gap:18px;margin-top:4px"><div style="flex:1"><div class="t-caption">Patrimônio total</div>${bloco(patBRL)}</div><div style="flex:1"><div class="t-caption">Valor investido</div>${bloco(invBRL)}</div></div>`,onExpand:"goTab('carteira')"});
  },
 };
 function evolucaoPatrimonioPontos(periodo){
@@ -962,14 +979,16 @@ function salvarSimulador(){
 
 /* ============ ABA CARTEIRA — 01-PRD §3.4 ============ */
 function carteira(){
- const pat=patrimonioCarteira(),inv=valorTotalInvestido(),ganho=ganhoCapital();
+ const patBRL=patrimonioCarteira(),invBRL=valorTotalInvestido(),ganhoBRL=ganhoCapital();
+ const principal=state.prefs.currency;
+ const patTotal=patrimonioLiquido()+convert(patBRL,'BRL',principal); // "junta as contas": contas + carteira num único patrimônio total
  const alocacao=alocacaoCarteira();
  const periodos=[['inicio','Início'],['12m','12 meses'],['2a','2 anos'],['5a','5 anos'],['10a','10 anos']];
  return `${topbar('Carteira','Investimentos')}
  <div class="glass specular card" style="margin-bottom:14px">
-  <div class="widget-head"><b>Patrimônio total</b>${pillFor(ganho>=0?'positivo':'negativo',(ganho>=0?'+':'')+money(ganho))}</div>
-  <div class="t-display hero-num">${money(pat)}</div>
-  <div class="widget-sub">Valor investido ${money(inv)}</div>
+  <div class="widget-head"><b>Patrimônio total</b>${pillFor(ganhoBRL>=0?'positivo':'negativo',(ganhoBRL>=0?'+':'')+moneyBRL(ganhoBRL))}</div>
+  <div class="t-display hero-num">${money(patTotal)}</div>
+  <div class="widget-sub">Contas + carteira · investido ${moneyBRL(invBRL)}${principal!=='BRL'?` (${money(invBRL,'BRL')})`:''}</div>
   <div class="segmented" style="margin:12px 0 0">${periodos.map(([id,l])=>`<button class="${(state.periodoCarteira||'12m')===id?'active':''}" onclick="state.periodoCarteira='${id}';render()">${l}</button>`).join('')}</div>
   ${lineChart(evolucaoPatrimonioPontos(state.periodoCarteira||'12m'))}
  </div>
@@ -979,16 +998,17 @@ function carteira(){
  `;
 }
 function ativoRow(a){
- const qtd=ativoQtd(a.id),preco=ativoPrecoAtual(a),valor=ativoValorMercado(a);
+ const qtd=ativoQtd(a.id),precoBRL=ativoPrecoAtual(a),valorBRL=ativoValorMercado(a);
  const mc=state.marketCache[a.id];
  const badge=mc?`<span class="fx-note">${ic('refresh')} atualizado ${new Date(mc.atualizadoEm).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})}</span>`:(COTAVEIS.has(a.tipo)?`<span class="fx-note">preço manual/custo médio</span>`:'');
+ const cor=ATIVO_CORES[a.tipo]||'#22B8CF';
  return `<div class="swipe-row" data-id="${a.id}"><div class="swipe-actions">
   <button class="swipe-action" onclick="closeSwipes();modalMovimentacao('venda','${a.id}')">${ic('arrows')}<span>Vender</span></button>
   <button class="swipe-action delete" onclick="excluirAtivo('${a.id}')">${ic('trash')}<span>Excluir</span></button>
  </div><div class="swipe-content"><div class="row" onclick="modalMovimentacao('compra','${a.id}')">
-  <div class="row-icon" style="background:linear-gradient(135deg,#22B8CF,#0E8CA6);font:800 11px var(--font)">${TIPOS_ATIVO[a.tipo].slice(0,3).toUpperCase()}</div>
-  <div class="row-main"><b>${esc(a.nome)}${a.codigo&&a.codigo!==a.nome?' · '+esc(a.codigo):''}</b><span>${qtd.toLocaleString('pt-BR',{maximumFractionDigits:6})} un. · ${money(preco)} ${badge}</span></div>
-  <div class="row-value"><b>${money(valor)}</b><span>${TIPOS_ATIVO[a.tipo]}</span></div>
+  <div class="row-icon" style="background:${cor};font:800 11px var(--font)">${TIPOS_ATIVO[a.tipo].slice(0,3).toUpperCase()}</div>
+  <div class="row-main"><b>${esc(a.nome)}${a.codigo&&a.codigo!==a.nome?' · '+esc(a.codigo):''}</b><span>${qtd.toLocaleString('pt-BR',{maximumFractionDigits:6})} un. · ${money(precoBRL,'BRL')} ${badge}</span></div>
+  <div class="row-value">${dualBRL(valorBRL)}<span>${TIPOS_ATIVO[a.tipo]}</span></div>
  </div></div></div>`;
 }
 function excluirAtivo(id){closeSwipes();state.ativosCarteira=state.ativosCarteira.filter(a=>a.id!==id);state.movimentacoesAtivo=state.movimentacoesAtivo.filter(m=>m.ativoId!==id);render();toast('Ativo removido.')}
