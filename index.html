@@ -306,7 +306,9 @@ const PALETA_CATEGORIA_CORES=['#FF6B6B','#FF9F43','#FFCA3A','#8AC926','#1FA971',
 const PALETA_CATEGORIA_ICONES=['house','fork','car','film','heart','book','bag','repeatIc','plane','gift','trend','receipt','paw','dots','cash','wallet2','gauge','target'];
 function cat(id){
  const lista=state.categorias||CATEGORIAS;
- return lista.find(c=>c.id===id)||lista.find(c=>c.id==='outros')||CATEGORIA_FALLBACK;
+ const c=lista.find(c=>c.id===id)||lista.find(c=>c.id==='outros');
+ if(c)return c;
+ return {...CATEGORIA_FALLBACK,nome:tr(CATEGORIA_FALLBACK.nome)};
 }
 function subcat(categoriaId,subId){const c=cat(categoriaId);return c&&c.subcategorias&&c.subcategorias.find(s=>s.id===subId)}
 const TIPOS_CONTA={normal:{nome:'Conta normal',icone:'bank'},poupanca:{nome:'Poupança',icone:'piggy'},emprestimo:{nome:'Empréstimo',icone:'arrows'},dinheiro:{nome:'Dinheiro',icone:'cash'},outros:{nome:'Outros',icone:'wallet2'}};
@@ -315,6 +317,345 @@ const ATIVO_CORES={fii:'#22B8CF',acao:'#5E8BFF',fundo:'#8D6E63',cripto:'#F5A623'
 const COTAVEIS=new Set(['fii','acao','cripto','stock','reit','bdr','etf','etf_internacional']);
 const CRYPTO_IDS={BTC:'bitcoin',ETH:'ethereum',USDT:'tether',BNB:'binancecoin',SOL:'solana',ADA:'cardano',XRP:'ripple',DOGE:'dogecoin',LTC:'litecoin',DOT:'polkadot'};
 const MOEDAS=['BRL','USD','EUR','GBP','JPY','CAD','AUD','CHF','ARS','MXN','CNY','INR'];
+
+/* ============ I18N — tradução de UI ============ */
+const I18N_EN={
+ "Hoje":"Today",
+ "Configure uma senha de bloqueio nesta demonstração.":"Set up a lock passcode in this demo.",
+ "A página de avaliação será aberta na loja.":"The rating page will open in the store.",
+ "Não foi possível conectar à nuvem agora":"Couldn't connect to the cloud right now",
+ "Sincronização na nuvem ainda não configurada":"Cloud sync not configured yet",
+ "+ Novo ativo…":"+ New asset…",
+ "+ Novo grupo…":"+ New group…",
+ "1 ano":"1 year",
+ "10 anos":"10 years",
+ "5 anos":"5 years",
+ "6 meses":"6 months",
+ "7 dias":"7 days",
+ "A categoria \"Outros\" não pode ser excluída.":"The \"Other\" category cannot be deleted.",
+ "A senha precisa ter pelo menos 6 caracteres.":"Password must be at least 6 characters.",
+ "Adicionar":"Add",
+ "Ajustes":"Settings",
+ "Atenção":"Attention",
+ "Ativo":"Asset",
+ "Ativo removido.":"Asset removed.",
+ "Ativo sem nome":"Unnamed asset",
+ "Ativos na carteira":"Assets in portfolio",
+ "Ativos − passivos":"Assets − liabilities",
+ "Ativos − passivos, todas as contas incluídas":"Assets − liabilities, all included accounts",
+ "Atualizar cotações":"Refresh quotes",
+ "Avaliar app":"Rate app",
+ "Backup exportado.":"Backup exported.",
+ "Bloqueio de senha":"Passcode lock",
+ "Bruto":"Gross",
+ "CSV exportado.":"CSV exported.",
+ "Cadastrando um ativo novo — preencha pelo menos o código/ticker (usado também para buscar a cotação automática).":"Registering a new asset — fill in at least the code/ticker (also used to fetch the automatic quote).",
+ "Cadastre sua primeira conta com o botão +.":"Add your first account with the + button.",
+ "Cadastre uma conta em Contas.":"Add an account in Accounts.",
+ "Cadastro de trabalhos":"Job registry",
+ "Calcular":"Calculate",
+ "Categoria":"Category",
+ "Categoria excluída.":"Category deleted.",
+ "Categoria salva.":"Category saved.",
+ "Categorias":"Categories",
+ "Compartilhar este app":"Share this app",
+ "Compra":"Purchase",
+ "Compra registrada.":"Purchase recorded.",
+ "Comprar":"Buy",
+ "Confirmar":"Confirm",
+ "Conta":"Account",
+ "Conta criada (local).":"Account created (local).",
+ "Conta criada!":"Account created!",
+ "Conta criada! Confirme seu e-mail antes de entrar.":"Account created! Confirm your email before signing in.",
+ "Conta de destino":"Destination account",
+ "Conta excluída.":"Account deleted.",
+ "Conta salva.":"Account saved.",
+ "Contas":"Accounts",
+ "Contas + carteira · investido":"Accounts + portfolio · invested",
+ "Contas no painel":"Accounts in dashboard",
+ "Contate-nos":"Contact us",
+ "Conte como está sendo sua experiência":"Tell us how your experience has been",
+ "Controle suas horas, contas e investimentos.":"Track your hours, accounts and investments.",
+ "Copie o link do app para compartilhar.":"Copy the app link to share.",
+ "Cor":"Color",
+ "Cotações":"Quotes",
+ "Cotações atualizadas.":"Quotes updated.",
+ "Criar categoria":"Create category",
+ "Criar conta":"Create account",
+ "Crie um objetivo para calcular seu aporte ideal.":"Create a goal to calculate your ideal contribution.",
+ "Código/Ticker":"Code/Ticker",
+ "Data":"Date",
+ "Data de nascimento":"Date of birth",
+ "Data final":"End date",
+ "Data inicial":"Start date",
+ "Defina um limite diário para acompanhar seus gastos.":"Set a daily limit to track your spending.",
+ "Desconto (%)":"Discount (%)",
+ "Descrição":"Description",
+ "Digite seu e-mail no campo acima primeiro.":"Enter your email in the field above first.",
+ "Digite um nome para a categoria.":"Enter a name for the category.",
+ "Distribuição por trabalho":"Breakdown by job",
+ "Diária":"Daily",
+ "Duplicar":"Duplicate",
+ "E-mail":"Email",
+ "E-mail inválido.":"Invalid email.",
+ "E-mail ou senha inválidos.":"Invalid email or password.",
+ "Editar":"Edit",
+ "Editar categoria":"Edit category",
+ "Editar conta":"Edit account",
+ "Editar objetivo":"Edit goal",
+ "Editar registro":"Edit entry",
+ "Editar trabalho":"Edit job",
+ "Editar transação":"Edit transaction",
+ "Entrar":"Sign in",
+ "Enviamos um link de redefinição pro seu e-mail.":"We've sent a reset link to your email.",
+ "Envie o app para amigos":"Send the app to friends",
+ "Escolha quais contas entram no cálculo do painel (patrimônio líquido e widget de Contas).":"Choose which accounts count toward the dashboard (net worth and Accounts widget).",
+ "Esqueceu sua senha?":"Forgot your password?",
+ "Este mês":"This month",
+ "Este trabalho tem registros vinculados. Exclua-os primeiro.":"This job has linked entries. Delete them first.",
+ "Evolução do patrimônio":"Net worth over time",
+ "Ex.: Conta corrente":"E.g.: Checking account",
+ "Ex.: Farmácia":"E.g.: Pharmacy",
+ "Ex.: PETR4, MXRF11, BTC":"E.g.: PETR4, MXRF11, BTC",
+ "Ex.: Petrobras PN — se deixar em branco, usamos o código":"E.g.: Petrobras PN — if left blank, we use the code",
+ "Ex.: Reserva de emergência":"E.g.: Emergency fund",
+ "Ex.: Supermercado":"E.g.: Groceries",
+ "Excluir":"Delete",
+ "Excluir categoria":"Delete category",
+ "Excluir conta":"Delete account",
+ "Excluir objetivo":"Delete goal",
+ "Excluir trabalho":"Delete job",
+ "Exporta contas, transações, horas trabalhadas e carteira de investimentos.":"Exports accounts, transactions, hours worked and investment portfolio.",
+ "Exportar CSV":"Export CSV",
+ "Exportar PDF":"Export PDF",
+ "Exportar dados (.json)":"Export data (.json)",
+ "Exportar dados em CSV ou PDF":"Export data as CSV or PDF",
+ "Fale com a nossa equipe":"Talk to our team",
+ "Fim":"End",
+ "Fim de jornada":"Workday end",
+ "Formato de data":"Date format",
+ "Frequência do aporte":"Contribution frequency",
+ "Gasto":"Expense",
+ "Gasto hoje":"Spent today",
+ "Gastos":"Spending",
+ "Grupo":"Group",
+ "Grupo não criado.":"Group not created.",
+ "Hora":"Time",
+ "Horas reúne controle de gastos, contas, horas trabalhadas e carteira de investimentos em uma única experiência, com visual e interações inspirados no ecossistema Apple.":"Horas brings together expense tracking, accounts, hours worked and investment portfolio in a single experience, with visuals and interactions inspired by the Apple ecosystem.",
+ "Horas, contas, investimentos e trabalho em um só lugar.":"Hours, accounts, investments and work in one place.",
+ "Idioma":"Language",
+ "Idioma, tema, moeda":"Language, theme, currency",
+ "Incluir no patrimônio líquido":"Include in net worth",
+ "Início":"Start",
+ "Início da semana":"Start of week",
+ "Início de jornada":"Workday start",
+ "Já existe uma conta com esse e-mail.":"An account with this email already exists.",
+ "Já tem conta?":"Already have an account?",
+ "Limite diário":"Daily limit",
+ "Limite diário atualizado.":"Daily limit updated.",
+ "Lucro":"Income",
+ "Lucro/prejuízo":"Profit/loss",
+ "Meta atingida":"Goal reached",
+ "Moeda":"Currency",
+ "Moeda principal":"Main currency",
+ "Máx./mín. 52 sem.":"52-wk high/low",
+ "Máx./mín. do dia":"Day's high/low",
+ "Mês":"Month",
+ "Negativo":"Negative",
+ "Nenhum":"None",
+ "Nenhum provento registrado pela brapi para os seus ativos neste mês.":"No dividends reported by brapi for your assets this month.",
+ "Nenhum registro neste dia. Toque em + para adicionar.":"No entries on this day. Tap + to add one.",
+ "Nenhum trabalho cadastrado.":"No jobs registered.",
+ "Nenhuma":"None",
+ "Nenhuma ainda · toque para criar":"None yet · tap to create",
+ "Nenhuma ainda.":"None yet.",
+ "Nenhuma categoria ainda. Toque em \"Nova categoria\" para criar a primeira.":"No categories yet. Tap \"New category\" to create the first one.",
+ "Nenhuma transação ainda. Toque em + para adicionar.":"No transactions yet. Tap + to add one.",
+ "No caminho certo":"On track",
+ "Nome":"Name",
+ "Nome (opcional)":"Name (optional)",
+ "Nome da conta":"Account name",
+ "Nome do cliente/trabalho":"Client/job name",
+ "Nome do novo grupo:":"New group name:",
+ "Nome do objetivo":"Goal name",
+ "Nome do trabalho":"Job name",
+ "Nome, aniversário e e-mail":"Name, birthday and email",
+ "Notas":"Notes",
+ "Nova categoria":"New category",
+ "Nova conta":"New account",
+ "Nova subcategoria":"New subcategory",
+ "Nova transação":"New transaction",
+ "Novo objetivo":"New goal",
+ "Novo registro":"New entry",
+ "Novo trabalho":"New job",
+ "Não definido":"Not set",
+ "Não foi possível carregar seus dados da nuvem.":"Couldn't load your data from the cloud.",
+ "Não foi possível completar. Tente de novo.":"Couldn't complete. Try again.",
+ "Não foi possível enviar o e-mail.":"Couldn't send the email.",
+ "Objetivo":"Goal",
+ "Objetivo excluído.":"Goal deleted.",
+ "Objetivo salvo.":"Goal saved.",
+ "Objetivos inteligentes":"Smart goals",
+ "Patrimônio líquido":"Net worth",
+ "Patrimônio total":"Total net worth",
+ "Patrimônio total + investido":"Total net worth + invested",
+ "Pausa (min)":"Break (min)",
+ "Perfil":"Profile",
+ "Perfil atualizado.":"Profile updated.",
+ "Personalizar":"Customize",
+ "Positivo":"Positive",
+ "Preencha e-mail e senha.":"Fill in email and password.",
+ "Preferências salvas.":"Preferences saved.",
+ "Preset de destaque (herdado do Horas)":"Accent preset (inherited from Horas)",
+ "Preço médio":"Average price",
+ "Proteja o acesso ao app":"Protect access to the app",
+ "Provento":"Dividend",
+ "Proventos":"Dividends",
+ "Proventos do mês":"This month's dividends",
+ "Proventos recebidos":"Dividends received",
+ "Proventos recebidos em":"Dividends received in",
+ "Quantidade":"Quantity",
+ "Recursos, créditos e versão":"Features, credits and version",
+ "Registre sua primeira compra.":"Log your first purchase.",
+ "Registre uma compra na Carteira.":"Log a purchase in Portfolio.",
+ "Registro excluído.":"Entry deleted.",
+ "Registro salvo.":"Entry saved.",
+ "Relatórios / backup":"Reports / backup",
+ "Reordenar widgets":"Reorder widgets",
+ "Resolva os registros vinculados para excluir":"Resolve linked entries to delete",
+ "Sair da conta":"Sign out",
+ "Saldo real":"Actual balance",
+ "Salvar":"Save",
+ "Sem dados no período.":"No data for this period.",
+ "Sem ganhos no período selecionado.":"No earnings in the selected period.",
+ "Sem gastos no período.":"No spending in this period.",
+ "Sem grupo":"No group",
+ "Sem histórico de proventos disponível pela brapi para este ativo.":"No dividend history available from brapi for this asset.",
+ "Sem lançamentos suficientes ainda.":"Not enough entries yet.",
+ "Sem nome":"No name",
+ "Sem registros de horas no período.":"No hour entries in this period.",
+ "Semanal":"Weekly",
+ "Senha":"Password",
+ "Senha inválida (mínimo 6 caracteres).":"Invalid password (minimum 6 characters).",
+ "Sessão iniciada (local).":"Session started (local).",
+ "Sessão iniciada.":"Session started.",
+ "Seu tempo, seu dinheiro.":"Your time, your money.",
+ "Seus ativos":"Your assets",
+ "Simulação de salário":"Salary simulation",
+ "Sincronização na nuvem indisponível agora.":"Cloud sync unavailable right now.",
+ "Sobre":"About",
+ "Sua posição":"Your position",
+ "Subcategoria":"Subcategory",
+ "Subcategorias":"Subcategories",
+ "Tema":"Theme",
+ "Tipo":"Type",
+ "Tipo de ativo":"Asset type",
+ "Todos os trabalhos":"All jobs",
+ "Toque em + para registrar uma compra.":"Tap + to log a purchase.",
+ "Total a receber + horas":"Total to receive + hours",
+ "Trabalho":"Job",
+ "Trabalho avulso":"Freelance work",
+ "Trabalho avulso (digitar nome)":"Freelance work (type name)",
+ "Trabalho excluído.":"Job deleted.",
+ "Trabalho salvo.":"Job saved.",
+ "Trabalhos":"Jobs",
+ "Transação excluída.":"Transaction deleted.",
+ "Transação salva.":"Transaction saved.",
+ "Transferência":"Transfer",
+ "Ultrapassado":"Over limit",
+ "Valor":"Amount",
+ "Valor atual":"Current value",
+ "Valor de mercado":"Market cap",
+ "Valor do limite por dia":"Daily limit amount",
+ "Valor investido":"Invested amount",
+ "Valor total":"Total amount",
+ "Venda":"Sale",
+ "Venda registrada.":"Sale recorded.",
+ "Vender":"Sell",
+ "Versão 0.3 (protótipo local) · dados salvos apenas neste navegador · cotações de câmbio via Frankfurter.app e cripto via CoinGecko, quando disponíveis.":"Version 0.3 (local prototype) · data saved only in this browser · exchange rates via Frankfurter.app and crypto via CoinGecko, when available.",
+ "Visão geral":"Overview",
+ "Você ainda não criou nenhuma categoria.":"You haven't created any category yet.",
+ "Widgets do resumo":"Overview widgets",
+ "atualizado":"updated",
+ "categoria":"category",
+ "categorias":"categories",
+ "conta":"account",
+ "contas":"accounts",
+ "cota":"share",
+ "cripto":"crypto",
+ "câmbio ao vivo":"live rate",
+ "câmbio estimado":"estimated rate",
+ "de":"of",
+ "de origem":"(source)",
+ "Compra de ativo":"Asset purchase",
+ "Venda de ativo":"Asset sale",
+ "desconto":"discount",
+ "dia":"day",
+ "e formato de data":"and date format",
+ "falha de rede":"network failure",
+ "fora do patrimônio":"excluded from net worth",
+ "função /api ainda não publicada":"API function not deployed yet",
+ "pausa":"break",
+ "preço manual/custo médio":"manual price/avg. cost",
+ "rede":"network",
+ "registro":"entry",
+ "registros":"entries",
+ "sem dado p/":"no data for",
+ "semana":"week",
+ "sessão local apenas, os dados ficam só neste aparelho.":"local session only, data stays on this device.",
+ "subcategoria":"subcategory",
+ "subcategorias":"subcategories",
+ "toque para editar":"tap to edit",
+ "total":"total",
+ "un.":"un.",
+ "Ícone":"Icon",
+ "Últimos 7 dias":"Last 7 days",
+ "Geral":"Overview",
+ "Calendário":"Calendar",
+ "Carteira":"Portfolio",
+ "Transações":"Transactions",
+ "Patrimônio":"Net worth",
+ "Investimentos":"Investments",
+ "Registro de horas":"Hour log",
+ "Histórico":"History",
+ "Bom dia":"Good morning",
+ "Você":"You",
+ "Conta normal":"Regular account",
+ "Poupança":"Savings",
+ "Empréstimo":"Loan",
+ "Dinheiro":"Cash",
+ "Outros":"Other",
+ "FII":"REIT (BR)",
+ "Ação":"Stock",
+ "Fundo":"Fund",
+ "Criptomoeda":"Crypto",
+ "Stock":"Stock",
+ "REIT":"REIT",
+ "BDR":"BDR",
+ "ETF":"ETF",
+ "ETF internacional":"International ETF",
+ "Tesouro Direto":"Treasury Bonds",
+ "Renda fixa":"Fixed income",
+ "Valor por hora":"Hourly rate",
+ "Outros custos":"Other costs",
+ "Preço unitário":"Unit price",
+ "Valor extra":"Extra amount",
+ "Valor extra padrão":"Default extra amount",
+ "Valor alvo":"Target amount",
+ "Já acumulado":"Already saved",
+ "Claro":"Light",
+ "Escuro":"Dark",
+ "Sistema":"System",
+ "Clássico":"Classic",
+ "Aurora":"Aurora",
+ "Violeta":"Violet",
+ "Domingo":"Sunday",
+ "Segunda":"Monday",
+ "compra":"purchase",
+ "venda":"sale",
+};
+function idioma(){return state.prefs.language==='en'?'en-US':'pt-BR'}
+function tr(s){const v=I18N_EN[s];return (state.prefs.language==='en'&&v!==undefined)?v:s}
 
 /* ============ SUPABASE — autenticação + sincronização de dados na nuvem ============ */
 // a "anon key" do Supabase é feita pra ficar no cliente (não é secreta como o BRAPI_TOKEN) —
@@ -415,7 +756,7 @@ function fmtDate(iso){
  return `${d}/${m}/${y}`;
 }
 function diaMes(iso){const d=new Date(iso+'T12:00');return d.getDate()}
-function nomeMes(iso,curto){const d=new Date(iso+'T12:00');return d.toLocaleDateString('pt-BR',{month:curto?'short':'long'}).replace('.','')}
+function nomeMes(iso,curto){const d=new Date(iso+'T12:00');return d.toLocaleDateString(idioma(),{month:curto?'short':'long'}).replace('.','')}
 function toast(t){const el=$('#toast');el.textContent=t;el.classList.add('show');clearTimeout(window._toastT);window._toastT=setTimeout(()=>el.classList.remove('show'),2600)}
 function esc(s){return (s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 
@@ -433,7 +774,7 @@ function moneyHero(id,value){
 }
 function moneyCompact(id,value,label,attrs){
  const v=(value===undefined||value===null||value==='')?'':value;
- return `<div class="field-group"><label class="flabel">${esc(label)}</label><div class="money-compact"><span class="cur">${CURRENCY_SYMBOLS[state.prefs.currency]||state.prefs.currency}</span><input class="field" id="${id}" type="number" inputmode="decimal" step="0.01" placeholder="0,00" value="${v}" ${attrs||''}></div></div>`;
+ return `<div class="field-group"><label class="flabel">${esc(tr(label))}</label><div class="money-compact"><span class="cur">${CURRENCY_SYMBOLS[state.prefs.currency]||state.prefs.currency}</span><input class="field" id="${id}" type="number" inputmode="decimal" step="0.01" placeholder="0,00" value="${v}" ${attrs||''}></div></div>`;
 }
 
 /* ============ CÂMBIO — Frankfurter.app, sem chave (01-PRD §3.7) ============ */
@@ -473,9 +814,9 @@ async function refreshMarketData(silent){
     for(const a of cripto){const cid=CRYPTO_IDS[a.codigo.toUpperCase()];const precoBRL=d[cid]&&d[cid].brl;if(precoBRL!=null)state.marketCache[a.id]={preco:precoBRL,moeda:'BRL',atualizadoEm:Date.now()}}
    }else{
     console.warn('cotação cripto (CoinGecko) HTTP',r.status);
-    erros.push(`cripto (${r.status})`);
+    erros.push(`${tr('cripto')} (${r.status})`);
    }
-  }catch(e){console.warn('cotação cripto indisponível, mantendo cache',e);erros.push('cripto (rede)')}
+  }catch(e){console.warn('cotação cripto indisponível, mantendo cache',e);erros.push(`${tr('cripto')} (${tr('rede')})`)}
  }
  // cotação B3 via /api/brapi-quote — função de servidor que guarda o token, o cliente nunca fala com a brapi.dev diretamente
  const b3=state.ativosCarteira.filter(a=>['acao','fii','bdr','etf'].includes(a.tipo)&&a.codigo);
@@ -498,17 +839,17 @@ async function refreshMarketData(silent){
     const semCotacao=b3.filter(a=>porCodigo[a.codigo.toUpperCase()]==null);
     if(semCotacao.length){
      console.warn('sem cotação para:',semCotacao.map(a=>a.codigo).join(', '),d);
-     erros.push(`B3: sem dado p/ ${semCotacao.map(a=>a.codigo).join(', ')}`);
+     erros.push(`B3: ${tr('sem dado p/')} ${semCotacao.map(a=>a.codigo).join(', ')}`);
     }
    }else{
     let corpo={};try{corpo=await r.json()}catch(e){}
     console.warn('/api/brapi-quote HTTP',r.status,corpo);
-    erros.push(corpo.mensagem?`B3: ${corpo.mensagem}`:r.status===404?'B3: função /api ainda não publicada':`B3 (${r.status})`);
+    erros.push(corpo.mensagem?`B3: ${corpo.mensagem}`:r.status===404?`B3: ${tr('função /api ainda não publicada')}`:`B3 (${r.status})`);
    }
-  }catch(e){console.warn('cotação B3 indisponível',e);erros.push('B3: falha de rede')}
+  }catch(e){console.warn('cotação B3 indisponível',e);erros.push(`B3: ${tr('falha de rede')}`)}
  }
  save();
- if(!silent){render();toast(erros.length?`Cotações: ${erros.join(' · ')}`:'Cotações atualizadas.')}
+ if(!silent){render();toast(erros.length?`${tr('Cotações')}: ${erros.join(' · ')}`:tr('Cotações atualizadas.'))}
 }
 
 /* ============ DOMÍNIO — fórmulas da 01-PRD.md §4 ============ */
@@ -605,7 +946,7 @@ function alocacaoCarteira(){
  const map={};
  state.ativosCarteira.forEach(a=>{const v=ativoValorMercado(a);if(v>0)map[a.tipo]=(map[a.tipo]||0)+v});
  const total=Object.values(map).reduce((s,v)=>s+v,0)||1;
- return Object.entries(map).map(([tipo,valor],i)=>({tipo,nome:TIPOS_ATIVO[tipo],valor,pct:valor/total*100,cor:PALETA_GRAFICO[i%PALETA_GRAFICO.length]}));
+ return Object.entries(map).map(([tipo,valor],i)=>({tipo,nome:tr(TIPOS_ATIVO[tipo]),valor,pct:valor/total*100,cor:PALETA_GRAFICO[i%PALETA_GRAFICO.length]}));
 }
 const PALETA_GRAFICO=['#5E8BFF','#1FA971','#A855F7','#F5A623','#EC4899','#06B6D4','#8D6E63','#F43F5E'];
 // dinheiro em BRL exibido no "conceito de conta": convertido em negrito, nativo (BRL) embaixo — como uma conta em moeda estrangeira
@@ -623,20 +964,21 @@ function applyTheme(){
  if(theme==='system')theme=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';
  document.documentElement.dataset.theme=theme;
  document.documentElement.dataset.tab=['geral','contas','calendario','carteira','transacoes'].includes(state.page)?state.page:'ajustes';
+ document.documentElement.lang=state.prefs.language==='en'?'en':'pt-BR';
 }
 function goTab(t){state.page=t;state.prevPage=t;closeSwipes();render()}
 function openAjustes(){state.page='ajustes';render()}
 function backFromAjustes(){state.page=state.prevPage||'geral';render()}
 function tabbar(){
- return `<nav class="tabbar">${TABS.map(([id,label])=>`<button class="${state.page===id?'active':''}" onclick="goTab('${id}')">${ic(id)}<span>${label}</span></button>`).join('')}</nav>`;
+ return `<nav class="tabbar">${TABS.map(([id,label])=>`<button class="${state.page===id?'active':''}" onclick="goTab('${id}')">${ic(id)}<span>${tr(label)}</span></button>`).join('')}</nav>`;
 }
 function topbar(title,eyebrow){
- return `<div class="topbar"><div><div class="greet">${esc(eyebrow||'')}</div><h1>${esc(title)}</h1></div><button class="icon-btn" aria-label="Ajustes" onclick="openAjustes()">${ic('ajustes')}</button></div>`;
+ return `<div class="topbar"><div><div class="greet">${esc(tr(eyebrow||''))}</div><h1>${esc(tr(title))}</h1></div><button class="icon-btn" aria-label="${tr('Ajustes')}" onclick="openAjustes()">${ic('ajustes')}</button></div>`;
 }
 function fabFor(page){
  const map={contas:'modalConta()',calendario:'modalRegistro()',carteira:'modalAtivoOrigem()',transacoes:'modalTransacao()'};
  if(!map[page])return '';
- return `<button class="fab" onclick="${map[page]}" aria-label="Adicionar">${ic('plus')}</button>`;
+ return `<button class="fab" onclick="${map[page]}" aria-label="${tr('Adicionar')}">${ic('plus')}</button>`;
 }
 function render(){
  applyTheme();
@@ -673,58 +1015,58 @@ function login(){
  const criar=authMode==='criar';
  return `<div class="login-screen"><div class="login-card glass specular">
   <div class="login-mark">h</div>
-  <h1>Seu tempo, seu dinheiro.</h1>
-  <p>Horas, contas, investimentos e trabalho em um só lugar.</p>
-  <div class="field-group"><label class="flabel">E-mail</label><input class="field" id="login-email" type="email" placeholder="voce@email.com" autocomplete="email"></div>
-  <div class="field-group"><label class="flabel">Senha</label><input class="field" id="login-senha" type="password" placeholder="••••••••" autocomplete="${criar?'new-password':'current-password'}"></div>
-  <button class="modal-save" onclick="${criar?'signUp()':'signIn()'}">${criar?'Criar conta':'Entrar'}</button>
-  ${sb?'':`<p style="font-size:11px;text-align:center;margin:12px 0 0;color:var(--warning)">${SUPABASE_CONFIGURADO?'Não foi possível conectar à nuvem agora':'Sincronização na nuvem ainda não configurada'} — sessão local apenas, os dados ficam só neste aparelho.</p>`}
+  <h1>${tr('Seu tempo, seu dinheiro.')}</h1>
+  <p>${tr('Horas, contas, investimentos e trabalho em um só lugar.')}</p>
+  <div class="field-group"><label class="flabel">${tr('E-mail')}</label><input class="field" id="login-email" type="email" placeholder="voce@email.com" autocomplete="email"></div>
+  <div class="field-group"><label class="flabel">${tr('Senha')}</label><input class="field" id="login-senha" type="password" placeholder="••••••••" autocomplete="${criar?'new-password':'current-password'}"></div>
+  <button class="modal-save" onclick="${criar?'signUp()':'signIn()'}">${criar?tr('Criar conta'):tr('Entrar')}</button>
+  ${sb?'':`<p style="font-size:11px;text-align:center;margin:12px 0 0;color:var(--warning)">${tr(SUPABASE_CONFIGURADO?'Não foi possível conectar à nuvem agora':'Sincronização na nuvem ainda não configurada')} — ${tr('sessão local apenas, os dados ficam só neste aparelho.')}</p>`}
   <p style="font-size:12px;text-align:center;margin:18px 0 0;color:var(--muted)">${criar
-   ?`Já tem conta? <a href="javascript:void(0)" style="color:var(--accent)" onclick="authMode='entrar';render()">Entrar</a>`
-   :`<a href="javascript:void(0)" style="color:var(--accent)" onclick="esqueciSenha()">Esqueceu sua senha?</a> · <a href="javascript:void(0)" style="color:var(--accent)" onclick="authMode='criar';render()">Criar conta</a>`}</p>
+   ?`${tr('Já tem conta?')} <a href="javascript:void(0)" style="color:var(--accent)" onclick="authMode='entrar';render()">${tr('Entrar')}</a>`
+   :`<a href="javascript:void(0)" style="color:var(--accent)" onclick="esqueciSenha()">${tr('Esqueceu sua senha?')}</a> · <a href="javascript:void(0)" style="color:var(--accent)" onclick="authMode='criar';render()">${tr('Criar conta')}</a>`}</p>
  </div></div>`;
 }
 async function signIn(){
  const email=$('#login-email').value.trim(),senha=$('#login-senha').value;
- if(!email||!senha){toast('Preencha e-mail e senha.');return}
- if(!sb){state.loggedIn=true;render();toast('Sessão iniciada (local).');refreshMarketData(true);return}
+ if(!email||!senha){toast(tr('Preencha e-mail e senha.'));return}
+ if(!sb){state.loggedIn=true;render();toast(tr('Sessão iniciada (local).'));refreshMarketData(true);return}
  const {error}=await sb.auth.signInWithPassword({email,password:senha});
  if(error){toast(traduzErroAuth(error));return}
  state.profile.email=email;
  await sincronizarDoServidor();
- state.loggedIn=true;render();toast('Sessão iniciada.');refreshMarketData(true);
+ state.loggedIn=true;render();toast(tr('Sessão iniciada.'));refreshMarketData(true);
 }
 async function signUp(){
  const email=$('#login-email').value.trim(),senha=$('#login-senha').value;
- if(!email||!senha){toast('Preencha e-mail e senha.');return}
- if(senha.length<6){toast('A senha precisa ter pelo menos 6 caracteres.');return}
- if(!sb){state.loggedIn=true;render();toast('Conta criada (local).');return}
+ if(!email||!senha){toast(tr('Preencha e-mail e senha.'));return}
+ if(senha.length<6){toast(tr('A senha precisa ter pelo menos 6 caracteres.'));return}
+ if(!sb){state.loggedIn=true;render();toast(tr('Conta criada (local).'));return}
  const {data,error}=await sb.auth.signUp({email,password:senha});
  if(error){toast(traduzErroAuth(error));return}
  state.profile.email=email;
  if(data.session){
-  state.loggedIn=true;render();toast('Conta criada!');
+  state.loggedIn=true;render();toast(tr('Conta criada!'));
   await sincronizarParaNuvemAgora(); // primeira sincronização: sobe o que já existia neste aparelho
   refreshMarketData(true);
  }else{
-  toast('Conta criada! Confirme seu e-mail antes de entrar.');
+  toast(tr('Conta criada! Confirme seu e-mail antes de entrar.'));
   authMode='entrar';render();
  }
 }
 function traduzErroAuth(error){
  const m=(error&&error.message)||'';
- if(m.includes('Invalid login credentials'))return 'E-mail ou senha inválidos.';
- if(m.includes('User already registered'))return 'Já existe uma conta com esse e-mail.';
- if(/password/i.test(m))return 'Senha inválida (mínimo 6 caracteres).';
- if(/email/i.test(m))return 'E-mail inválido.';
- return m||'Não foi possível completar. Tente de novo.';
+ if(m.includes('Invalid login credentials'))return tr('E-mail ou senha inválidos.');
+ if(m.includes('User already registered'))return tr('Já existe uma conta com esse e-mail.');
+ if(/password/i.test(m))return tr('Senha inválida (mínimo 6 caracteres).');
+ if(/email/i.test(m))return tr('E-mail inválido.');
+ return m||tr('Não foi possível completar. Tente de novo.');
 }
 async function esqueciSenha(){
  const email=$('#login-email').value.trim();
- if(!email){toast('Digite seu e-mail no campo acima primeiro.');return}
- if(!sb){toast('Sincronização na nuvem indisponível agora.');return}
+ if(!email){toast(tr('Digite seu e-mail no campo acima primeiro.'));return}
+ if(!sb){toast(tr('Sincronização na nuvem indisponível agora.'));return}
  const {error}=await sb.auth.resetPasswordForEmail(email);
- toast(error?'Não foi possível enviar o e-mail.':'Enviamos um link de redefinição pro seu e-mail.');
+ toast(error?tr('Não foi possível enviar o e-mail.'):tr('Enviamos um link de redefinição pro seu e-mail.'));
 }
 
 /* ============ SWIPE ============ */
@@ -764,7 +1106,7 @@ function donutCss(fatias){
 function donutWidget(fatias,centerLabel){
  return `<div style="display:flex;align-items:center;gap:18px;margin-top:8px">
   <div class="donut" style="background:${donutCss(fatias)}"><div class="donut-center">${centerLabel||''}</div></div>
-  <div class="legend">${fatias.slice(0,5).map(f=>`<div class="legend-row"><span class="dot" style="background:${f.cor}"></span>${esc(f.nome)}<b>${f.pct.toFixed(0)}%</b></div>`).join('')||'<span class="t-caption">Sem dados no período.</span>'}</div>
+  <div class="legend">${fatias.slice(0,5).map(f=>`<div class="legend-row"><span class="dot" style="background:${f.cor}"></span>${esc(f.nome)}<b>${f.pct.toFixed(0)}%</b></div>`).join('')||`<span class="t-caption">${tr('Sem dados no período.')}</span>`}</div>
  </div>`;
 }
 function arcWidget(pct,label){
@@ -773,7 +1115,7 @@ function arcWidget(pct,label){
  return `<div class="arc" style="background:conic-gradient(${color} 0 ${clamped}%,color-mix(in srgb, var(--ink) 10%, transparent) ${clamped}%)" data-pct="${label}"></div>`;
 }
 function lineChart(pontos){
- if(!pontos.length)return `<div class="chart-wrap">${emptyState('trend','Sem lançamentos suficientes ainda.')}</div>`;
+ if(!pontos.length)return `<div class="chart-wrap">${emptyState('trend',tr('Sem lançamentos suficientes ainda.'))}</div>`;
  const w=300,h=100,max=Math.max(...pontos.map(p=>p.v),1),min=Math.min(...pontos.map(p=>p.v),0);
  const range=(max-min)||1;
  const step=pontos.length>1?w/(pontos.length-1):0;
@@ -791,65 +1133,65 @@ function lineChart(pontos){
 
 /* ============ ABA GERAL — 01-PRD §3.1 ============ */
 function periodo7Dias(){return [diasAtras(6),isoHoje()]}
-function contasIncluidasLabel(){const t=state.contas.length,inc=state.contas.filter(c=>c.incluida).length;return `Contas: ${inc}/${t}`}
+function contasIncluidasLabel(){const t=state.contas.length,inc=state.contas.filter(c=>c.incluida).length;return `${tr('Contas')}: ${inc}/${t}`}
 const WIDGET_DEFS={
  limiteDiario(){
   const st=statusLimite();
-  if(!state.limiteDiario.valor)return widgetShell({title:'Limite diário',pill:pillFor('vazio','Não definido'),body:emptyState('gauge','Defina um limite diário para acompanhar seus gastos.'),onExpand:"modalLimiteDiario()"});
-  const texto=st.estado==='ultrapassado'?'Ultrapassado':st.estado==='atencao'?'Atenção':'No caminho certo';
-  return widgetShell({title:'Limite diário',pill:pillFor(st.estado,texto),
-   body:`<div style="display:flex;align-items:center;gap:16px;margin-top:6px">${arcWidget(st.pct,st.pct+'%')}<div><div class="t-caption">Gasto hoje</div><div style="font-size:20px;font-weight:800">${money(st.gasto)}</div><div class="t-caption">de ${money(st.limite)}</div></div></div>`,
+  if(!state.limiteDiario.valor)return widgetShell({title:tr('Limite diário'),pill:pillFor('vazio',tr('Não definido')),body:emptyState('gauge',tr('Defina um limite diário para acompanhar seus gastos.')),onExpand:"modalLimiteDiario()"});
+  const texto=st.estado==='ultrapassado'?tr('Ultrapassado'):st.estado==='atencao'?tr('Atenção'):tr('No caminho certo');
+  return widgetShell({title:tr('Limite diário'),pill:pillFor(st.estado,texto),
+   body:`<div style="display:flex;align-items:center;gap:16px;margin-top:6px">${arcWidget(st.pct,st.pct+'%')}<div><div class="t-caption">${tr('Gasto hoje')}</div><div style="font-size:20px;font-weight:800">${money(st.gasto)}</div><div class="t-caption">${tr('de')} ${money(st.limite)}</div></div></div>`,
    onExpand:"modalLimiteDiario()"});
  },
  objetivos(){
-  if(!state.objetivos.length)return widgetShell({title:'Objetivos inteligentes',pill:pillFor('vazio','Nenhum'),body:emptyState('target','Crie um objetivo para calcular seu aporte ideal.'),onExpand:"modalObjetivo()"});
-  const rows=state.objetivos.slice(0,3).map(o=>{const a=aporteObjetivo(o);return `<div class="row" style="cursor:pointer;margin-bottom:8px" onclick="event.stopPropagation();modalObjetivo('${o.id}')"><div class="row-icon" style="background:linear-gradient(135deg,#A855F7,#EC4899)">${ic('target')}</div><div class="row-main"><b>${esc(o.nome)}</b><span>${a.concluido?'Meta atingida':`${money(a.aporte)} / ${o.frequencia==='semanal'?'semana':'dia'}`}</span></div><div class="row-value"><b>${money(o.valorAcumulado)}</b><span>de ${money(o.valorAlvo)}</span></div></div>`}).join('');
-  return widgetShell({title:'Objetivos inteligentes',pill:`<button class="icon-btn" style="width:30px;height:30px" onclick="event.stopPropagation();modalObjetivo()">${ic('plus')}</button>`,body:`<div style="margin-top:6px">${rows}</div>`});
+  if(!state.objetivos.length)return widgetShell({title:tr('Objetivos inteligentes'),pill:pillFor('vazio',tr('Nenhum')),body:emptyState('target',tr('Crie um objetivo para calcular seu aporte ideal.')),onExpand:"modalObjetivo()"});
+  const rows=state.objetivos.slice(0,3).map(o=>{const a=aporteObjetivo(o);return `<div class="row" style="cursor:pointer;margin-bottom:8px" onclick="event.stopPropagation();modalObjetivo('${o.id}')"><div class="row-icon" style="background:linear-gradient(135deg,#A855F7,#EC4899)">${ic('target')}</div><div class="row-main"><b>${esc(o.nome)}</b><span>${a.concluido?tr('Meta atingida'):`${money(a.aporte)} / ${o.frequencia==='semanal'?tr('semana'):tr('dia')}`}</span></div><div class="row-value"><b>${money(o.valorAcumulado)}</b><span>${tr('de')} ${money(o.valorAlvo)}</span></div></div>`}).join('');
+  return widgetShell({title:tr('Objetivos inteligentes'),pill:`<button class="icon-btn" style="width:30px;height:30px" onclick="event.stopPropagation();modalObjetivo()">${ic('plus')}</button>`,body:`<div style="margin-top:6px">${rows}</div>`});
  },
  gastos(){
   const periodo=state.periodoGastos||'semana';
   const [i,f]=periodo==='mes'?[inicioMes(),isoHoje()]:periodo7Dias();
   const fatias=gastosPorCategoria(i,f);const total=fatias.reduce((s,x)=>s+x.valor,0);
   const toggle=`<div class="segmented">
-   <button class="${periodo!=='mes'?'active':''}" onclick="event.stopPropagation();state.periodoGastos='semana';render()">7 dias</button>
-   <button class="${periodo==='mes'?'active':''}" onclick="event.stopPropagation();state.periodoGastos='mes';render()">Mês</button>
+   <button class="${periodo!=='mes'?'active':''}" onclick="event.stopPropagation();state.periodoGastos='semana';render()">${tr('7 dias')}</button>
+   <button class="${periodo==='mes'?'active':''}" onclick="event.stopPropagation();state.periodoGastos='mes';render()">${tr('Mês')}</button>
   </div>`;
-  return widgetShell({title:'Gastos',pill:toggle,value:money(total),sub:periodo==='mes'?'Este mês':'Últimos 7 dias',body:fatias.length?donutWidget(fatias):emptyState('dots','Sem gastos no período.'),onExpand:"goTab('transacoes')"});
+  return widgetShell({title:tr('Gastos'),pill:toggle,value:money(total),sub:periodo==='mes'?tr('Este mês'):tr('Últimos 7 dias'),body:fatias.length?donutWidget(fatias):emptyState('dots',tr('Sem gastos no período.')),onExpand:"goTab('transacoes')"});
  },
  patrimonioLiquido(){
   const pl=patrimonioLiquido();
-  return widgetShell({title:'Patrimônio líquido',pill:pillFor(pl>=0?'positivo':'negativo',pl>=0?'Positivo':'Negativo'),value:money(pl),sub:'Ativos − passivos, todas as contas incluídas',onExpand:"goTab('contas')"});
+  return widgetShell({title:tr('Patrimônio líquido'),pill:pillFor(pl>=0?'positivo':'negativo',pl>=0?tr('Positivo'):tr('Negativo')),value:money(pl),sub:tr('Ativos − passivos, todas as contas incluídas'),onExpand:"goTab('contas')"});
  },
  contasWidget(){
   const list=state.contas.filter(c=>c.incluida).slice(0,4).map(c=>`<div class="legend-row"><span class="dot" style="background:${c.tipo==='emprestimo'?'var(--danger)':'var(--accent)'}"></span>${esc(c.nome)}<b>${money(saldoContaConvertido(c))}</b></div>`).join('');
-  return widgetShell({title:'Contas',pill:`<span class="pill neutral" style="cursor:pointer" onclick="event.stopPropagation();modalSelecionarContas()">${contasIncluidasLabel()}</span>`,body:`<div class="legend" style="margin-top:6px">${list||emptyState('contas','Cadastre uma conta em Contas.')}</div>`,onExpand:"goTab('contas')"});
+  return widgetShell({title:tr('Contas'),pill:`<span class="pill neutral" style="cursor:pointer" onclick="event.stopPropagation();modalSelecionarContas()">${contasIncluidasLabel()}</span>`,body:`<div class="legend" style="margin-top:6px">${list||emptyState('contas',tr('Cadastre uma conta em Contas.'))}</div>`,onExpand:"goTab('contas')"});
  },
  horasTrabalho(){
   const [i,f]=periodo7Dias();const regs=registrosNoPeriodo(i,f);const total=totalAReceber(regs),horas=totalHoras(regs);
   const porTrabalho={};regs.forEach(r=>{const n=nomeRegistro(r);porTrabalho[n]=(porTrabalho[n]||0)+valorRegistro(r)});
   const fatias=Object.entries(porTrabalho).map(([nome,valor],i)=>({nome,valor,pct:total?valor/total*100:0,cor:PALETA_GRAFICO[i%PALETA_GRAFICO.length]}));
-  return widgetShell({title:'Total a receber + horas',pill:`<span class="pill neutral">${Math.floor(horas)}h ${Math.round((horas%1)*60)}min</span>`,value:money(total),sub:'Últimos 7 dias',body:fatias.length?donutWidget(fatias):emptyState('clock','Sem registros de horas no período.'),onExpand:"goTab('calendario')"});
+  return widgetShell({title:tr('Total a receber + horas'),pill:`<span class="pill neutral">${Math.floor(horas)}h ${Math.round((horas%1)*60)}min</span>`,value:money(total),sub:tr('Últimos 7 dias'),body:fatias.length?donutWidget(fatias):emptyState('clock',tr('Sem registros de horas no período.')),onExpand:"goTab('calendario')"});
  },
  distribuicaoTrabalho(){
   const [i,f]=periodo7Dias();const regs=registrosNoPeriodo(i,f);
   const porTrabalho={};regs.forEach(r=>{const n=nomeRegistro(r);porTrabalho[n]=(porTrabalho[n]||0)+valorRegistro(r)});
   const total=Object.values(porTrabalho).reduce((s,v)=>s+v,0);
   const fatias=Object.entries(porTrabalho).map(([nome,valor],i)=>({nome,valor,pct:total?valor/total*100:0,cor:PALETA_GRAFICO[i%PALETA_GRAFICO.length]}));
-  return widgetShell({title:'Distribuição por trabalho',sub:'Últimos 7 dias',body:fatias.length?donutWidget(fatias):emptyState('trend','Sem ganhos no período selecionado.')});
+  return widgetShell({title:tr('Distribuição por trabalho'),sub:tr('Últimos 7 dias'),body:fatias.length?donutWidget(fatias):emptyState('trend',tr('Sem ganhos no período selecionado.'))});
  },
  simulador(){
   const sim=state.simulador||{inicio:diasAtras(29),fim:isoHoje(),trabalhoId:'all',desconto:0};
   const r=simuladorSalario(sim.inicio,sim.fim,sim.trabalhoId,sim.desconto);
-  return widgetShell({title:'Simulação de salário',value:money(r.liquido),sub:`Bruto ${money(r.bruto)} · desconto ${sim.desconto||0}%`,onExpand:"modalSimulador()"});
+  return widgetShell({title:tr('Simulação de salário'),value:money(r.liquido),sub:`${tr('Bruto')} ${money(r.bruto)} · ${tr('desconto')} ${sim.desconto||0}%`,onExpand:"modalSimulador()"});
  },
  evolucaoPatrimonio(){
   const pontos=evolucaoPatrimonioPontos(state.periodoCarteira||'1a');
   const ganhoBRL=ganhoCapital();
-  return widgetShell({title:'Evolução do patrimônio',value:moneyBRL(patrimonioCarteira()),pill:pillFor(ganhoBRL>=0?'positivo':'negativo',(ganhoBRL>=0?'+':'')+moneyBRL(ganhoBRL)),body:lineChart(pontos),onExpand:"goTab('carteira')"});
+  return widgetShell({title:tr('Evolução do patrimônio'),value:moneyBRL(patrimonioCarteira()),pill:pillFor(ganhoBRL>=0?'positivo':'negativo',(ganhoBRL>=0?'+':'')+moneyBRL(ganhoBRL)),body:lineChart(pontos),onExpand:"goTab('carteira')"});
  },
  ativosCarteira(){
   const fatias=alocacaoCarteira();
-  return widgetShell({title:'Ativos na carteira',body:fatias.length?donutWidget(fatias):emptyState('carteira','Registre uma compra na Carteira.'),onExpand:"goTab('carteira')"});
+  return widgetShell({title:tr('Ativos na carteira'),body:fatias.length?donutWidget(fatias):emptyState('carteira',tr('Registre uma compra na Carteira.')),onExpand:"goTab('carteira')"});
  },
  patrimonioInvestido(){
   const patBRL=patrimonioCarteira(),invBRL=valorTotalInvestido();
@@ -857,7 +1199,7 @@ const WIDGET_DEFS={
   const bloco=valorBRL=>principal==='BRL'
    ?`<div style="font-size:22px;font-weight:800">${money(valorBRL,'BRL')}</div>`
    :`<div style="font-size:22px;font-weight:800">${money(convert(valorBRL,'BRL',principal))}</div><div class="t-caption" style="margin-top:2px">${money(valorBRL,'BRL')}</div>`;
-  return widgetShell({title:'Patrimônio total + investido',body:`<div style="display:flex;gap:18px;margin-top:4px"><div style="flex:1"><div class="t-caption">Patrimônio total</div>${bloco(patBRL)}</div><div style="flex:1"><div class="t-caption">Valor investido</div>${bloco(invBRL)}</div></div>`,onExpand:"goTab('carteira')"});
+  return widgetShell({title:tr('Patrimônio total + investido'),body:`<div style="display:flex;gap:18px;margin-top:4px"><div style="flex:1"><div class="t-caption">${tr('Patrimônio total')}</div>${bloco(patBRL)}</div><div style="flex:1"><div class="t-caption">${tr('Valor investido')}</div>${bloco(invBRL)}</div></div>`,onExpand:"goTab('carteira')"});
  },
 };
 function evolucaoPatrimonioPontos(periodo){
@@ -867,22 +1209,22 @@ function evolucaoPatrimonioPontos(periodo){
  const pts=[];
  for(let i=n-1;i>=0;i--){
   const fator=1-(i/n)*0.35;
-  pts.push({label:i===0?'Hoje':`-${i}`,v:Math.max(0,atual*fator)});
+  pts.push({label:i===0?tr('Hoje'):`-${i}`,v:Math.max(0,atual*fator)});
  }
  return pts;
 }
 function widgetOrderPanel(){
  const defs={limiteDiario:'Limite diário',objetivos:'Objetivos inteligentes',gastos:'Gastos',patrimonioLiquido:'Patrimônio líquido',contasWidget:'Contas',horasTrabalho:'Total a receber + horas',distribuicaoTrabalho:'Distribuição por trabalho',simulador:'Simulação de salário',evolucaoPatrimonio:'Evolução do patrimônio',ativosCarteira:'Ativos na carteira',patrimonioInvestido:'Patrimônio total + investido'};
  const order=state.widgetOrderGeral;
- const body=order.map((k,i)=>`<div class="reorder-row"><span style="color:var(--muted);font-size:18px;letter-spacing:-2px">⠿⠿</span><b>${defs[k]}</b><button class="icon-btn" ${i===0?'disabled':''} onclick="moveWidget(${i},-1)">${ic('up')}</button><button class="icon-btn" ${i===order.length-1?'disabled':''} onclick="moveWidget(${i},1)">${ic('chevron')}</button></div>`).join('');
- return modalShell('Widgets do resumo',body);
+ const body=order.map((k,i)=>`<div class="reorder-row"><span style="color:var(--muted);font-size:18px;letter-spacing:-2px">⠿⠿</span><b>${tr(defs[k])}</b><button class="icon-btn" ${i===0?'disabled':''} onclick="moveWidget(${i},-1)">${ic('up')}</button><button class="icon-btn" ${i===order.length-1?'disabled':''} onclick="moveWidget(${i},1)">${ic('chevron')}</button></div>`).join('');
+ return modalShell(tr('Widgets do resumo'),body);
 }
 function moveWidget(i,dir){const o=state.widgetOrderGeral;const j=i+dir;if(j<0||j>=o.length)return;[o[i],o[j]]=[o[j],o[i]];modal=widgetOrderPanel();render()}
 function openWidgetOrder(){modal=widgetOrderPanel();render()}
 function geral(){
  return `${topbar(state.profile.name||'Você','Bom dia')}
- <div class="section-head"><div class="t-title">Visão geral</div>
- <div style="display:flex;gap:8px"><button class="icon-btn" onclick="refreshMarketData()" aria-label="Atualizar cotações">${ic('refresh')}</button><button class="icon-btn" onclick="openWidgetOrder()" aria-label="Reordenar widgets">${ic('sliders')}</button></div></div>
+ <div class="section-head"><div class="t-title">${tr('Visão geral')}</div>
+ <div style="display:flex;gap:8px"><button class="icon-btn" onclick="refreshMarketData()" aria-label="${tr('Atualizar cotações')}">${ic('refresh')}</button><button class="icon-btn" onclick="openWidgetOrder()" aria-label="${tr('Reordenar widgets')}">${ic('sliders')}</button></div></div>
  ${state.widgetOrderGeral.map(k=>WIDGET_DEFS[k]?WIDGET_DEFS[k]():'').join('')}
  `;
 }
@@ -890,7 +1232,7 @@ function geral(){
 /* ============ ABA CONTAS — 01-PRD §3.2 ============ */
 function contas(){
  const pl=patrimonioLiquido();
- const grupos=[...state.gruposConta,{id:null,nome:'Sem grupo'}];
+ const grupos=[...state.gruposConta,{id:null,nome:tr('Sem grupo')}];
  const body=grupos.map(g=>{
   const list=state.contas.filter(c=>c.grupoId===g.id);
   if(!list.length)return '';
@@ -900,11 +1242,11 @@ function contas(){
  }).join('');
  return `${topbar('Contas','Patrimônio')}
  <div class="glass specular card" style="margin-bottom:18px">
-  <div class="t-caption">Patrimônio líquido</div>
+  <div class="t-caption">${tr('Patrimônio líquido')}</div>
   <div class="t-display hero-num">${money(pl)}</div>
-  <div class="widget-sub">Ativos − passivos · ${state.contas.length} conta${state.contas.length===1?'':'s'}</div>
+  <div class="widget-sub">${tr('Ativos − passivos')} · ${state.contas.length===1?`1 ${tr('conta')}`:`${state.contas.length} ${tr('contas')}`}</div>
  </div>
- ${state.contas.length?body:emptyState('contas','Cadastre sua primeira conta com o botão +.')}
+ ${state.contas.length?body:emptyState('contas',tr('Cadastre sua primeira conta com o botão +.'))}
  `;
 }
 function contaRow(c){
@@ -913,17 +1255,17 @@ function contaRow(c){
  const convertido=estrangeira?saldoContaConvertido(c):null;
  const estimado=estrangeira&&!fxIsLive(c.moeda,state.prefs.currency);
  return `<div class="swipe-row" data-id="${c.id}"><div class="swipe-actions">
-  <button class="swipe-action" onclick="closeSwipes();modalConta('${c.id}')">${ic('sliders')}<span>Editar</span></button>
-  <button class="swipe-action delete" onclick="excluirConta('${c.id}')">${ic('trash')}<span>Excluir</span></button>
+  <button class="swipe-action" onclick="closeSwipes();modalConta('${c.id}')">${ic('sliders')}<span>${tr('Editar')}</span></button>
+  <button class="swipe-action delete" onclick="excluirConta('${c.id}')">${ic('trash')}<span>${tr('Excluir')}</span></button>
  </div><div class="swipe-content"><div class="row" onclick="modalConta('${c.id}')">
   <div class="acc-badge" style="background:${c.tipo==='emprestimo'?'linear-gradient(135deg,#F55B5B,#B9302F)':'linear-gradient(135deg,var(--accent),var(--accent2))'}">${ic(t.icone)}</div>
-  <div class="row-main"><b>${esc(c.nome)}</b><span>${t.nome}${c.incluida?'':' · fora do patrimônio'}</span></div>
-  <div class="row-value">${convertido!==null?`<div class="foreign"><b class="${c.tipo==='emprestimo'?'money-neg':''}">${c.tipo==='emprestimo'?'-':''}${money(convertido)}</b><small>${money(c.saldo,c.moeda)}${estimado?' · câmbio estimado':' · câmbio ao vivo'}</small></div>`:`<b class="${c.tipo==='emprestimo'?'money-neg':''}">${c.tipo==='emprestimo'?'-':''}${money(c.saldo,c.moeda)}</b>`}</div>
+  <div class="row-main"><b>${esc(c.nome)}</b><span>${tr(t.nome)}${c.incluida?'':' · '+tr('fora do patrimônio')}</span></div>
+  <div class="row-value">${convertido!==null?`<div class="foreign"><b class="${c.tipo==='emprestimo'?'money-neg':''}">${c.tipo==='emprestimo'?'-':''}${money(convertido)}</b><small>${money(c.saldo,c.moeda)}${estimado?' · '+tr('câmbio estimado'):' · '+tr('câmbio ao vivo')}</small></div>`:`<b class="${c.tipo==='emprestimo'?'money-neg':''}">${c.tipo==='emprestimo'?'-':''}${money(c.saldo,c.moeda)}</b>`}</div>
  </div></div></div>`;
 }
-function excluirConta(id){closeSwipes();state.contas=state.contas.filter(c=>c.id!==id);render();toast('Conta excluída.')}
+function excluirConta(id){closeSwipes();state.contas=state.contas.filter(c=>c.id!==id);render();toast(tr('Conta excluída.'))}
 function modalSelecionarContas(){
- const body=`<p class="t-caption" style="margin:0 0 14px">Escolha quais contas entram no cálculo do painel (patrimônio líquido e widget de Contas).</p>
+ const body=`<p class="t-caption" style="margin:0 0 14px">${tr('Escolha quais contas entram no cálculo do painel (patrimônio líquido e widget de Contas).')}</p>
  <div class="list">${state.contas.length?state.contas.map(c=>{
   const t=TIPOS_CONTA[c.tipo];
   return `<div class="row" style="cursor:pointer" onclick="toggleContaIncluida('${c.id}')">
@@ -931,8 +1273,8 @@ function modalSelecionarContas(){
    <div class="row-main"><b>${esc(c.nome)}</b><span>${money(c.saldo,c.moeda)}</span></div>
    <input type="checkbox" ${c.incluida?'checked':''} onclick="event.stopPropagation();toggleContaIncluida('${c.id}')" style="width:22px;height:22px;accent-color:var(--accent)">
   </div>`;
- }).join(''):emptyState('contas','Cadastre uma conta em Contas.')}</div>`;
- modal=modalShell('Contas no painel',body);
+ }).join(''):emptyState('contas',tr('Cadastre uma conta em Contas.'))}</div>`;
+ modal=modalShell(tr('Contas no painel'),body);
  render();
 }
 function toggleContaIncluida(id){
@@ -944,23 +1286,23 @@ function toggleContaIncluida(id){
 function modalConta(id){
  const c=id?state.contas.find(x=>x.id===id):{tipo:'normal',nome:'',moeda:state.prefs.currency,saldo:'',grupoId:state.gruposConta[0]?.id||null,incluida:true};
  const body=`
- <div class="field-group"><label class="flabel">Tipo</label><select class="field" id="cf-tipo">${Object.entries(TIPOS_CONTA).map(([k,v])=>`<option value="${k}" ${c.tipo===k?'selected':''}>${v.nome}</option>`).join('')}</select></div>
- <div class="field-group"><label class="flabel">Nome da conta</label><input class="field" id="cf-nome" value="${esc(c.nome)}" placeholder="Ex.: Conta corrente"></div>
- <div class="field-group"><label class="flabel">Moeda</label><select class="field" id="cf-moeda">${MOEDAS.map(m=>`<option ${c.moeda===m?'selected':''}>${m}</option>`).join('')}</select></div>
- <div class="field-group"><label class="flabel">Saldo real</label>${moneyHero('cf-saldo',c.saldo)}</div>
- <div class="field-group"><label class="flabel">Grupo</label><select class="field" id="cf-grupo"><option value="">Sem grupo</option>${state.gruposConta.map(g=>`<option value="${g.id}" ${c.grupoId===g.id?'selected':''}>${esc(g.nome)}</option>`).join('')}<option value="__novo">+ Novo grupo…</option></select></div>
- <div class="field-group" style="display:flex;align-items:center;gap:10px"><input type="checkbox" id="cf-incluida" ${c.incluida?'checked':''} style="width:18px;height:18px"><label class="flabel" style="margin:0;text-transform:none;font-size:13px" for="cf-incluida">Incluir no patrimônio líquido</label></div>
- <button class="modal-save" onclick="salvarConta('${id||''}')">Salvar</button>
- ${id?`<button class="modal-save danger" onclick="excluirConta('${id}');modal=null;render()">Excluir conta</button>`:''}`;
- modal=modalShell(id?'Editar conta':'Nova conta',body);
+ <div class="field-group"><label class="flabel">${tr('Tipo')}</label><select class="field" id="cf-tipo">${Object.entries(TIPOS_CONTA).map(([k,v])=>`<option value="${k}" ${c.tipo===k?'selected':''}>${tr(v.nome)}</option>`).join('')}</select></div>
+ <div class="field-group"><label class="flabel">${tr('Nome da conta')}</label><input class="field" id="cf-nome" value="${esc(c.nome)}" placeholder="${tr('Ex.: Conta corrente')}"></div>
+ <div class="field-group"><label class="flabel">${tr('Moeda')}</label><select class="field" id="cf-moeda">${MOEDAS.map(m=>`<option ${c.moeda===m?'selected':''}>${m}</option>`).join('')}</select></div>
+ <div class="field-group"><label class="flabel">${tr('Saldo real')}</label>${moneyHero('cf-saldo',c.saldo)}</div>
+ <div class="field-group"><label class="flabel">${tr('Grupo')}</label><select class="field" id="cf-grupo"><option value="">${tr('Sem grupo')}</option>${state.gruposConta.map(g=>`<option value="${g.id}" ${c.grupoId===g.id?'selected':''}>${esc(g.nome)}</option>`).join('')}<option value="__novo">${tr('+ Novo grupo…')}</option></select></div>
+ <div class="field-group" style="display:flex;align-items:center;gap:10px"><input type="checkbox" id="cf-incluida" ${c.incluida?'checked':''} style="width:18px;height:18px"><label class="flabel" style="margin:0;text-transform:none;font-size:13px" for="cf-incluida">${tr('Incluir no patrimônio líquido')}</label></div>
+ <button class="modal-save" onclick="salvarConta('${id||''}')">${tr('Salvar')}</button>
+ ${id?`<button class="modal-save danger" onclick="excluirConta('${id}');modal=null;render()">${tr('Excluir conta')}</button>`:''}`;
+ modal=modalShell(id?tr('Editar conta'):tr('Nova conta'),body);
  render();
 }
 function salvarConta(id){
  let grupoId=$('#cf-grupo').value||null;
- if(grupoId==='__novo'){const nome=prompt('Nome do novo grupo:');if(!nome){toast('Grupo não criado.');return}const g={id:uid(),nome};state.gruposConta.push(g);grupoId=g.id}
- const data={tipo:$('#cf-tipo').value,nome:$('#cf-nome').value.trim()||'Nova conta',moeda:$('#cf-moeda').value,saldo:parseFloat($('#cf-saldo').value)||0,grupoId,incluida:$('#cf-incluida').checked};
+ if(grupoId==='__novo'){const nome=prompt(tr('Nome do novo grupo:'));if(!nome){toast(tr('Grupo não criado.'));return}const g={id:uid(),nome};state.gruposConta.push(g);grupoId=g.id}
+ const data={tipo:$('#cf-tipo').value,nome:$('#cf-nome').value.trim()||tr('Nova conta'),moeda:$('#cf-moeda').value,saldo:parseFloat($('#cf-saldo').value)||0,grupoId,incluida:$('#cf-incluida').checked};
  if(id){Object.assign(state.contas.find(c=>c.id===id),data)}else{state.contas.push({id:uid(),...data})}
- modal=null;render();toast('Conta salva.');
+ modal=null;render();toast(tr('Conta salva.'));
 }
 
 /* ============ ABA CALENDÁRIO — herdado do Horas (01-PRD §1.4/§3.3) ============ */
@@ -976,7 +1318,7 @@ function calendario(){
  const iso=d=>`${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
  const withRecords=new Set(state.registrosDeHoras.map(r=>r.data));
  const selDay=state.calDia||isoHoje();
- const nomeMesAnoRaw=first.toLocaleDateString('pt-BR',{month:'long',year:'numeric'});
+ const nomeMesAnoRaw=first.toLocaleDateString(idioma(),{month:'long',year:'numeric'});
  const nomeMesAno=nomeMesAnoRaw.charAt(0).toUpperCase()+nomeMesAnoRaw.slice(1);
  const dayRecords=state.registrosDeHoras.filter(r=>r.data===selDay).sort((a,b)=>a.inicio.localeCompare(b.inicio));
  return `${topbar('Calendário','Registro de horas')}
@@ -986,7 +1328,7 @@ function calendario(){
    <b>${nomeMesAno}</b>
    <button class="icon-btn" onclick="calMoveMes(1)">${ic('chevron')}</button>
   </div>
-  <div class="weekdays"><span>S</span><span>T</span><span>Q</span><span>Q</span><span>S</span><span>S</span><span>D</span></div>
+  <div class="weekdays">${(state.prefs.language==='en'?['M','T','W','T','F','S','S']:['S','T','Q','Q','S','S','D']).map(l=>`<span>${l}</span>`).join('')}</div>
   <div class="days">${cells.map(d=>{
    if(!d)return '<span></span>';
    const dIso=iso(d);
@@ -995,8 +1337,8 @@ function calendario(){
    return `<button class="day ${isToday?'today':''} ${isSel&&!isToday?'selected':''}" onclick="state.calDia='${dIso}';render()">${d}${withRecords.has(dIso)?'<span class="dot"></span>':''}</button>`;
   }).join('')}</div>
  </div>
- <div class="section-head"><div class="t-headline">${fmtDate(selDay)}</div><span class="t-caption">${dayRecords.length} registro${dayRecords.length===1?'':'s'}</span></div>
- <div class="list">${dayRecords.length?dayRecords.map(r=>registroRow(r)).join(''):emptyState('clock','Nenhum registro neste dia. Toque em + para adicionar.')}</div>
+ <div class="section-head"><div class="t-headline">${fmtDate(selDay)}</div><span class="t-caption">${dayRecords.length===1?`1 ${tr('registro')}`:`${dayRecords.length} ${tr('registros')}`}</span></div>
+ <div class="list">${dayRecords.length?dayRecords.map(r=>registroRow(r)).join(''):emptyState('clock',tr('Nenhum registro neste dia. Toque em + para adicionar.'))}</div>
  `;
 }
 function calMoveMes(dir){
@@ -1006,16 +1348,16 @@ function calMoveMes(dir){
 function registroRow(r){
  const h=horasRegistro(r),v=valorRegistro(r);
  return `<div class="swipe-row" data-id="${r.id}"><div class="swipe-actions">
-  <button class="swipe-action" onclick="closeSwipes();duplicarRegistro('${r.id}')">${ic('dup')}<span>Duplicar</span></button>
-  <button class="swipe-action delete" onclick="excluirRegistro('${r.id}')">${ic('trash')}<span>Excluir</span></button>
+  <button class="swipe-action" onclick="closeSwipes();duplicarRegistro('${r.id}')">${ic('dup')}<span>${tr('Duplicar')}</span></button>
+  <button class="swipe-action delete" onclick="excluirRegistro('${r.id}')">${ic('trash')}<span>${tr('Excluir')}</span></button>
  </div><div class="swipe-content"><div class="row" onclick="modalRegistro('${r.id}')">
   <div class="row-icon" style="background:linear-gradient(135deg,var(--accent),var(--accent2))">${ic('clock')}</div>
-  <div class="row-main"><b>${esc(nomeRegistro(r))}</b><span>${r.inicio.slice(11,16)}–${r.fim.slice(11,16)} · pausa ${r.pausa||0}min</span></div>
+  <div class="row-main"><b>${esc(nomeRegistro(r))}</b><span>${r.inicio.slice(11,16)}–${r.fim.slice(11,16)} · ${tr('pausa')} ${r.pausa||0}min</span></div>
   <div class="row-value"><b>${money(v)}</b><span>${h.toFixed(1)}h</span></div>
  </div></div></div>`;
 }
 function duplicarRegistro(id){closeSwipes();modalRegistro(null,id)}
-function excluirRegistro(id){closeSwipes();state.registrosDeHoras=state.registrosDeHoras.filter(r=>r.id!==id);render();toast('Registro excluído.')}
+function excluirRegistro(id){closeSwipes();state.registrosDeHoras=state.registrosDeHoras.filter(r=>r.id!==id);render();toast(tr('Registro excluído.'))}
 function modalRegistro(id,duplicarDeId){
  const base=id?state.registrosDeHoras.find(r=>r.id===id):(duplicarDeId?{...state.registrosDeHoras.find(r=>r.id===duplicarDeId),id:null}:null);
  const data=base?base.data:(state.calDia||isoHoje());
@@ -1025,21 +1367,21 @@ function modalRegistro(id,duplicarDeId){
  const pausa=base?base.pausa:(state.trabalhos[0]?.pausa||0);
  const extra=base?base.valorExtra:'', notas=base?base.notas:'', avulso=base?base.nomeAvulso:'', valorHoraAvulso=base?base.valorHoraAvulso:'';
  const body=`
- <div class="field-group"><label class="flabel">Trabalho</label><select class="field" id="rf-trabalho" onchange="syncRegistroTrabalho(this,${!id})">${state.trabalhos.map(w=>`<option value="${w.id}" ${trabalhoId===w.id&&!avulso?'selected':''}>${esc(w.nome)}</option>`).join('')}<option value="__avulso" ${avulso?'selected':''}>Trabalho avulso (digitar nome)</option></select></div>
+ <div class="field-group"><label class="flabel">${tr('Trabalho')}</label><select class="field" id="rf-trabalho" onchange="syncRegistroTrabalho(this,${!id})">${state.trabalhos.map(w=>`<option value="${w.id}" ${trabalhoId===w.id&&!avulso?'selected':''}>${esc(w.nome)}</option>`).join('')}<option value="__avulso" ${avulso?'selected':''}>${tr('Trabalho avulso (digitar nome)')}</option></select></div>
  <div id="rf-avulso-wrap" style="display:${avulso?'block':'none'}">
-  <div class="field-group"><label class="flabel">Nome do cliente/trabalho</label><input class="field" id="rf-avulso" value="${esc(avulso||'')}"></div>
+  <div class="field-group"><label class="flabel">${tr('Nome do cliente/trabalho')}</label><input class="field" id="rf-avulso" value="${esc(avulso||'')}"></div>
   ${moneyCompact('rf-valorhora-avulso',valorHoraAvulso,'Valor por hora')}
  </div>
- <div class="field-group"><label class="flabel">Data</label><input class="field" id="rf-data" type="date" value="${data}"></div>
+ <div class="field-group"><label class="flabel">${tr('Data')}</label><input class="field" id="rf-data" type="date" value="${data}"></div>
  <div class="field-row">
-  <div class="field-group"><label class="flabel">Início</label><input class="field" id="rf-inicio" type="time" value="${inicio}"></div>
-  <div class="field-group"><label class="flabel">Fim</label><input class="field" id="rf-fim" type="time" value="${fim}"></div>
+  <div class="field-group"><label class="flabel">${tr('Início')}</label><input class="field" id="rf-inicio" type="time" value="${inicio}"></div>
+  <div class="field-group"><label class="flabel">${tr('Fim')}</label><input class="field" id="rf-fim" type="time" value="${fim}"></div>
  </div>
- <div class="field-group"><label class="flabel">Pausa (min)</label><input class="field" id="rf-pausa" type="number" value="${pausa||0}"></div>
+ <div class="field-group"><label class="flabel">${tr('Pausa (min)')}</label><input class="field" id="rf-pausa" type="number" value="${pausa||0}"></div>
  ${moneyCompact('rf-extra',extra,'Valor extra')}
- <div class="field-group"><label class="flabel">Notas</label><textarea class="field" id="rf-notas" rows="2">${esc(notas||'')}</textarea></div>
- <button class="modal-save" onclick="salvarRegistro('${id||''}')">Salvar</button>`;
- modal=modalShell(id?'Editar registro':'Novo registro',body);
+ <div class="field-group"><label class="flabel">${tr('Notas')}</label><textarea class="field" id="rf-notas" rows="2">${esc(notas||'')}</textarea></div>
+ <button class="modal-save" onclick="salvarRegistro('${id||''}')">${tr('Salvar')}</button>`;
+ modal=modalShell(id?tr('Editar registro'):tr('Novo registro'),body);
  render();
 }
 function syncRegistroTrabalho(select,isNew){
@@ -1059,25 +1401,25 @@ function salvarRegistro(id){
  if(fimH<inicioH)fimData=new Date(new Date(data+'T12:00').getTime()+86400000).toISOString().slice(0,10);
  const payload={
   trabalhoId:trabSel==='__avulso'?null:trabSel,
-  nomeAvulso:trabSel==='__avulso'?($('#rf-avulso').value.trim()||'Trabalho avulso'):null,
+  nomeAvulso:trabSel==='__avulso'?($('#rf-avulso').value.trim()||tr('Trabalho avulso')):null,
   valorHoraAvulso:trabSel==='__avulso'?(parseFloat($('#rf-valorhora-avulso').value)||0):null,
   data,inicio:`${data}T${inicioH}`,fim:`${fimData}T${fimH}`,
   pausa:parseInt($('#rf-pausa').value)||0,valorExtra:parseFloat($('#rf-extra').value)||0,notas:$('#rf-notas').value,
  };
  if(id){Object.assign(state.registrosDeHoras.find(r=>r.id===id),payload)}else{state.registrosDeHoras.push({id:uid(),...payload})}
- modal=null;render();toast('Registro salvo.');
+ modal=null;render();toast(tr('Registro salvo.'));
 }
 function modalSimulador(){
  const s=state.simulador||{inicio:diasAtras(29),fim:isoHoje(),trabalhoId:'all',desconto:0};
  const body=`
  <div class="field-row">
-  <div class="field-group"><label class="flabel">Data inicial</label><input class="field" id="sf-inicio" type="date" value="${s.inicio}"></div>
-  <div class="field-group"><label class="flabel">Data final</label><input class="field" id="sf-fim" type="date" value="${s.fim}"></div>
+  <div class="field-group"><label class="flabel">${tr('Data inicial')}</label><input class="field" id="sf-inicio" type="date" value="${s.inicio}"></div>
+  <div class="field-group"><label class="flabel">${tr('Data final')}</label><input class="field" id="sf-fim" type="date" value="${s.fim}"></div>
  </div>
- <div class="field-group"><label class="flabel">Trabalho</label><select class="field" id="sf-trabalho"><option value="all" ${s.trabalhoId==='all'?'selected':''}>Todos os trabalhos</option>${state.trabalhos.map(w=>`<option value="${w.id}" ${s.trabalhoId===w.id?'selected':''}>${esc(w.nome)}</option>`).join('')}</select></div>
- <div class="field-group"><label class="flabel">Desconto (%)</label><input class="field" id="sf-desconto" type="number" min="0" max="100" value="${s.desconto||0}"></div>
- <button class="modal-save" onclick="salvarSimulador()">Calcular</button>`;
- modal=modalShell('Simulação de salário',body);
+ <div class="field-group"><label class="flabel">${tr('Trabalho')}</label><select class="field" id="sf-trabalho"><option value="all" ${s.trabalhoId==='all'?'selected':''}>${tr('Todos os trabalhos')}</option>${state.trabalhos.map(w=>`<option value="${w.id}" ${s.trabalhoId===w.id?'selected':''}>${esc(w.nome)}</option>`).join('')}</select></div>
+ <div class="field-group"><label class="flabel">${tr('Desconto (%)')}</label><input class="field" id="sf-desconto" type="number" min="0" max="100" value="${s.desconto||0}"></div>
+ <button class="modal-save" onclick="salvarSimulador()">${tr('Calcular')}</button>`;
+ modal=modalShell(tr('Simulação de salário'),body);
  render();
 }
 function salvarSimulador(){
@@ -1091,58 +1433,58 @@ function carteira(){
  const principal=state.prefs.currency;
  const patTotal=patrimonioLiquido()+convert(patBRL,'BRL',principal); // "junta as contas": contas + carteira num único patrimônio total
  const alocacao=alocacaoCarteira();
- const periodos=[['6m','6 meses'],['1a','1 ano'],['5a','5 anos'],['10a','10 anos']];
+ const periodos=[['6m',tr('6 meses')],['1a',tr('1 ano')],['5a',tr('5 anos')],['10a',tr('10 anos')]];
  return `${topbar('Carteira','Investimentos')}
- <div class="section-head" style="margin-top:-4px"><span></span><div style="display:flex;gap:8px"><button class="icon-btn" onclick="modalProventos()" aria-label="Proventos">${ic('gift')}</button><button class="icon-btn" onclick="refreshMarketData()" aria-label="Atualizar cotações">${ic('refresh')}</button></div></div>
+ <div class="section-head" style="margin-top:-4px"><span></span><div style="display:flex;gap:8px"><button class="icon-btn" onclick="modalProventos()" aria-label="${tr('Proventos')}">${ic('gift')}</button><button class="icon-btn" onclick="refreshMarketData()" aria-label="${tr('Atualizar cotações')}">${ic('refresh')}</button></div></div>
  <div class="glass specular card" style="margin-bottom:14px">
-  <div class="widget-head"><b>Patrimônio total</b>${pillFor(ganhoBRL>=0?'positivo':'negativo',(ganhoBRL>=0?'+':'')+moneyBRL(ganhoBRL))}</div>
+  <div class="widget-head"><b>${tr('Patrimônio total')}</b>${pillFor(ganhoBRL>=0?'positivo':'negativo',(ganhoBRL>=0?'+':'')+moneyBRL(ganhoBRL))}</div>
   <div class="t-display hero-num">${money(patTotal)}</div>
-  <div class="widget-sub">Contas + carteira · investido ${moneyBRL(invBRL)}${principal!=='BRL'?` (${money(invBRL,'BRL')})`:''}</div>
+  <div class="widget-sub">${tr('Contas + carteira · investido')} ${moneyBRL(invBRL)}${principal!=='BRL'?` (${money(invBRL,'BRL')})`:''}</div>
   <div class="segmented" style="margin:12px 0 0">${periodos.map(([id,l])=>`<button class="${(state.periodoCarteira||'1a')===id?'active':''}" onclick="state.periodoCarteira='${id}';render()">${l}</button>`).join('')}</div>
   ${lineChart(evolucaoPatrimonioPontos(state.periodoCarteira||'1a'))}
  </div>
- <div class="glass card" style="margin-bottom:18px"><div class="t-headline" style="margin-bottom:4px">Ativos na carteira</div>${alocacao.length?donutWidget(alocacao):emptyState('carteira','Registre sua primeira compra.')}</div>
- <div class="section-head"><div class="t-headline">Seus ativos</div><span class="t-caption">${state.ativosCarteira.length}</span></div>
- <div class="list">${state.ativosCarteira.length?state.ativosCarteira.map(a=>ativoRow(a)).join(''):emptyState('carteira','Toque em + para registrar uma compra.')}</div>
+ <div class="glass card" style="margin-bottom:18px"><div class="t-headline" style="margin-bottom:4px">${tr('Ativos na carteira')}</div>${alocacao.length?donutWidget(alocacao):emptyState('carteira',tr('Registre sua primeira compra.'))}</div>
+ <div class="section-head"><div class="t-headline">${tr('Seus ativos')}</div><span class="t-caption">${state.ativosCarteira.length}</span></div>
+ <div class="list">${state.ativosCarteira.length?state.ativosCarteira.map(a=>ativoRow(a)).join(''):emptyState('carteira',tr('Toque em + para registrar uma compra.'))}</div>
  `;
 }
 function ativoRow(a){
  const qtd=ativoQtd(a.id),precoBRL=ativoPrecoAtual(a),valorBRL=ativoValorMercado(a);
  const mc=state.marketCache[a.id];
- const badge=mc?`<span class="fx-note">${ic('refresh')} atualizado ${new Date(mc.atualizadoEm).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})}</span>`:(COTAVEIS.has(a.tipo)?`<span class="fx-note">preço manual/custo médio</span>`:'');
+ const badge=mc?`<span class="fx-note">${ic('refresh')} ${tr('atualizado')} ${new Date(mc.atualizadoEm).toLocaleTimeString(idioma(),{hour:'2-digit',minute:'2-digit'})}</span>`:(COTAVEIS.has(a.tipo)?`<span class="fx-note">${tr('preço manual/custo médio')}</span>`:'');
  const cor=ATIVO_CORES[a.tipo]||'#22B8CF';
  return `<div class="swipe-row" data-id="${a.id}"><div class="swipe-actions">
-  <button class="swipe-action" onclick="closeSwipes();modalMovimentacao('venda','${a.id}')">${ic('arrows')}<span>Vender</span></button>
-  <button class="swipe-action delete" onclick="excluirAtivo('${a.id}')">${ic('trash')}<span>Excluir</span></button>
+  <button class="swipe-action" onclick="closeSwipes();modalMovimentacao('venda','${a.id}')">${ic('arrows')}<span>${tr('Vender')}</span></button>
+  <button class="swipe-action delete" onclick="excluirAtivo('${a.id}')">${ic('trash')}<span>${tr('Excluir')}</span></button>
  </div><div class="swipe-content"><div class="row" onclick="modalAtivoDetalhe('${a.id}')">
-  <div class="row-icon" style="background:${cor};font:800 11px var(--font)">${TIPOS_ATIVO[a.tipo].slice(0,3).toUpperCase()}</div>
-  <div class="row-main"><b>${esc(a.nome)}${a.codigo&&a.codigo!==a.nome?' · '+esc(a.codigo):''}</b><span>${qtd.toLocaleString('pt-BR',{maximumFractionDigits:6})} un. · ${money(precoBRL,'BRL')} ${badge}</span></div>
-  <div class="row-value">${dualBRL(valorBRL)}<span>${TIPOS_ATIVO[a.tipo]}</span></div>
+  <div class="row-icon" style="background:${cor};font:800 11px var(--font)">${tr(TIPOS_ATIVO[a.tipo]).slice(0,3).toUpperCase()}</div>
+  <div class="row-main"><b>${esc(a.nome)}${a.codigo&&a.codigo!==a.nome?' · '+esc(a.codigo):''}</b><span>${qtd.toLocaleString(idioma(),{maximumFractionDigits:6})} ${tr('un.')} · ${money(precoBRL,'BRL')} ${badge}</span></div>
+  <div class="row-value">${dualBRL(valorBRL)}<span>${tr(TIPOS_ATIVO[a.tipo])}</span></div>
  </div></div></div>`;
 }
-function excluirAtivo(id){closeSwipes();state.ativosCarteira=state.ativosCarteira.filter(a=>a.id!==id);state.movimentacoesAtivo=state.movimentacoesAtivo.filter(m=>m.ativoId!==id);render();toast('Ativo removido.')}
+function excluirAtivo(id){closeSwipes();state.ativosCarteira=state.ativosCarteira.filter(a=>a.id!==id);state.movimentacoesAtivo=state.movimentacoesAtivo.filter(m=>m.ativoId!==id);render();toast(tr('Ativo removido.'))}
 function modalAtivoOrigem(){modalMovimentacao('compra',null)}
 function modalMovimentacao(tipo,ativoId){
  const ativos=state.ativosCarteira;
  const body=`
  <div class="type-toggle">
-  <button data-k="compra" class="${tipo==='compra'?'active':''}" onclick="modalMovimentacao('compra','${ativoId||''}')">Compra</button>
-  <button data-k="venda" class="${tipo==='venda'?'active':''}" onclick="modalMovimentacao('venda','${ativoId||''}')">Venda</button>
+  <button data-k="compra" class="${tipo==='compra'?'active':''}" onclick="modalMovimentacao('compra','${ativoId||''}')">${tr('Compra')}</button>
+  <button data-k="venda" class="${tipo==='venda'?'active':''}" onclick="modalMovimentacao('venda','${ativoId||''}')">${tr('Venda')}</button>
  </div>
- <div class="field-group"><label class="flabel">Ativo</label><select class="field" id="mf-ativo" onchange="document.getElementById('mf-novo-wrap').style.display=this.value==='__novo'?'block':'none'">${ativos.map(a=>`<option value="${a.id}" ${ativoId===a.id?'selected':''}>${esc(a.nome)}${a.codigo&&a.codigo!==a.nome?' ('+esc(a.codigo)+')':''}</option>`).join('')}<option value="__novo" ${!ativoId?'selected':''}>+ Novo ativo…</option></select></div>
+ <div class="field-group"><label class="flabel">${tr('Ativo')}</label><select class="field" id="mf-ativo" onchange="document.getElementById('mf-novo-wrap').style.display=this.value==='__novo'?'block':'none'">${ativos.map(a=>`<option value="${a.id}" ${ativoId===a.id?'selected':''}>${esc(a.nome)}${a.codigo&&a.codigo!==a.nome?' ('+esc(a.codigo)+')':''}</option>`).join('')}<option value="__novo" ${!ativoId?'selected':''}>${tr('+ Novo ativo…')}</option></select></div>
  <div id="mf-novo-wrap" style="display:${!ativoId?'block':'none'}">
-  <p class="t-caption" style="margin:0 0 12px">Cadastrando um ativo novo — preencha pelo menos o código/ticker (usado também para buscar a cotação automática).</p>
-  <div class="field-group"><label class="flabel">Tipo de ativo</label><select class="field" id="mf-tipo">${Object.entries(TIPOS_ATIVO).map(([k,v])=>`<option value="${k}">${v}</option>`).join('')}</select></div>
-  <div class="field-group"><label class="flabel">Código/Ticker</label><input class="field" id="mf-codigo" placeholder="Ex.: PETR4, MXRF11, BTC"></div>
-  <div class="field-group"><label class="flabel">Nome (opcional)</label><input class="field" id="mf-nome" placeholder="Ex.: Petrobras PN — se deixar em branco, usamos o código"></div>
+  <p class="t-caption" style="margin:0 0 12px">${tr('Cadastrando um ativo novo — preencha pelo menos o código/ticker (usado também para buscar a cotação automática).')}</p>
+  <div class="field-group"><label class="flabel">${tr('Tipo de ativo')}</label><select class="field" id="mf-tipo">${Object.entries(TIPOS_ATIVO).map(([k,v])=>`<option value="${k}">${tr(v)}</option>`).join('')}</select></div>
+  <div class="field-group"><label class="flabel">${tr('Código/Ticker')}</label><input class="field" id="mf-codigo" placeholder="${tr('Ex.: PETR4, MXRF11, BTC')}"></div>
+  <div class="field-group"><label class="flabel">${tr('Nome (opcional)')}</label><input class="field" id="mf-nome" placeholder="${tr('Ex.: Petrobras PN — se deixar em branco, usamos o código')}"></div>
  </div>
- <div class="field-group"><label class="flabel">Data</label><input class="field" id="mf-data" type="date" value="${isoHoje()}"></div>
- <div class="field-group"><label class="flabel">Quantidade</label><input class="field" id="mf-qtd" type="number" step="any" placeholder="0" value="" oninput="calcMovTotal()"></div>
+ <div class="field-group"><label class="flabel">${tr('Data')}</label><input class="field" id="mf-data" type="date" value="${isoHoje()}"></div>
+ <div class="field-group"><label class="flabel">${tr('Quantidade')}</label><input class="field" id="mf-qtd" type="number" step="any" placeholder="0" value="" oninput="calcMovTotal()"></div>
  ${moneyCompact('mf-preco','','Preço unitário','oninput="calcMovTotal()"')}
  ${moneyCompact('mf-custos','','Outros custos','oninput="calcMovTotal()"')}
- <div class="calc-row"><span class="t-caption">Valor total</span><b id="mf-total">${money(0)}</b></div>
- <button class="modal-save" onclick="salvarMovimentacao('${tipo}')">Confirmar ${tipo}</button>`;
- modal=modalShell(`${tipo==='compra'?'Compra':'Venda'} de ativo`,body);
+ <div class="calc-row"><span class="t-caption">${tr('Valor total')}</span><b id="mf-total">${money(0)}</b></div>
+ <button class="modal-save" onclick="salvarMovimentacao('${tipo}')">${tr('Confirmar')} ${tr(tipo)}</button>`;
+ modal=modalShell(tipo==='compra'?tr('Compra de ativo'):tr('Venda de ativo'),body);
  render();calcMovTotal();
 }
 function calcMovTotal(){
@@ -1153,14 +1495,14 @@ function salvarMovimentacao(tipo){
  let ativoId=$('#mf-ativo').value;
  if(ativoId==='__novo'){
   const codigo=$('#mf-codigo').value.trim()||null;
-  const nome=$('#mf-nome').value.trim()||codigo||'Ativo sem nome';
+  const nome=$('#mf-nome').value.trim()||codigo||tr('Ativo sem nome');
   const novo={id:uid(),tipo:$('#mf-tipo').value,codigo,nome};
   state.ativosCarteira.push(novo);ativoId=novo.id;
  }
  const mov={id:uid(),ativoId,tipo,data:$('#mf-data').value,quantidade:parseFloat($('#mf-qtd').value)||0,preco:parseFloat($('#mf-preco').value)||0,outrosCustos:parseFloat($('#mf-custos').value)||0};
  mov.valorTotal=mov.quantidade*mov.preco+mov.outrosCustos;
  state.movimentacoesAtivo.push(mov);
- modal=null;render();toast(tipo==='compra'?'Compra registrada.':'Venda registrada.');
+ modal=null;render();toast(tipo==='compra'?tr('Compra registrada.'):tr('Venda registrada.'));
  refreshMarketData(true);
 }
 
@@ -1186,34 +1528,34 @@ function modalAtivoDetalhe(id){
  const cor=ATIVO_CORES[a.tipo]||'#22B8CF';
  const variacaoPct=det&&det.regularMarketChangePercent;
  const stats=[];
- if(det&&(det.regularMarketDayHigh!=null||det.regularMarketDayLow!=null))stats.push(['Máx./mín. do dia',`${money(det.regularMarketDayHigh||0,'BRL')} / ${money(det.regularMarketDayLow||0,'BRL')}`]);
- if(det&&(det.fiftyTwoWeekHigh!=null||det.fiftyTwoWeekLow!=null))stats.push(['Máx./mín. 52 sem.',`${money(det.fiftyTwoWeekHigh||0,'BRL')} / ${money(det.fiftyTwoWeekLow||0,'BRL')}`]);
- if(det&&det.marketCap!=null)stats.push(['Valor de mercado',money(det.marketCap,'BRL')]);
+ if(det&&(det.regularMarketDayHigh!=null||det.regularMarketDayLow!=null))stats.push([tr('Máx./mín. do dia'),`${money(det.regularMarketDayHigh||0,'BRL')} / ${money(det.regularMarketDayLow||0,'BRL')}`]);
+ if(det&&(det.fiftyTwoWeekHigh!=null||det.fiftyTwoWeekLow!=null))stats.push([tr('Máx./mín. 52 sem.'),`${money(det.fiftyTwoWeekHigh||0,'BRL')} / ${money(det.fiftyTwoWeekLow||0,'BRL')}`]);
+ if(det&&det.marketCap!=null)stats.push([tr('Valor de mercado'),money(det.marketCap,'BRL')]);
  const proventos=proventosDoAtivo(a).slice().sort((x,y)=>dataProvento(y).localeCompare(dataProvento(x)));
  const body=`
  <div class="glass card" style="text-align:center;margin-bottom:14px">
-  ${det&&det.logourl?`<img src="${esc(det.logourl)}" alt="" style="width:44px;height:44px;border-radius:12px;margin-bottom:8px" onerror="this.style.display='none'">`:`<div class="row-icon" style="background:${cor};font:800 13px var(--font);margin:0 auto 8px">${TIPOS_ATIVO[a.tipo].slice(0,3).toUpperCase()}</div>`}
+  ${det&&det.logourl?`<img src="${esc(det.logourl)}" alt="" style="width:44px;height:44px;border-radius:12px;margin-bottom:8px" onerror="this.style.display='none'">`:`<div class="row-icon" style="background:${cor};font:800 13px var(--font);margin:0 auto 8px">${tr(TIPOS_ATIVO[a.tipo]).slice(0,3).toUpperCase()}</div>`}
   <div class="t-headline">${esc((det&&(det.longName||det.shortName))||a.nome)}</div>
-  <div class="t-caption">${esc(a.codigo||a.nome)} · ${TIPOS_ATIVO[a.tipo]}</div>
+  <div class="t-caption">${esc(a.codigo||a.nome)} · ${tr(TIPOS_ATIVO[a.tipo])}</div>
   <div class="t-display hero-num" style="margin-top:10px">${money(precoBRL,'BRL')}</div>
   ${variacaoPct!=null?pillFor(variacaoPct>=0?'positivo':'negativo',`${variacaoPct>=0?'+':''}${variacaoPct.toFixed(2)}%`):''}
-  <div class="t-caption" style="margin-top:6px">${mc?`atualizado ${new Date(mc.atualizadoEm).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})}`:'preço manual/custo médio'}</div>
+  <div class="t-caption" style="margin-top:6px">${mc?`${tr('atualizado')} ${new Date(mc.atualizadoEm).toLocaleTimeString(idioma(),{hour:'2-digit',minute:'2-digit'})}`:tr('preço manual/custo médio')}</div>
  </div>
  ${stats.length?`<div class="glass card" style="margin-bottom:14px">${stats.map(([l,v])=>`<div class="calc-row"><span class="t-caption">${l}</span><b>${v}</b></div>`).join('')}</div>`:''}
  <div class="glass card" style="margin-bottom:14px">
-  <div class="t-headline" style="margin-bottom:8px">Sua posição</div>
-  <div class="calc-row"><span class="t-caption">Quantidade</span><b>${qtd.toLocaleString('pt-BR',{maximumFractionDigits:6})}</b></div>
-  <div class="calc-row"><span class="t-caption">Preço médio</span><b>${money(custoMedio,'BRL')}</b></div>
-  <div class="calc-row"><span class="t-caption">Valor investido</span><b>${money(investidoBRL,'BRL')}</b></div>
-  <div class="calc-row"><span class="t-caption">Valor atual</span><b>${money(valorBRL,'BRL')}</b></div>
-  <div class="calc-row"><span class="t-caption">Lucro/prejuízo</span>${pillFor(ganhoBRL>=0?'positivo':'negativo',`${ganhoBRL>=0?'+':''}${money(ganhoBRL,'BRL')} (${ganhoPct>=0?'+':''}${ganhoPct.toFixed(1)}%)`)}</div>
+  <div class="t-headline" style="margin-bottom:8px">${tr('Sua posição')}</div>
+  <div class="calc-row"><span class="t-caption">${tr('Quantidade')}</span><b>${qtd.toLocaleString(idioma(),{maximumFractionDigits:6})}</b></div>
+  <div class="calc-row"><span class="t-caption">${tr('Preço médio')}</span><b>${money(custoMedio,'BRL')}</b></div>
+  <div class="calc-row"><span class="t-caption">${tr('Valor investido')}</span><b>${money(investidoBRL,'BRL')}</b></div>
+  <div class="calc-row"><span class="t-caption">${tr('Valor atual')}</span><b>${money(valorBRL,'BRL')}</b></div>
+  <div class="calc-row"><span class="t-caption">${tr('Lucro/prejuízo')}</span>${pillFor(ganhoBRL>=0?'positivo':'negativo',`${ganhoBRL>=0?'+':''}${money(ganhoBRL,'BRL')} (${ganhoPct>=0?'+':''}${ganhoPct.toFixed(1)}%)`)}</div>
  </div>
  <div style="display:flex;gap:10px;margin-bottom:14px">
-  <button class="modal-save" style="margin:0;flex:1" onclick="modalMovimentacao('compra','${id}')">Comprar</button>
-  <button class="modal-save danger" style="margin:0;flex:1" onclick="modalMovimentacao('venda','${id}')">Vender</button>
+  <button class="modal-save" style="margin:0;flex:1" onclick="modalMovimentacao('compra','${id}')">${tr('Comprar')}</button>
+  <button class="modal-save danger" style="margin:0;flex:1" onclick="modalMovimentacao('venda','${id}')">${tr('Vender')}</button>
  </div>
- <div class="section-head"><div class="t-headline">Proventos recebidos</div><span class="t-caption">${proventos.length}</span></div>
- <div class="list">${proventos.length?proventos.map(d=>`<div class="row"><div class="row-icon" style="background:var(--success)">${ic('gift')}</div><div class="row-main"><b>${esc(d.label||d.relatedTo||'Provento')}</b><span>${fmtDataProvento(dataProvento(d))}</span></div><div class="row-value"><b>${money(d.rate||0,'BRL')}/cota</b><span>${money((d.rate||0)*qtd,'BRL')} total</span></div></div>`).join(''):emptyState('gift','Sem histórico de proventos disponível pela brapi para este ativo.')}</div>
+ <div class="section-head"><div class="t-headline">${tr('Proventos recebidos')}</div><span class="t-caption">${proventos.length}</span></div>
+ <div class="list">${proventos.length?proventos.map(d=>`<div class="row"><div class="row-icon" style="background:var(--success)">${ic('gift')}</div><div class="row-main"><b>${esc(d.label||d.relatedTo||tr('Provento'))}</b><span>${fmtDataProvento(dataProvento(d))}</span></div><div class="row-value"><b>${money(d.rate||0,'BRL')}/${tr('cota')}</b><span>${money((d.rate||0)*qtd,'BRL')} ${tr('total')}</span></div></div>`).join(''):emptyState('gift',tr('Sem histórico de proventos disponível pela brapi para este ativo.'))}</div>
  `;
  modal=modalShell(a.codigo||a.nome,body);render();
 }
@@ -1235,12 +1577,12 @@ function modalProventos(){
  const totalGeral=linhas.reduce((s,l)=>s+l.total,0);
  const body=`
  <div class="glass specular card" style="margin-bottom:14px;text-align:center">
-  <div class="t-caption">Proventos recebidos em ${hoje.toLocaleDateString('pt-BR',{month:'long',year:'numeric'})}</div>
+  <div class="t-caption">${tr('Proventos recebidos em')} ${hoje.toLocaleDateString(idioma(),{month:'long',year:'numeric'})}</div>
   <div class="t-display hero-num" style="margin-top:6px">${moneyBRL(totalGeral)}</div>
  </div>
- <div class="list">${linhas.length?linhas.map(l=>`<div class="row"><div class="row-icon" style="background:${ATIVO_CORES[l.a.tipo]||'#22B8CF'};font:800 11px var(--font)">${TIPOS_ATIVO[l.a.tipo].slice(0,3).toUpperCase()}</div><div class="row-main"><b>${esc(l.a.nome)}${l.a.codigo&&l.a.codigo!==l.a.nome?' · '+esc(l.a.codigo):''}</b><span>${TIPOS_ATIVO[l.a.tipo]}</span></div><div class="row-value"><b>${moneyBRL(l.total)}</b></div></div>`).join(''):emptyState('gift','Nenhum provento registrado pela brapi para os seus ativos neste mês.')}</div>
+ <div class="list">${linhas.length?linhas.map(l=>`<div class="row"><div class="row-icon" style="background:${ATIVO_CORES[l.a.tipo]||'#22B8CF'};font:800 11px var(--font)">${tr(TIPOS_ATIVO[l.a.tipo]).slice(0,3).toUpperCase()}</div><div class="row-main"><b>${esc(l.a.nome)}${l.a.codigo&&l.a.codigo!==l.a.nome?' · '+esc(l.a.codigo):''}</b><span>${tr(TIPOS_ATIVO[l.a.tipo])}</span></div><div class="row-value"><b>${moneyBRL(l.total)}</b></div></div>`).join(''):emptyState('gift',tr('Nenhum provento registrado pela brapi para os seus ativos neste mês.'))}</div>
  `;
- modal=modalShell('Proventos do mês',body);render();
+ modal=modalShell(tr('Proventos do mês'),body);render();
 }
 
 /* ============ ABA TRANSAÇÕES — 01-PRD §3.5 ============ */
@@ -1249,12 +1591,12 @@ function transacoes(){
  [...state.transacoes].sort((a,b)=>(b.data+b.hora).localeCompare(a.data+a.hora)).forEach(t=>{(grouped[t.data]=grouped[t.data]||[]).push(t)});
  const dias=Object.keys(grouped).sort().reverse();
  return `${topbar('Transações','Histórico')}
- <button class="glass card" style="width:100%;text-align:left;border:0;cursor:pointer;margin-bottom:16px;display:flex;align-items:center;gap:12px" onclick="modalCategorias()"><div class="row-icon" style="background:color-mix(in srgb, var(--accent) 20%, transparent);color:var(--accent)">${ic('sliders')}</div><div class="row-main"><b>Categorias</b><span>${state.categorias.length?`${state.categorias.length} categoria${state.categorias.length===1?'':'s'} · toque para editar`:'Nenhuma ainda · toque para criar'}</span></div><span class="chev" style="color:var(--muted)">${ic('chevron')}</span></button>
+ <button class="glass card" style="width:100%;text-align:left;border:0;cursor:pointer;margin-bottom:16px;display:flex;align-items:center;gap:12px" onclick="modalCategorias()"><div class="row-icon" style="background:color-mix(in srgb, var(--accent) 20%, transparent);color:var(--accent)">${ic('sliders')}</div><div class="row-main"><b>${tr('Categorias')}</b><span>${state.categorias.length?`${state.categorias.length===1?`1 ${tr('categoria')}`:`${state.categorias.length} ${tr('categorias')}`} · ${tr('toque para editar')}`:tr('Nenhuma ainda · toque para criar')}</span></div><span class="chev" style="color:var(--muted)">${ic('chevron')}</span></button>
  <div class="list">${dias.length?dias.map(d=>{
   const items=grouped[d];
   const subtotal=items.reduce((s,t)=>s+(t.tipo==='gasto'?-t.valor:t.tipo==='lucro'?t.valor:0),0);
   return `<div class="group-head">${fmtDate(d)}<b class="${subtotal>=0?'money-pos':'money-neg'}">${subtotal>=0?'+':''}${money(subtotal)}</b></div><div style="margin-bottom:14px">${items.map(t=>transacaoRow(t)).join('')}</div>`;
- }).join(''):emptyState('transacoes','Nenhuma transação ainda. Toque em + para adicionar.')}</div>
+ }).join(''):emptyState('transacoes',tr('Nenhuma transação ainda. Toque em + para adicionar.'))}</div>
  `;
 }
 function transacaoRow(t){
@@ -1264,40 +1606,40 @@ function transacaoRow(t){
  const isTransfer=t.tipo==='transferencia';
  const contaDestino=isTransfer?state.contas.find(a=>a.id===t.contaDestinoId):null;
  return `<div class="swipe-row" data-id="${t.id}"><div class="swipe-actions">
-  <button class="swipe-action" onclick="closeSwipes();modalTransacao('${t.id}')">${ic('sliders')}<span>Editar</span></button>
-  <button class="swipe-action delete" onclick="excluirTransacao('${t.id}')">${ic('trash')}<span>Excluir</span></button>
+  <button class="swipe-action" onclick="closeSwipes();modalTransacao('${t.id}')">${ic('sliders')}<span>${tr('Editar')}</span></button>
+  <button class="swipe-action delete" onclick="excluirTransacao('${t.id}')">${ic('trash')}<span>${tr('Excluir')}</span></button>
  </div><div class="swipe-content"><div class="row" onclick="modalTransacao('${t.id}')">
   <div class="row-icon" style="background:${isTransfer?'linear-gradient(135deg,var(--accent),var(--accent2))':c.cor}">${ic(isTransfer?'arrows':c.icone)}</div>
-  <div class="row-main"><b>${esc(t.descricao||(isTransfer?'Transferência':c.nome))}</b><span>${isTransfer?`${esc(contaOrigem?.nome||'')} → ${esc(contaDestino?.nome||'')}`:`${esc(contaOrigem?.nome||'')} · ${esc(c.nome)}${sc?' · '+esc(sc.nome):''}`} · ${t.hora}</span></div>
+  <div class="row-main"><b>${esc(t.descricao||(isTransfer?tr('Transferência'):c.nome))}</b><span>${isTransfer?`${esc(contaOrigem?.nome||'')} → ${esc(contaDestino?.nome||'')}`:`${esc(contaOrigem?.nome||'')} · ${esc(c.nome)}${sc?' · '+esc(sc.nome):''}`} · ${t.hora}</span></div>
   <div class="row-value"><b class="${t.tipo==='gasto'?'money-neg':t.tipo==='lucro'?'money-pos':''}">${t.tipo==='gasto'?'-':t.tipo==='lucro'?'+':''}${money(t.valor,contaMoeda(t.contaId))}</b></div>
  </div></div></div>`;
 }
-function excluirTransacao(id){closeSwipes();state.transacoes=state.transacoes.filter(t=>t.id!==id);render();toast('Transação excluída.')}
+function excluirTransacao(id){closeSwipes();state.transacoes=state.transacoes.filter(t=>t.id!==id);render();toast(tr('Transação excluída.'))}
 
 /* ============ CATEGORIAS EDITÁVEIS — 05-Design-System §2.3 (paleta e ícones fechados) ============ */
 function modalCategorias(){
  const body=`<div class="list">${state.categorias.length?state.categorias.map(c=>`<div class="swipe-row" data-id="${c.id}"><div class="swipe-actions">
-  <button class="swipe-action" onclick="closeSwipes();modalCategoria('${c.id}')">${ic('sliders')}<span>Editar</span></button>
-  <button class="swipe-action delete" onclick="excluirCategoria('${c.id}')">${ic('trash')}<span>Excluir</span></button>
- </div><div class="swipe-content"><div class="cat-manage-row" onclick="modalCategoria('${c.id}')"><span class="ci" style="background:${c.cor}">${ic(c.icone)}</span><div class="row-main"><b>${esc(c.nome)}</b><span>${c.subcategorias.length} subcategoria${c.subcategorias.length===1?'':'s'}</span></div><span class="chev" style="color:var(--muted)">${ic('chevron')}</span></div></div></div>`).join(''):emptyState('sliders','Nenhuma categoria ainda. Toque em "Nova categoria" para criar a primeira.')}</div>
- <button class="modal-save" onclick="modalCategoria()">Nova categoria</button>`;
- modal=modalShell('Categorias',body);
+  <button class="swipe-action" onclick="closeSwipes();modalCategoria('${c.id}')">${ic('sliders')}<span>${tr('Editar')}</span></button>
+  <button class="swipe-action delete" onclick="excluirCategoria('${c.id}')">${ic('trash')}<span>${tr('Excluir')}</span></button>
+ </div><div class="swipe-content"><div class="cat-manage-row" onclick="modalCategoria('${c.id}')"><span class="ci" style="background:${c.cor}">${ic(c.icone)}</span><div class="row-main"><b>${esc(c.nome)}</b><span>${c.subcategorias.length===1?`1 ${tr('subcategoria')}`:`${c.subcategorias.length} ${tr('subcategorias')}`}</span></div><span class="chev" style="color:var(--muted)">${ic('chevron')}</span></div></div></div>`).join(''):emptyState('sliders',tr('Nenhuma categoria ainda. Toque em "Nova categoria" para criar a primeira.'))}</div>
+ <button class="modal-save" onclick="modalCategoria()">${tr('Nova categoria')}</button>`;
+ modal=modalShell(tr('Categorias'),body);
  render();
 }
 function modalCategoria(id){
  const c=id?cat(id):{id:null,nome:'',cor:PALETA_CATEGORIA_CORES[0],icone:PALETA_CATEGORIA_ICONES[0],subcategorias:[]};
  const isOutros=id==='outros';
  const body=`
- <div class="field-group"><label class="flabel">Nome</label><input class="field" id="ctf-nome" value="${esc(c.nome)}" placeholder="Ex.: Farmácia" ${isOutros?'disabled':''}></div>
- <div class="field-group"><label class="flabel">Cor</label><div class="color-grid" id="ctf-cores">${PALETA_CATEGORIA_CORES.map(cor=>`<button type="button" class="color-pick ${c.cor===cor?'active':''}" data-cor="${cor}" style="background:${cor}" onclick="pickCor(this)"></button>`).join('')}</div></div>
- <div class="field-group"><label class="flabel">Ícone</label><div class="icon-grid" id="ctf-icones">${PALETA_CATEGORIA_ICONES.map(icn=>`<button type="button" class="icon-pick ${c.icone===icn?'active':''}" data-icone="${icn}" onclick="pickIcone(this)">${ic(icn)}</button>`).join('')}</div></div>
- <div class="field-group"><label class="flabel">Subcategorias</label>
-  <div id="ctf-subcats">${(c.subcategorias||[]).map(s=>`<span class="subcat-chip" data-sub-id="${s.id}"><span>${esc(s.nome)}</span><button type="button" onclick="this.parentElement.remove()">${ic('close')}</button></span>`).join('')||`<span class="t-caption" id="ctf-subcats-empty">Nenhuma ainda.</span>`}</div>
-  <div style="display:flex;gap:8px;margin-top:8px"><input class="field" id="ctf-novasub" placeholder="Nova subcategoria"><button type="button" class="icon-btn" onclick="addSubcategoriaTemp()">${ic('plus')}</button></div>
+ <div class="field-group"><label class="flabel">${tr('Nome')}</label><input class="field" id="ctf-nome" value="${esc(c.nome)}" placeholder="${tr('Ex.: Farmácia')}" ${isOutros?'disabled':''}></div>
+ <div class="field-group"><label class="flabel">${tr('Cor')}</label><div class="color-grid" id="ctf-cores">${PALETA_CATEGORIA_CORES.map(cor=>`<button type="button" class="color-pick ${c.cor===cor?'active':''}" data-cor="${cor}" style="background:${cor}" onclick="pickCor(this)"></button>`).join('')}</div></div>
+ <div class="field-group"><label class="flabel">${tr('Ícone')}</label><div class="icon-grid" id="ctf-icones">${PALETA_CATEGORIA_ICONES.map(icn=>`<button type="button" class="icon-pick ${c.icone===icn?'active':''}" data-icone="${icn}" onclick="pickIcone(this)">${ic(icn)}</button>`).join('')}</div></div>
+ <div class="field-group"><label class="flabel">${tr('Subcategorias')}</label>
+  <div id="ctf-subcats">${(c.subcategorias||[]).map(s=>`<span class="subcat-chip" data-sub-id="${s.id}"><span>${esc(s.nome)}</span><button type="button" onclick="this.parentElement.remove()">${ic('close')}</button></span>`).join('')||`<span class="t-caption" id="ctf-subcats-empty">${tr('Nenhuma ainda.')}</span>`}</div>
+  <div style="display:flex;gap:8px;margin-top:8px"><input class="field" id="ctf-novasub" placeholder="${tr('Nova subcategoria')}"><button type="button" class="icon-btn" onclick="addSubcategoriaTemp()">${ic('plus')}</button></div>
  </div>
- <button class="modal-save" onclick="salvarCategoria('${id||''}')">Salvar</button>
- ${id&&!isOutros?`<button class="modal-save danger" onclick="excluirCategoria('${id}')">Excluir categoria</button>`:''}`;
- modal=modalShell(id?'Editar categoria':'Nova categoria',body,{onClose:'modalCategorias()'});
+ <button class="modal-save" onclick="salvarCategoria('${id||''}')">${tr('Salvar')}</button>
+ ${id&&!isOutros?`<button class="modal-save danger" onclick="excluirCategoria('${id}')">${tr('Excluir categoria')}</button>`:''}`;
+ modal=modalShell(id?tr('Editar categoria'):tr('Nova categoria'),body,{onClose:'modalCategorias()'});
  render();
 }
 function pickCor(btn){document.querySelectorAll('#ctf-cores .color-pick').forEach(b=>b.classList.remove('active'));btn.classList.add('active')}
@@ -1317,7 +1659,7 @@ function addSubcategoriaTemp(){
 }
 function salvarCategoria(id){
  const nome=$('#ctf-nome').value.trim();
- if(!id&&!nome){toast('Digite um nome para a categoria.');return}
+ if(!id&&!nome){toast(tr('Digite um nome para a categoria.'));return}
  const cor=document.querySelector('#ctf-cores .color-pick.active')?.dataset.cor||PALETA_CATEGORIA_CORES[0];
  const icone=document.querySelector('#ctf-icones .icon-pick.active')?.dataset.icone||PALETA_CATEGORIA_ICONES[0];
  const subcategorias=[...document.querySelectorAll('#ctf-subcats .subcat-chip')].map(el=>({id:el.dataset.subId,nome:el.querySelector('span').textContent}));
@@ -1325,43 +1667,43 @@ function salvarCategoria(id){
   const c=cat(id);
   Object.assign(c,{nome:id==='outros'?c.nome:(nome||c.nome),cor,icone,subcategorias});
  }else{
-  state.categorias.push({id:uid(),nome:nome||'Categoria',cor,icone,subcategorias});
+  state.categorias.push({id:uid(),nome:nome||tr('Categoria'),cor,icone,subcategorias});
  }
- modalCategorias();toast('Categoria salva.');
+ modalCategorias();toast(tr('Categoria salva.'));
 }
 function excluirCategoria(id){
- if(id==='outros'){toast('A categoria "Outros" não pode ser excluída.');return}
+ if(id==='outros'){toast(tr('A categoria "Outros" não pode ser excluída.'));return}
  state.categorias=state.categorias.filter(c=>c.id!==id);
  state.transacoes.forEach(t=>{if(t.categoriaId===id){t.categoriaId='outros';t.subcategoriaId=null}});
- modalCategorias();toast('Categoria excluída.');
+ modalCategorias();toast(tr('Categoria excluída.'));
 }
 function modalTransacao(id){
  const t=id?state.transacoes.find(x=>x.id===id):{tipo:'gasto',valor:'',descricao:'',data:isoHoje(),hora:new Date().toTimeString().slice(0,5),contaId:state.contas[0]?.id,contaDestinoId:null,categoriaId:'outros',subcategoriaId:null};
  const body=`
  <div class="type-toggle">
-  ${['gasto','lucro','transferencia'].map(k=>`<button data-k="${k}" class="${t.tipo===k?'active':''}" onclick="setTransacaoTipo('${k}')">${k==='gasto'?'Gasto':k==='lucro'?'Lucro':'Transferência'}</button>`).join('')}
+  ${['gasto','lucro','transferencia'].map(k=>`<button data-k="${k}" class="${t.tipo===k?'active':''}" onclick="setTransacaoTipo('${k}')">${k==='gasto'?tr('Gasto'):k==='lucro'?tr('Lucro'):tr('Transferência')}</button>`).join('')}
  </div>
- <div class="field-group"><label class="flabel">Valor</label>${moneyHero('tf-valor',t.valor)}</div>
- <div class="field-group"><label class="flabel">Descrição</label><input class="field" id="tf-desc" value="${esc(t.descricao||'')}" placeholder="Ex.: Supermercado"></div>
+ <div class="field-group"><label class="flabel">${tr('Valor')}</label>${moneyHero('tf-valor',t.valor)}</div>
+ <div class="field-group"><label class="flabel">${tr('Descrição')}</label><input class="field" id="tf-desc" value="${esc(t.descricao||'')}" placeholder="${tr('Ex.: Supermercado')}"></div>
  <div class="field-row">
-  <div class="field-group"><label class="flabel">Data</label><input class="field" id="tf-data" type="date" value="${t.data}"></div>
-  <div class="field-group"><label class="flabel">Hora</label><input class="field" id="tf-hora" type="time" value="${t.hora}"></div>
+  <div class="field-group"><label class="flabel">${tr('Data')}</label><input class="field" id="tf-data" type="date" value="${t.data}"></div>
+  <div class="field-group"><label class="flabel">${tr('Hora')}</label><input class="field" id="tf-hora" type="time" value="${t.hora}"></div>
  </div>
- <div class="field-group"><label class="flabel">Conta${t.tipo==='transferencia'?' de origem':''}</label><select class="field" id="tf-conta">${state.contas.map(a=>`<option value="${a.id}" ${t.contaId===a.id?'selected':''}>${esc(a.nome)}</option>`).join('')}</select></div>
- <div class="field-group" id="tf-destino-wrap" style="display:${t.tipo==='transferencia'?'block':'none'}"><label class="flabel">Conta de destino</label><select class="field" id="tf-destino">${state.contas.map(a=>`<option value="${a.id}" ${t.contaDestinoId===a.id?'selected':''}>${esc(a.nome)}</option>`).join('')}</select></div>
- <div class="field-group" id="tf-cat-wrap" style="display:${t.tipo==='transferencia'?'none':'block'}"><label class="flabel">Categoria</label>
-  ${state.categorias.length?`<div class="cat-grid">${state.categorias.map(c=>`<button type="button" class="cat-pick ${t.categoriaId===c.id?'active':''}" data-cat="${c.id}" onclick="pickCategoria('${c.id}')"><span class="ci" style="background:${c.cor}">${ic(c.icone)}</span><span>${esc(c.nome)}</span></button>`).join('')}</div>`:`<div class="empty-cta" style="padding:16px 4px"><div class="t-caption" style="margin-bottom:10px">Você ainda não criou nenhuma categoria.</div><button type="button" class="modal-save" style="width:auto;padding:9px 16px;margin:0" onclick="modal=null;render();modalCategoria()">Criar categoria</button></div>`}
+ <div class="field-group"><label class="flabel">${tr('Conta')}${t.tipo==='transferencia'?' '+tr('de origem'):''}</label><select class="field" id="tf-conta">${state.contas.map(a=>`<option value="${a.id}" ${t.contaId===a.id?'selected':''}>${esc(a.nome)}</option>`).join('')}</select></div>
+ <div class="field-group" id="tf-destino-wrap" style="display:${t.tipo==='transferencia'?'block':'none'}"><label class="flabel">${tr('Conta de destino')}</label><select class="field" id="tf-destino">${state.contas.map(a=>`<option value="${a.id}" ${t.contaDestinoId===a.id?'selected':''}>${esc(a.nome)}</option>`).join('')}</select></div>
+ <div class="field-group" id="tf-cat-wrap" style="display:${t.tipo==='transferencia'?'none':'block'}"><label class="flabel">${tr('Categoria')}</label>
+  ${state.categorias.length?`<div class="cat-grid">${state.categorias.map(c=>`<button type="button" class="cat-pick ${t.categoriaId===c.id?'active':''}" data-cat="${c.id}" onclick="pickCategoria('${c.id}')"><span class="ci" style="background:${c.cor}">${ic(c.icone)}</span><span>${esc(c.nome)}</span></button>`).join('')}</div>`:`<div class="empty-cta" style="padding:16px 4px"><div class="t-caption" style="margin-bottom:10px">${tr('Você ainda não criou nenhuma categoria.')}</div><button type="button" class="modal-save" style="width:auto;padding:9px 16px;margin:0" onclick="modal=null;render();modalCategoria()">${tr('Criar categoria')}</button></div>`}
   <div id="tf-subcat-wrap" style="margin-top:10px">${subcatChips(t.categoriaId,t.subcategoriaId)}</div>
  </div>
- <button class="modal-save" onclick="salvarTransacao('${id||''}')">Salvar</button>`;
- modal=modalShell(id?'Editar transação':'Nova transação',body);
+ <button class="modal-save" onclick="salvarTransacao('${id||''}')">${tr('Salvar')}</button>`;
+ modal=modalShell(id?tr('Editar transação'):tr('Nova transação'),body);
  render();
 }
 function subcatChips(categoriaId,selectedId){
  const c=cat(categoriaId);
  if(!c||!c.subcategorias.length)return '';
- return `<div class="flabel" style="margin-bottom:8px">Subcategoria</div><div class="selectbar" style="overflow:visible;flex-wrap:wrap">
-  <button type="button" class="chip ${!selectedId?'active':''}" data-subcat="" onclick="pickSubcategoria('')">Nenhuma</button>
+ return `<div class="flabel" style="margin-bottom:8px">${tr('Subcategoria')}</div><div class="selectbar" style="overflow:visible;flex-wrap:wrap">
+  <button type="button" class="chip ${!selectedId?'active':''}" data-subcat="" onclick="pickSubcategoria('')">${tr('Nenhuma')}</button>
   ${c.subcategorias.map(s=>`<button type="button" class="chip ${selectedId===s.id?'active':''}" data-subcat="${s.id}" onclick="pickSubcategoria('${s.id}')">${esc(s.nome)}</button>`).join('')}
  </div>`;
 }
@@ -1388,29 +1730,34 @@ function salvarTransacao(id){
   subcategoriaId:tipo==='transferencia'?null:(subcategoriaId||null),
  };
  if(id){Object.assign(state.transacoes.find(t=>t.id===id),data)}else{state.transacoes.push({id:uid(),...data})}
- modal=null;render();toast('Transação salva.');
+ modal=null;render();toast(tr('Transação salva.'));
 }
 
 /* ============ AJUSTES — 01-PRD §3.6 ============ */
 function ajustes(){
+ const idiomaSub=`${tr('Idioma, tema, moeda')} (${state.prefs.currency}) ${tr('e formato de data')}`;
+ const nTrab=state.trabalhos.length;
+ const trabSub=state.prefs.language==='en'
+  ?`${nTrab} job${nTrab===1?'':'s'} registered`
+  :`${nTrab} trabalho${nTrab===1?'':'s'} cadastrado${nTrab===1?'':'s'}`;
  const rows=[
-  ['user','Perfil','Nome, aniversário e e-mail','modalPerfil()'],
-  ['palette','Personalizar',`Idioma, tema, moeda (${state.prefs.currency}) e formato de data`,'modalPersonalizar()'],
-  ['contas','Cadastro de trabalhos',`${state.trabalhos.length} trabalho${state.trabalhos.length===1?'':'s'} cadastrado${state.trabalhos.length===1?'':'s'}`,'modalTrabalhos()'],
-  ['cloud','Relatórios / backup','Exportar dados em CSV ou PDF','modalBackup()'],
-  ['lock','Bloqueio de senha','Proteja o acesso ao app','toast(\'Configure uma senha de bloqueio nesta demonstração.\')'],
-  ['share','Compartilhar este app','Envie o app para amigos','compartilharApp()'],
-  ['star','Avaliar app','Conte como está sendo sua experiência','toast(\'A página de avaliação será aberta na loja.\')'],
-  ['info','Sobre','Recursos, créditos e versão','modalSobre()'],
-  ['mail','Contate-nos','Fale com a nossa equipe',`location.href='mailto:suporte@horas.app?subject=Suporte%20Horas'`],
+  ['user',tr('Perfil'),tr('Nome, aniversário e e-mail'),'modalPerfil()'],
+  ['palette',tr('Personalizar'),idiomaSub,'modalPersonalizar()'],
+  ['contas',tr('Cadastro de trabalhos'),trabSub,'modalTrabalhos()'],
+  ['cloud',tr('Relatórios / backup'),tr('Exportar dados em CSV ou PDF'),'modalBackup()'],
+  ['lock',tr('Bloqueio de senha'),tr('Proteja o acesso ao app'),'toast(tr(\'Configure uma senha de bloqueio nesta demonstração.\'))'],
+  ['share',tr('Compartilhar este app'),tr('Envie o app para amigos'),'compartilharApp()'],
+  ['star',tr('Avaliar app'),tr('Conte como está sendo sua experiência'),'toast(tr(\'A página de avaliação será aberta na loja.\'))'],
+  ['info',tr('Sobre'),tr('Recursos, créditos e versão'),'modalSobre()'],
+  ['mail',tr('Contate-nos'),tr('Fale com a nossa equipe'),`location.href='mailto:suporte@horas.app?subject=Suporte%20Horas'`],
  ];
- return `<div class="topbar"><button class="icon-btn" onclick="backFromAjustes()">${ic('chevronL')}</button><h1 style="flex:1;text-align:center;font-size:18px">Ajustes</h1><span style="width:38px"></span></div>
+ return `<div class="topbar"><button class="icon-btn" onclick="backFromAjustes()">${ic('chevronL')}</button><h1 style="flex:1;text-align:center;font-size:18px">${tr('Ajustes')}</h1><span style="width:38px"></span></div>
  <div class="glass card" style="display:flex;align-items:center;gap:14px;margin-bottom:18px">
   <div class="avatar-btn" style="width:52px;height:52px;font-size:19px">${(state.profile.name||'?')[0].toUpperCase()}</div>
-  <div class="row-main"><b style="font-size:16px">${esc(state.profile.name||'Sem nome')}</b><span>${esc(state.profile.email||'')}</span></div>
+  <div class="row-main"><b style="font-size:16px">${esc(state.profile.name||tr('Sem nome'))}</b><span>${esc(state.profile.email||'')}</span></div>
  </div>
  <div class="glass" style="padding:2px 14px">${rows.map(([icon,title,sub,action])=>`<div class="setting-row" onclick="${action}"><div class="si">${ic(icon)}</div><div><b>${title}</b><span>${sub}</span></div><span class="chev">${ic('chevron')}</span></div>`).join('')}</div>
- <button class="modal-save" style="max-width:560px;margin-top:22px;background:var(--mat-thin);color:var(--danger);border:1px solid var(--border)" onclick="sair()">Sair da conta</button>
+ <button class="modal-save" style="max-width:560px;margin-top:22px;background:var(--mat-thin);color:var(--danger);border:1px solid var(--border)" onclick="sair()">${tr('Sair da conta')}</button>
  `;
 }
 async function sair(){
@@ -1433,7 +1780,7 @@ async function sincronizarDoServidor(){
  const uid=await uidAtual();
  if(!uid)return;
  const {data,error}=await sb.from('user_state').select('data').eq('user_id',uid).maybeSingle();
- if(error){console.warn('falha ao buscar dados da nuvem',error);toast('Não foi possível carregar seus dados da nuvem.');return}
+ if(error){console.warn('falha ao buscar dados da nuvem',error);toast(tr('Não foi possível carregar seus dados da nuvem.'));return}
  if(data&&data.data)Object.assign(state,data.data);
 }
 async function sincronizarParaNuvemAgora(){
@@ -1462,35 +1809,35 @@ async function restaurarSessaoSupabase(){
  }
 }
 function compartilharApp(){
- if(navigator.share){navigator.share({title:'Horas',text:'Controle suas horas, contas e investimentos.',url:location.href}).catch(()=>{})}
- else toast('Copie o link do app para compartilhar.');
+ if(navigator.share){navigator.share({title:'Horas',text:tr('Controle suas horas, contas e investimentos.'),url:location.href}).catch(()=>{})}
+ else toast(tr('Copie o link do app para compartilhar.'));
 }
 function modalPerfil(){
  const p=state.profile;
  const body=`
- <div class="field-group"><label class="flabel">Nome</label><input class="field" id="pf-nome" value="${esc(p.name||'')}"></div>
- <div class="field-group"><label class="flabel">Data de nascimento</label><input class="field" id="pf-nasc" type="date" value="${p.birthday||''}"></div>
- <div class="field-group"><label class="flabel">E-mail</label><input class="field" id="pf-email" type="email" value="${esc(p.email||'')}"></div>
- <button class="modal-save" onclick="salvarPerfil()">Salvar</button>`;
- modal=modalShell('Perfil',body);
+ <div class="field-group"><label class="flabel">${tr('Nome')}</label><input class="field" id="pf-nome" value="${esc(p.name||'')}"></div>
+ <div class="field-group"><label class="flabel">${tr('Data de nascimento')}</label><input class="field" id="pf-nasc" type="date" value="${p.birthday||''}"></div>
+ <div class="field-group"><label class="flabel">${tr('E-mail')}</label><input class="field" id="pf-email" type="email" value="${esc(p.email||'')}"></div>
+ <button class="modal-save" onclick="salvarPerfil()">${tr('Salvar')}</button>`;
+ modal=modalShell(tr('Perfil'),body);
  render();
 }
-function salvarPerfil(){state.profile={...state.profile,name:$('#pf-nome').value.trim(),birthday:$('#pf-nasc').value,email:$('#pf-email').value.trim()};modal=null;render();toast('Perfil atualizado.')}
+function salvarPerfil(){state.profile={...state.profile,name:$('#pf-nome').value.trim(),birthday:$('#pf-nasc').value,email:$('#pf-email').value.trim()};modal=null;render();toast(tr('Perfil atualizado.'))}
 function modalPersonalizar(){
  const p=state.prefs;
  const presets=[['classico','Clássico'],['aurora','Aurora'],['violeta','Violeta']];
  const body=`
- <div class="field-group"><label class="flabel">Idioma</label><select class="field" id="pz-idioma">${[['pt','Português'],['en','English (em breve)']].map(([k,l])=>`<option value="${k}" ${p.language===k?'selected':''}>${l}</option>`).join('')}</select></div>
- <div class="field-group"><label class="flabel">Tema</label>
-  <div class="segmented" id="pz-tema">${[['light','Claro'],['dark','Escuro'],['system','Sistema']].map(([k,l])=>`<button type="button" class="${p.theme===k?'active':''}" data-v="${k}" onclick="pickSeg('pz-tema',this)">${l}</button>`).join('')}</div>
+ <div class="field-group"><label class="flabel">${tr('Idioma')}</label><select class="field" id="pz-idioma">${[['pt','Português'],['en','English']].map(([k,l])=>`<option value="${k}" ${p.language===k?'selected':''}>${l}</option>`).join('')}</select></div>
+ <div class="field-group"><label class="flabel">${tr('Tema')}</label>
+  <div class="segmented" id="pz-tema">${[['light','Claro'],['dark','Escuro'],['system','Sistema']].map(([k,l])=>`<button type="button" class="${p.theme===k?'active':''}" data-v="${k}" onclick="pickSeg('pz-tema',this)">${tr(l)}</button>`).join('')}</div>
  </div>
- <div class="field-group"><label class="flabel">Moeda principal</label><select class="field" id="pz-moeda">${MOEDAS.map(m=>`<option ${p.currency===m?'selected':''}>${m}</option>`).join('')}</select></div>
- <div class="field-group"><label class="flabel">Formato de data</label><select class="field" id="pz-data">${['DD/MM/AAAA','MM/DD/AAAA','AAAA-MM-DD'].map(f=>`<option ${p.dateFormat===f?'selected':''}>${f}</option>`).join('')}</select></div>
- <div class="field-group"><label class="flabel">Preset de destaque (herdado do Horas)</label>
-  <div class="segmented" id="pz-preset">${presets.map(([k,l])=>`<button type="button" class="${p.accentPreset===k?'active':''}" data-v="${k}" onclick="pickSeg('pz-preset',this)">${l}</button>`).join('')}</div>
+ <div class="field-group"><label class="flabel">${tr('Moeda principal')}</label><select class="field" id="pz-moeda">${MOEDAS.map(m=>`<option ${p.currency===m?'selected':''}>${m}</option>`).join('')}</select></div>
+ <div class="field-group"><label class="flabel">${tr('Formato de data')}</label><select class="field" id="pz-data">${['DD/MM/AAAA','MM/DD/AAAA','AAAA-MM-DD'].map(f=>`<option ${p.dateFormat===f?'selected':''}>${f}</option>`).join('')}</select></div>
+ <div class="field-group"><label class="flabel">${tr('Preset de destaque (herdado do Horas)')}</label>
+  <div class="segmented" id="pz-preset">${presets.map(([k,l])=>`<button type="button" class="${p.accentPreset===k?'active':''}" data-v="${k}" onclick="pickSeg('pz-preset',this)">${tr(l)}</button>`).join('')}</div>
  </div>
- <button class="modal-save" onclick="salvarPersonalizar()">Salvar</button>`;
- modal=modalShell('Personalizar',body);
+ <button class="modal-save" onclick="salvarPersonalizar()">${tr('Salvar')}</button>`;
+ modal=modalShell(tr('Personalizar'),body);
  render();
 }
 function pickSeg(id,btn){document.querySelectorAll(`#${id} button`).forEach(b=>b.classList.remove('active'));btn.classList.add('active')}
@@ -1502,87 +1849,87 @@ function salvarPersonalizar(){
   dateFormat:$('#pz-data').value,
   accentPreset:document.querySelector('#pz-preset button.active').dataset.v,
  };
- modal=null;render();toast('Preferências salvas.');
+ modal=null;render();toast(tr('Preferências salvas.'));
  refreshMarketData(true);
 }
 function modalTrabalhos(){
- const body=`<div class="list">${state.trabalhos.length?state.trabalhos.map(w=>`<div class="row" onclick="modalTrabalho('${w.id}')"><div class="row-icon" style="background:linear-gradient(135deg,var(--accent),var(--accent2))">${ic('contas')}</div><div class="row-main"><b>${esc(w.nome)}</b><span>${w.inicioJornada}–${w.fimJornada} · ${money(w.valorHora)}/h</span></div><span class="chev" style="color:var(--muted)">${ic('chevron')}</span></div>`).join(''):emptyState('contas','Nenhum trabalho cadastrado.')}</div>`;
- modal=modalShell('Trabalhos',body,{headerRight:`<button class="icon-btn" onclick="modalTrabalho()">${ic('plus')}</button>`});
+ const body=`<div class="list">${state.trabalhos.length?state.trabalhos.map(w=>`<div class="row" onclick="modalTrabalho('${w.id}')"><div class="row-icon" style="background:linear-gradient(135deg,var(--accent),var(--accent2))">${ic('contas')}</div><div class="row-main"><b>${esc(w.nome)}</b><span>${w.inicioJornada}–${w.fimJornada} · ${money(w.valorHora)}/h</span></div><span class="chev" style="color:var(--muted)">${ic('chevron')}</span></div>`).join(''):emptyState('contas',tr('Nenhum trabalho cadastrado.'))}</div>`;
+ modal=modalShell(tr('Trabalhos'),body,{headerRight:`<button class="icon-btn" onclick="modalTrabalho()">${ic('plus')}</button>`});
  render();
 }
 function modalTrabalho(id){
  const w=id?state.trabalhos.find(x=>x.id===id):{nome:'',inicioJornada:'09:00',fimJornada:'18:00',pausa:0,valorHora:'',valorExtraPadrao:'',descricao:'',inicioSemana:'segunda'};
  const temRegistros=id&&state.registrosDeHoras.some(r=>r.trabalhoId===id);
  const body=`
- <div class="field-group"><label class="flabel">Nome do trabalho</label><input class="field" id="wf-nome" value="${esc(w.nome)}"></div>
+ <div class="field-group"><label class="flabel">${tr('Nome do trabalho')}</label><input class="field" id="wf-nome" value="${esc(w.nome)}"></div>
  <div class="field-row">
-  <div class="field-group"><label class="flabel">Início de jornada</label><input class="field" id="wf-inicio" type="time" value="${w.inicioJornada}"></div>
-  <div class="field-group"><label class="flabel">Fim de jornada</label><input class="field" id="wf-fim" type="time" value="${w.fimJornada}"></div>
+  <div class="field-group"><label class="flabel">${tr('Início de jornada')}</label><input class="field" id="wf-inicio" type="time" value="${w.inicioJornada}"></div>
+  <div class="field-group"><label class="flabel">${tr('Fim de jornada')}</label><input class="field" id="wf-fim" type="time" value="${w.fimJornada}"></div>
  </div>
- <div class="field-group"><label class="flabel">Pausa (min)</label><input class="field" id="wf-pausa" type="number" value="${w.pausa||0}"></div>
+ <div class="field-group"><label class="flabel">${tr('Pausa (min)')}</label><input class="field" id="wf-pausa" type="number" value="${w.pausa||0}"></div>
  ${moneyCompact('wf-valorhora',w.valorHora,'Valor por hora')}
  ${moneyCompact('wf-extra',w.valorExtraPadrao,'Valor extra padrão')}
- <div class="field-group"><label class="flabel">Descrição</label><textarea class="field" id="wf-desc" rows="2">${esc(w.descricao||'')}</textarea></div>
- <div class="field-group"><label class="flabel">Início da semana</label><select class="field" id="wf-semana">${['domingo','segunda'].map(d=>`<option ${w.inicioSemana===d?'selected':''}>${d}</option>`).join('')}</select></div>
- <button class="modal-save" onclick="salvarTrabalho('${id||''}')">Salvar</button>
- ${id?`<button class="modal-save danger" onclick="excluirTrabalho('${id}')" ${temRegistros?'disabled style="opacity:.5"':''}>${temRegistros?'Resolva os registros vinculados para excluir':'Excluir trabalho'}</button>`:''}`;
- modal=modalShell(id?'Editar trabalho':'Novo trabalho',body,{onClose:'modalTrabalhos()'});
+ <div class="field-group"><label class="flabel">${tr('Descrição')}</label><textarea class="field" id="wf-desc" rows="2">${esc(w.descricao||'')}</textarea></div>
+ <div class="field-group"><label class="flabel">${tr('Início da semana')}</label><select class="field" id="wf-semana">${['domingo','segunda'].map(d=>`<option value="${d}" ${w.inicioSemana===d?'selected':''}>${tr(d==='domingo'?'Domingo':'Segunda')}</option>`).join('')}</select></div>
+ <button class="modal-save" onclick="salvarTrabalho('${id||''}')">${tr('Salvar')}</button>
+ ${id?`<button class="modal-save danger" onclick="excluirTrabalho('${id}')" ${temRegistros?'disabled style="opacity:.5"':''}>${temRegistros?tr('Resolva os registros vinculados para excluir'):tr('Excluir trabalho')}</button>`:''}`;
+ modal=modalShell(id?tr('Editar trabalho'):tr('Novo trabalho'),body,{onClose:'modalTrabalhos()'});
  render();
 }
 function salvarTrabalho(id){
- const data={nome:$('#wf-nome').value.trim()||'Trabalho',inicioJornada:$('#wf-inicio').value,fimJornada:$('#wf-fim').value,pausa:parseInt($('#wf-pausa').value)||0,valorHora:parseFloat($('#wf-valorhora').value)||0,valorExtraPadrao:parseFloat($('#wf-extra').value)||0,descricao:$('#wf-desc').value,inicioSemana:$('#wf-semana').value};
+ const data={nome:$('#wf-nome').value.trim()||tr('Trabalho'),inicioJornada:$('#wf-inicio').value,fimJornada:$('#wf-fim').value,pausa:parseInt($('#wf-pausa').value)||0,valorHora:parseFloat($('#wf-valorhora').value)||0,valorExtraPadrao:parseFloat($('#wf-extra').value)||0,descricao:$('#wf-desc').value,inicioSemana:$('#wf-semana').value};
  if(id){Object.assign(state.trabalhos.find(w=>w.id===id),data)}else{state.trabalhos.push({id:uid(),...data})}
- modalTrabalhos();toast('Trabalho salvo.');
+ modalTrabalhos();toast(tr('Trabalho salvo.'));
 }
 function excluirTrabalho(id){
- if(state.registrosDeHoras.some(r=>r.trabalhoId===id)){toast('Este trabalho tem registros vinculados. Exclua-os primeiro.');return}
- state.trabalhos=state.trabalhos.filter(w=>w.id!==id);modalTrabalhos();toast('Trabalho excluído.');
+ if(state.registrosDeHoras.some(r=>r.trabalhoId===id)){toast(tr('Este trabalho tem registros vinculados. Exclua-os primeiro.'));return}
+ state.trabalhos=state.trabalhos.filter(w=>w.id!==id);modalTrabalhos();toast(tr('Trabalho excluído.'));
 }
 function modalObjetivo(id){
  const o=id?state.objetivos.find(x=>x.id===id):{nome:'',valorAlvo:'',valorAcumulado:'',dataFinal:diasAtras(-90),frequencia:'semanal'};
  const body=`
- <div class="field-group"><label class="flabel">Nome do objetivo</label><input class="field" id="of-nome" value="${esc(o.nome)}" placeholder="Ex.: Reserva de emergência"></div>
+ <div class="field-group"><label class="flabel">${tr('Nome do objetivo')}</label><input class="field" id="of-nome" value="${esc(o.nome)}" placeholder="${tr('Ex.: Reserva de emergência')}"></div>
  ${moneyCompact('of-alvo',o.valorAlvo,'Valor alvo')}
  ${moneyCompact('of-acum',o.valorAcumulado,'Já acumulado')}
- <div class="field-group"><label class="flabel">Data final</label><input class="field" id="of-data" type="date" value="${o.dataFinal}"></div>
- <div class="field-group"><label class="flabel">Frequência do aporte</label><div class="segmented" id="of-freq"><button type="button" class="${o.frequencia==='diaria'?'active':''}" data-v="diaria" onclick="pickSeg('of-freq',this)">Diária</button><button type="button" class="${o.frequencia!=='diaria'?'active':''}" data-v="semanal" onclick="pickSeg('of-freq',this)">Semanal</button></div></div>
- <button class="modal-save" onclick="salvarObjetivo('${id||''}')">Salvar</button>
- ${id?`<button class="modal-save danger" onclick="excluirObjetivo('${id}')">Excluir objetivo</button>`:''}`;
- modal=modalShell(id?'Editar objetivo':'Novo objetivo',body);
+ <div class="field-group"><label class="flabel">${tr('Data final')}</label><input class="field" id="of-data" type="date" value="${o.dataFinal}"></div>
+ <div class="field-group"><label class="flabel">${tr('Frequência do aporte')}</label><div class="segmented" id="of-freq"><button type="button" class="${o.frequencia==='diaria'?'active':''}" data-v="diaria" onclick="pickSeg('of-freq',this)">${tr('Diária')}</button><button type="button" class="${o.frequencia!=='diaria'?'active':''}" data-v="semanal" onclick="pickSeg('of-freq',this)">${tr('Semanal')}</button></div></div>
+ <button class="modal-save" onclick="salvarObjetivo('${id||''}')">${tr('Salvar')}</button>
+ ${id?`<button class="modal-save danger" onclick="excluirObjetivo('${id}')">${tr('Excluir objetivo')}</button>`:''}`;
+ modal=modalShell(id?tr('Editar objetivo'):tr('Novo objetivo'),body);
  render();
 }
 function salvarObjetivo(id){
- const data={nome:$('#of-nome').value.trim()||'Objetivo',valorAlvo:parseFloat($('#of-alvo').value)||0,valorAcumulado:parseFloat($('#of-acum').value)||0,dataFinal:$('#of-data').value,frequencia:document.querySelector('#of-freq button.active').dataset.v};
+ const data={nome:$('#of-nome').value.trim()||tr('Objetivo'),valorAlvo:parseFloat($('#of-alvo').value)||0,valorAcumulado:parseFloat($('#of-acum').value)||0,dataFinal:$('#of-data').value,frequencia:document.querySelector('#of-freq button.active').dataset.v};
  if(id){Object.assign(state.objetivos.find(o=>o.id===id),data)}else{state.objetivos.push({id:uid(),...data})}
- modal=null;render();toast('Objetivo salvo.');
+ modal=null;render();toast(tr('Objetivo salvo.'));
 }
-function excluirObjetivo(id){state.objetivos=state.objetivos.filter(o=>o.id!==id);modal=null;render();toast('Objetivo excluído.')}
+function excluirObjetivo(id){state.objetivos=state.objetivos.filter(o=>o.id!==id);modal=null;render();toast(tr('Objetivo excluído.'))}
 function modalLimiteDiario(){
  const body=`
- <div class="field-group"><label class="flabel">Valor do limite por dia</label>${moneyHero('lf-valor',state.limiteDiario.valor||'')}</div>
- <button class="modal-save" onclick="salvarLimiteDiario()">Salvar</button>`;
- modal=modalShell('Limite diário',body);
+ <div class="field-group"><label class="flabel">${tr('Valor do limite por dia')}</label>${moneyHero('lf-valor',state.limiteDiario.valor||'')}</div>
+ <button class="modal-save" onclick="salvarLimiteDiario()">${tr('Salvar')}</button>`;
+ modal=modalShell(tr('Limite diário'),body);
  render();
 }
-function salvarLimiteDiario(){state.limiteDiario.valor=parseFloat($('#lf-valor').value)||0;modal=null;render();toast('Limite diário atualizado.')}
+function salvarLimiteDiario(){state.limiteDiario.valor=parseFloat($('#lf-valor').value)||0;modal=null;render();toast(tr('Limite diário atualizado.'))}
 function modalSobre(){
  const body=`
- <p class="t-body">Horas reúne controle de gastos, contas, horas trabalhadas e carteira de investimentos em uma única experiência, com visual e interações inspirados no ecossistema Apple.</p>
- <p class="t-caption">Versão 0.3 (protótipo local) · dados salvos apenas neste navegador · cotações de câmbio via Frankfurter.app e cripto via CoinGecko, quando disponíveis.</p>`;
- modal=modalShell('Sobre',body);
+ <p class="t-body">${tr('Horas reúne controle de gastos, contas, horas trabalhadas e carteira de investimentos em uma única experiência, com visual e interações inspirados no ecossistema Apple.')}</p>
+ <p class="t-caption">${tr('Versão 0.3 (protótipo local) · dados salvos apenas neste navegador · cotações de câmbio via Frankfurter.app e cripto via CoinGecko, quando disponíveis.')}</p>`;
+ modal=modalShell(tr('Sobre'),body);
  render();
 }
 function modalBackup(){
  const body=`
- <p class="t-caption" style="margin-top:0">Exporta contas, transações, horas trabalhadas e carteira de investimentos.</p>
+ <p class="t-caption" style="margin-top:0">${tr('Exporta contas, transações, horas trabalhadas e carteira de investimentos.')}</p>
  <div style="display:flex;gap:10px;margin-top:14px">
-  <button class="modal-save" onclick="exportarCSV()">Exportar CSV</button>
-  <button class="modal-save" style="background:var(--mat-thin);color:var(--ink);border:1px solid var(--border)" onclick="window.print()">Exportar PDF</button>
+  <button class="modal-save" onclick="exportarCSV()">${tr('Exportar CSV')}</button>
+  <button class="modal-save" style="background:var(--mat-thin);color:var(--ink);border:1px solid var(--border)" onclick="window.print()">${tr('Exportar PDF')}</button>
  </div>
  <div style="display:flex;gap:10px;margin-top:10px">
-  <button class="modal-save" style="background:var(--mat-thin);color:var(--ink);border:1px solid var(--border)" onclick="exportarJSON()">Exportar dados (.json)</button>
+  <button class="modal-save" style="background:var(--mat-thin);color:var(--ink);border:1px solid var(--border)" onclick="exportarJSON()">${tr('Exportar dados (.json)')}</button>
  </div>`;
- modal=modalShell('Relatórios / backup',body);
+ modal=modalShell(tr('Relatórios / backup'),body);
  render();
 }
 function baixarArquivo(nome,conteudo,tipo){
@@ -1594,9 +1941,9 @@ function exportarCSV(){
  state.transacoes.forEach(t=>linhas.push(`transacao;${t.data};${t.descricao||''};${t.valor};${contaMoeda(t.contaId)}`));
  state.registrosDeHoras.forEach(r=>linhas.push(`registro_horas;${r.data};${nomeRegistro(r)};${valorRegistro(r).toFixed(2)};${state.prefs.currency}`));
  state.movimentacoesAtivo.forEach(m=>linhas.push(`${m.tipo}_ativo;${m.data};${state.ativosCarteira.find(a=>a.id===m.ativoId)?.nome||''};${m.valorTotal.toFixed(2)};${state.prefs.currency}`));
- baixarArquivo('horas-export.csv',linhas.join('\\n'),'text/csv');toast('CSV exportado.');
+ baixarArquivo('horas-export.csv',linhas.join('\\n'),'text/csv');toast(tr('CSV exportado.'));
 }
-function exportarJSON(){baixarArquivo('horas-backup.json',JSON.stringify(state,null,2),'application/json');toast('Backup exportado.')}
+function exportarJSON(){baixarArquivo('horas-backup.json',JSON.stringify(state,null,2),'application/json');toast(tr('Backup exportado.'))}
 
 /* ============ INIT ============ */
 matchMedia('(prefers-color-scheme: dark)').addEventListener('change',()=>{if(state.prefs.theme==='system')render()});
