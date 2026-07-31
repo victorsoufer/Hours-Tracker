@@ -332,7 +332,7 @@ function seed(){
   loggedIn:false,
   page:'geral', prevPage:'geral',
   profile:{name:'',birthday:'',email:''},
-  prefs:{theme:'system',currency:'BRL',dateFormat:'DD/MM/AAAA',language:'pt',accentPreset:'classico'},
+  prefs:{theme:'system',currency:'BRL',dateFormat:'DD/MM/AAAA',language:'pt',accentPreset:'classico',brapiToken:''},
   contasSelecionadas:null,
   gruposConta:[],
   contas:[],
@@ -424,20 +424,30 @@ function moneyCompact(id,value,label,attrs){
 }
 
 /* ============ CÂMBIO — Frankfurter.app, sem chave (01-PRD §3.7) ============ */
+// tabela de apoio (unidades por US$), usada só quando a cotação ao vivo está indisponível — ex.: dentro do preview do Artifact, cujo CSP bloqueia chamadas externas
+const FALLBACK_USD_RATES={BRL:5.4,USD:1,EUR:0.92,GBP:0.79,JPY:148,CAD:1.36,AUD:1.53,CHF:0.87,ARS:1050,MXN:17.5,CNY:7.1,INR:84};
+function fxIsLive(de,para){
+ if(de===para)return true;
+ if(!state.fx||!state.fx.rates||!state.fx.base)return false;
+ const {base,rates}=state.fx;
+ return (de===base||rates[de]!=null)&&(para===base||rates[para]!=null);
+}
 function convert(valor,de,para){
  if(!de||!para||de===para)return valor;
- if(!state.fx||!state.fx.rates)return valor;
- const {base,rates}=state.fx;
- const emBase = de===base ? valor : valor/(rates[de]||1);
- const final = para===base ? emBase : emBase*(rates[para]||1);
- return final;
+ if(fxIsLive(de,para)){
+  const {base,rates}=state.fx;
+  const emBase=de===base?valor:valor/rates[de];
+  return para===base?emBase:emBase*rates[para];
+ }
+ const usdDe=FALLBACK_USD_RATES[de]||1,usdPara=FALLBACK_USD_RATES[para]||1;
+ return (valor/usdDe)*usdPara;
 }
 async function refreshMarketData(silent){
  const principal=state.prefs.currency;
  try{
   const r=await fetch(`https://api.frankfurter.app/latest?from=${principal}`);
   if(r.ok){const d=await r.json();state.fx={base:d.base,rates:d.rates,updatedAt:Date.now()}}
- }catch(e){console.warn('câmbio indisponível, mantendo cache',e)}
+ }catch(e){console.warn('câmbio ao vivo indisponível, usando tabela de apoio',e)}
  const cripto=state.ativosCarteira.filter(a=>a.tipo==='cripto'&&a.codigo&&CRYPTO_IDS[a.codigo.toUpperCase()]);
  if(cripto.length){
   try{
@@ -448,6 +458,22 @@ async function refreshMarketData(silent){
     for(const a of cripto){const cid=CRYPTO_IDS[a.codigo.toUpperCase()];const preco=d[cid]&&d[cid][principal.toLowerCase()];if(preco!=null)state.marketCache[a.id]={preco,moeda:principal,atualizadoEm:Date.now()}}
    }
   }catch(e){console.warn('cotação cripto indisponível, mantendo cache',e)}
+ }
+ const b3=state.ativosCarteira.filter(a=>['acao','fii','bdr','etf'].includes(a.tipo)&&a.codigo);
+ if(b3.length){
+  try{
+   const token=state.prefs.brapiToken?`?token=${encodeURIComponent(state.prefs.brapiToken)}`:'';
+   const codigos=[...new Set(b3.map(a=>a.codigo.toUpperCase()))].join(',');
+   const r=await fetch(`https://brapi.dev/api/quote/${codigos}${token}`);
+   if(r.ok){
+    const d=await r.json();
+    const porCodigo={};(d.results||[]).forEach(res=>{if(res.regularMarketPrice!=null)porCodigo[res.symbol]=res.regularMarketPrice});
+    for(const a of b3){
+     const precoBRL=porCodigo[a.codigo.toUpperCase()];
+     if(precoBRL!=null)state.marketCache[a.id]={preco:convert(precoBRL,'BRL',principal),moeda:principal,atualizadoEm:Date.now()};
+    }
+   }
+  }catch(e){console.warn('cotação B3 (brapi.dev) indisponível, mantendo cache/custo médio',e)}
  }
  save();
  if(!silent){render();toast('Cotações atualizadas.')}
@@ -462,7 +488,7 @@ function horasRegistro(r){
  return Math.max(0,min)/60;
 }
 function trabalhoDe(r){return r.trabalhoId?state.trabalhos.find(w=>w.id===r.trabalhoId):null}
-function valorHoraDe(r){const t=trabalhoDe(r);return t?t.valorHora:0}
+function valorHoraDe(r){const t=trabalhoDe(r);return t?t.valorHora:(r.valorHoraAvulso||0)}
 // valor do registro = horas x valor/hora + valor extra
 function valorRegistro(r){return horasRegistro(r)*valorHoraDe(r)+(r.valorExtra||0)}
 function nomeRegistro(r){const t=trabalhoDe(r);return t?t.nome:(r.nomeAvulso||'Trabalho avulso')}
@@ -773,14 +799,16 @@ function contas(){
 }
 function contaRow(c){
  const t=TIPOS_CONTA[c.tipo];
- const convertido=c.moeda!==state.prefs.currency?saldoContaConvertido(c):null;
+ const estrangeira=c.moeda!==state.prefs.currency;
+ const convertido=estrangeira?saldoContaConvertido(c):null;
+ const estimado=estrangeira&&!fxIsLive(c.moeda,state.prefs.currency);
  return `<div class="swipe-row" data-id="${c.id}"><div class="swipe-actions">
   <button class="swipe-action" onclick="closeSwipes();modalConta('${c.id}')">${ic('sliders')}<span>Editar</span></button>
   <button class="swipe-action delete" onclick="excluirConta('${c.id}')">${ic('trash')}<span>Excluir</span></button>
  </div><div class="swipe-content"><div class="row" onclick="modalConta('${c.id}')">
   <div class="acc-badge" style="background:${c.tipo==='emprestimo'?'linear-gradient(135deg,#F55B5B,#B9302F)':'linear-gradient(135deg,var(--accent),var(--accent2))'}">${ic(t.icone)}</div>
   <div class="row-main"><b>${esc(c.nome)}</b><span>${t.nome}${c.incluida?'':' · fora do patrimônio'}</span></div>
-  <div class="row-value">${convertido!==null?`<div class="foreign"><b class="${c.tipo==='emprestimo'?'money-neg':''}">${c.tipo==='emprestimo'?'-':''}${money(convertido)}</b><small>${money(c.saldo,c.moeda)}</small></div>`:`<b class="${c.tipo==='emprestimo'?'money-neg':''}">${c.tipo==='emprestimo'?'-':''}${money(c.saldo,c.moeda)}</b>`}</div>
+  <div class="row-value">${convertido!==null?`<div class="foreign"><b class="${c.tipo==='emprestimo'?'money-neg':''}">${c.tipo==='emprestimo'?'-':''}${money(convertido)}</b><small>${money(c.saldo,c.moeda)}${estimado?' · câmbio estimado':' · câmbio ao vivo'}</small></div>`:`<b class="${c.tipo==='emprestimo'?'money-neg':''}">${c.tipo==='emprestimo'?'-':''}${money(c.saldo,c.moeda)}</b>`}</div>
  </div></div></div>`;
 }
 function excluirConta(id){closeSwipes();state.contas=state.contas.filter(c=>c.id!==id);render();toast('Conta excluída.')}
@@ -866,10 +894,13 @@ function modalRegistro(id,duplicarDeId){
  const inicio=base?base.inicio.slice(11,16):(state.trabalhos[0]?.inicioJornada||'09:00');
  const fim=base?base.fim.slice(11,16):(state.trabalhos[0]?.fimJornada||'18:00');
  const pausa=base?base.pausa:(state.trabalhos[0]?.pausa||0);
- const extra=base?base.valorExtra:'', notas=base?base.notas:'', avulso=base?base.nomeAvulso:'';
+ const extra=base?base.valorExtra:'', notas=base?base.notas:'', avulso=base?base.nomeAvulso:'', valorHoraAvulso=base?base.valorHoraAvulso:'';
  const body=`
  <div class="field-group"><label class="flabel">Trabalho</label><select class="field" id="rf-trabalho" onchange="syncRegistroTrabalho(this,${!id})">${state.trabalhos.map(w=>`<option value="${w.id}" ${trabalhoId===w.id&&!avulso?'selected':''}>${esc(w.nome)}</option>`).join('')}<option value="__avulso" ${avulso?'selected':''}>Trabalho avulso (digitar nome)</option></select></div>
- <div class="field-group" id="rf-avulso-wrap" style="display:${avulso?'block':'none'}"><label class="flabel">Nome do cliente/trabalho</label><input class="field" id="rf-avulso" value="${esc(avulso||'')}"></div>
+ <div id="rf-avulso-wrap" style="display:${avulso?'block':'none'}">
+  <div class="field-group"><label class="flabel">Nome do cliente/trabalho</label><input class="field" id="rf-avulso" value="${esc(avulso||'')}"></div>
+  ${moneyCompact('rf-valorhora-avulso',valorHoraAvulso,'Valor por hora')}
+ </div>
  <div class="field-group"><label class="flabel">Data</label><input class="field" id="rf-data" type="date" value="${data}"></div>
  <div class="field-row">
   <div class="field-group"><label class="flabel">Início</label><input class="field" id="rf-inicio" type="time" value="${inicio}"></div>
@@ -900,6 +931,7 @@ function salvarRegistro(id){
  const payload={
   trabalhoId:trabSel==='__avulso'?null:trabSel,
   nomeAvulso:trabSel==='__avulso'?($('#rf-avulso').value.trim()||'Trabalho avulso'):null,
+  valorHoraAvulso:trabSel==='__avulso'?(parseFloat($('#rf-valorhora-avulso').value)||0):null,
   data,inicio:`${data}T${inicioH}`,fim:`${fimData}T${fimH}`,
   pausa:parseInt($('#rf-pausa').value)||0,valorExtra:parseFloat($('#rf-extra').value)||0,notas:$('#rf-notas').value,
  };
@@ -951,7 +983,7 @@ function ativoRow(a){
   <button class="swipe-action delete" onclick="excluirAtivo('${a.id}')">${ic('trash')}<span>Excluir</span></button>
  </div><div class="swipe-content"><div class="row" onclick="modalMovimentacao('compra','${a.id}')">
   <div class="row-icon" style="background:linear-gradient(135deg,#22B8CF,#0E8CA6);font:800 11px var(--font)">${TIPOS_ATIVO[a.tipo].slice(0,3).toUpperCase()}</div>
-  <div class="row-main"><b>${esc(a.nome)}${a.codigo?' · '+esc(a.codigo):''}</b><span>${qtd.toLocaleString('pt-BR',{maximumFractionDigits:6})} un. · ${money(preco)} ${badge}</span></div>
+  <div class="row-main"><b>${esc(a.nome)}${a.codigo&&a.codigo!==a.nome?' · '+esc(a.codigo):''}</b><span>${qtd.toLocaleString('pt-BR',{maximumFractionDigits:6})} un. · ${money(preco)} ${badge}</span></div>
   <div class="row-value"><b>${money(valor)}</b><span>${TIPOS_ATIVO[a.tipo]}</span></div>
  </div></div></div>`;
 }
@@ -964,13 +996,12 @@ function modalMovimentacao(tipo,ativoId){
   <button data-k="compra" class="${tipo==='compra'?'active':''}" onclick="modalMovimentacao('compra','${ativoId||''}')">Compra</button>
   <button data-k="venda" class="${tipo==='venda'?'active':''}" onclick="modalMovimentacao('venda','${ativoId||''}')">Venda</button>
  </div>
- <div class="field-group"><label class="flabel">Ativo</label><select class="field" id="mf-ativo" onchange="document.getElementById('mf-novo-wrap').style.display=this.value==='__novo'?'block':'none'">${ativos.map(a=>`<option value="${a.id}" ${ativoId===a.id?'selected':''}>${esc(a.nome)}${a.codigo?' ('+a.codigo+')':''}</option>`).join('')}<option value="__novo" ${!ativoId?'selected':''}>+ Novo ativo…</option></select></div>
+ <div class="field-group"><label class="flabel">Ativo</label><select class="field" id="mf-ativo" onchange="document.getElementById('mf-novo-wrap').style.display=this.value==='__novo'?'block':'none'">${ativos.map(a=>`<option value="${a.id}" ${ativoId===a.id?'selected':''}>${esc(a.nome)}${a.codigo&&a.codigo!==a.nome?' ('+esc(a.codigo)+')':''}</option>`).join('')}<option value="__novo" ${!ativoId?'selected':''}>+ Novo ativo…</option></select></div>
  <div id="mf-novo-wrap" style="display:${!ativoId?'block':'none'}">
+  <p class="t-caption" style="margin:0 0 12px">Cadastrando um ativo novo — preencha pelo menos o código/ticker (usado também para buscar a cotação automática).</p>
   <div class="field-group"><label class="flabel">Tipo de ativo</label><select class="field" id="mf-tipo">${Object.entries(TIPOS_ATIVO).map(([k,v])=>`<option value="${k}">${v}</option>`).join('')}</select></div>
-  <div class="field-row">
-   <div class="field-group"><label class="flabel">Nome</label><input class="field" id="mf-nome" placeholder="Ex.: Petrobras PN"></div>
-   <div class="field-group"><label class="flabel">Código/Ticker</label><input class="field" id="mf-codigo" placeholder="Ex.: PETR4"></div>
-  </div>
+  <div class="field-group"><label class="flabel">Código/Ticker</label><input class="field" id="mf-codigo" placeholder="Ex.: PETR4, MXRF11, BTC"></div>
+  <div class="field-group"><label class="flabel">Nome (opcional)</label><input class="field" id="mf-nome" placeholder="Ex.: Petrobras PN — se deixar em branco, usamos o código"></div>
  </div>
  <div class="field-group"><label class="flabel">Data</label><input class="field" id="mf-data" type="date" value="${isoHoje()}"></div>
  <div class="field-group"><label class="flabel">Quantidade</label><input class="field" id="mf-qtd" type="number" step="any" placeholder="0" value="" oninput="calcMovTotal()"></div>
@@ -988,7 +1019,9 @@ function calcMovTotal(){
 function salvarMovimentacao(tipo){
  let ativoId=$('#mf-ativo').value;
  if(ativoId==='__novo'){
-  const novo={id:uid(),tipo:$('#mf-tipo').value,codigo:$('#mf-codigo').value.trim()||null,nome:$('#mf-nome').value.trim()||'Novo ativo'};
+  const codigo=$('#mf-codigo').value.trim()||null;
+  const nome=$('#mf-nome').value.trim()||codigo||'Ativo sem nome';
+  const novo={id:uid(),tipo:$('#mf-tipo').value,codigo,nome};
   state.ativosCarteira.push(novo);ativoId=novo.id;
  }
  const mov={id:uid(),ativoId,tipo,data:$('#mf-data').value,quantidade:parseFloat($('#mf-qtd').value)||0,preco:parseFloat($('#mf-preco').value)||0,outrosCustos:parseFloat($('#mf-custos').value)||0};
@@ -1194,22 +1227,23 @@ function modalPersonalizar(){
  <div class="field-group"><label class="flabel">Preset de destaque (herdado do Horas)</label>
   <div class="segmented" id="pz-preset">${presets.map(([k,l])=>`<button type="button" class="${p.accentPreset===k?'active':''}" data-v="${k}" onclick="pickSeg('pz-preset',this)">${l}</button>`).join('')}</div>
  </div>
+ <div class="field-group"><label class="flabel">Token brapi.dev (opcional)</label><input class="field" id="pz-brapi" value="${esc(p.brapiToken||'')}" placeholder="Cole aqui seu token gratuito"><p class="t-caption" style="margin:6px 3px 0">PETR4, VALE3, MGLU3 e ITUB4 têm cotação ao vivo sem token. Para outras ações, FIIs e BDRs, crie um token gratuito em brapi.dev e cole aqui — fica salvo só neste aparelho.</p></div>
  <button class="modal-save" onclick="salvarPersonalizar()">Salvar</button>`;
  modal=modalShell('Personalizar',body);
  render();
 }
 function pickSeg(id,btn){document.querySelectorAll(`#${id} button`).forEach(b=>b.classList.remove('active'));btn.classList.add('active')}
 function salvarPersonalizar(){
- const moedaAntiga=state.prefs.currency;
  state.prefs={...state.prefs,
   language:$('#pz-idioma').value,
   theme:document.querySelector('#pz-tema button.active').dataset.v,
   currency:$('#pz-moeda').value,
   dateFormat:$('#pz-data').value,
   accentPreset:document.querySelector('#pz-preset button.active').dataset.v,
+  brapiToken:$('#pz-brapi').value.trim(),
  };
  modal=null;render();toast('Preferências salvas.');
- if(moedaAntiga!==state.prefs.currency)refreshMarketData(true);
+ refreshMarketData(true);
 }
 function modalTrabalhos(){
  const body=`<div class="list">${state.trabalhos.length?state.trabalhos.map(w=>`<div class="row" onclick="modalTrabalho('${w.id}')"><div class="row-icon" style="background:linear-gradient(135deg,var(--accent),var(--accent2))">${ic('contas')}</div><div class="row-main"><b>${esc(w.nome)}</b><span>${w.inicioJornada}–${w.fimJornada} · ${money(w.valorHora)}/h</span></div><span class="chev" style="color:var(--muted)">${ic('chevron')}</span></div>`).join(''):emptyState('contas','Nenhum trabalho cadastrado.')}</div>`;
