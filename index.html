@@ -618,7 +618,29 @@ function render(){
  const content=(pages[state.page]||geral)();
  $('#app').innerHTML=`<div class="shell">${content}</div>${state.page!=='ajustes'?tabbar()+fabFor(state.page):''}${modal||''}`;
  bindSwipes();
+ // guarda a estrutura do pop-up aberto para sobreviver a um reload do PWA (o iOS pode descarregar a página ao trocar de app)
+ if(modal){state.modalHTML=modal}else{state.modalHTML=null;state.modalCampos=null}
  save();
+}
+/* ============ RASCUNHO DE FORMULÁRIO — sobrevive ao app ser descarregado da memória (comum em PWA no iOS ao trocar de app) ============ */
+document.addEventListener('input',e=>{
+ if(!modal)return;
+ const el=e.target;
+ if(!el.id||!el.closest('.modal-panel'))return;
+ state.modalCampos=state.modalCampos||{};
+ state.modalCampos[el.id]=el.type==='checkbox'?el.checked:el.value;
+ clearTimeout(window._rascunhoTimer);
+ window._rascunhoTimer=setTimeout(save,250);
+});
+function restaurarRascunhoModal(){
+ if(!state.modalCampos)return;
+ const panel=document.querySelector('.modal-panel');
+ if(!panel)return;
+ Object.entries(state.modalCampos).forEach(([id,val])=>{
+  const el=panel.querySelector('#'+CSS.escape(id));
+  if(!el)return;
+  if(el.type==='checkbox')el.checked=!!val;else el.value=val;
+ });
 }
 function login(){
  return `<div class="login-screen"><div class="login-card glass specular">
@@ -1384,7 +1406,9 @@ function exportarJSON(){baixarArquivo('horas-backup.json',JSON.stringify(state,n
 
 /* ============ INIT ============ */
 matchMedia('(prefers-color-scheme: dark)').addEventListener('change',()=>{if(state.prefs.theme==='system')render()});
+if(state.modalHTML)modal=state.modalHTML;
 render();
+if(modal)restaurarRascunhoModal();
 if(state.loggedIn)refreshMarketData(true);
 if('serviceWorker' in navigator && location.protocol!=='file:')navigator.serviceWorker.register('./sw.js').catch(()=>{});
 </script>
