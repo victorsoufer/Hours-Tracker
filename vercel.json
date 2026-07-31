@@ -1,7 +1,0 @@
-{
-  "functions": {
-    "api/brapi-quote.ts": {
-      "runtime": "nodejs20.x"
-    }
-  }
-}
