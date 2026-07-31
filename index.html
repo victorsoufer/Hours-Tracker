@@ -819,34 +819,37 @@ async function refreshMarketData(silent){
   }catch(e){console.warn('cotação cripto indisponível, mantendo cache',e);erros.push(`${tr('cripto')} (${tr('rede')})`)}
  }
  // cotação B3 via /api/brapi-quote — função de servidor que guarda o token, o cliente nunca fala com a brapi.dev diretamente
+ // obs.: o plano gratuito da brapi só permite 1 ativo por requisição, então buscamos um de cada vez em paralelo
  const b3=state.ativosCarteira.filter(a=>['acao','fii','bdr','etf'].includes(a.tipo)&&a.codigo);
  if(b3.length){
-  try{
-   const codigos=[...new Set(b3.map(a=>a.codigo.toUpperCase()))];
-   const symbolsParam=codigos.map(encodeURIComponent).join(',');
-   const r=await fetch(`/api/brapi-quote?symbols=${symbolsParam}`);
-   if(r.ok){
-    const d=await r.json();
-    const porCodigo={};
-    (d.results||[]).forEach(res=>{
-     const preco=res.data&&res.data.regularMarketPrice;
-     if(preco!=null)porCodigo[(res.symbol||res.requestedSymbol||'').toUpperCase()]=res.data;
-    });
-    for(const a of b3){
-     const dados=porCodigo[a.codigo.toUpperCase()];
-     if(dados!=null)state.marketCache[a.id]={preco:dados.regularMarketPrice,moeda:'BRL',atualizadoEm:Date.now(),detalhe:dados};
+  const codigos=[...new Set(b3.map(a=>a.codigo.toUpperCase()))];
+  const porCodigo={};
+  const semCotacao=[];
+  let erroComum=null;
+  await Promise.all(codigos.map(async codigo=>{
+   try{
+    const r=await fetch(`/api/brapi-quote?symbols=${encodeURIComponent(codigo)}`);
+    if(r.ok){
+     const d=await r.json();
+     const res=(d.results||[])[0];
+     const preco=res&&res.data&&res.data.regularMarketPrice;
+     if(preco!=null)porCodigo[codigo]=res.data;else semCotacao.push(codigo);
+    }else{
+     let corpo={};try{corpo=await r.json()}catch(e){}
+     console.warn('/api/brapi-quote HTTP',codigo,r.status,corpo);
+     erroComum=corpo.mensagem?`B3: ${corpo.mensagem}`:r.status===404?`B3: ${tr('função /api ainda não publicada')}`:`B3 (${r.status})`;
     }
-    const semCotacao=b3.filter(a=>porCodigo[a.codigo.toUpperCase()]==null);
-    if(semCotacao.length){
-     console.warn('sem cotação para:',semCotacao.map(a=>a.codigo).join(', '),d);
-     erros.push(`B3: ${tr('sem dado p/')} ${semCotacao.map(a=>a.codigo).join(', ')}`);
-    }
-   }else{
-    let corpo={};try{corpo=await r.json()}catch(e){}
-    console.warn('/api/brapi-quote HTTP',r.status,corpo);
-    erros.push(corpo.mensagem?`B3: ${corpo.mensagem}`:r.status===404?`B3: ${tr('função /api ainda não publicada')}`:`B3 (${r.status})`);
-   }
-  }catch(e){console.warn('cotação B3 indisponível',e);erros.push(`B3: ${tr('falha de rede')}`)}
+   }catch(e){console.warn('cotação B3 indisponível',codigo,e);erroComum=`B3: ${tr('falha de rede')}`}
+  }));
+  for(const a of b3){
+   const dados=porCodigo[a.codigo.toUpperCase()];
+   if(dados!=null)state.marketCache[a.id]={preco:dados.regularMarketPrice,moeda:'BRL',atualizadoEm:Date.now(),detalhe:dados};
+  }
+  if(semCotacao.length){
+   console.warn('sem cotação para:',semCotacao.join(', '));
+   erros.push(`B3: ${tr('sem dado p/')} ${semCotacao.join(', ')}`);
+  }
+  if(erroComum)erros.push(erroComum);
  }
  save();
  if(!silent){render();toast(erros.length?`${tr('Cotações')}: ${erros.join(' · ')}`:tr('Cotações atualizadas.'))}
