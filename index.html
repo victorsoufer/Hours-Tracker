@@ -145,7 +145,7 @@ label.flabel{display:block;font-size:12px;font-weight:700;color:var(--muted);mar
 .tabbar button{flex:1;border:0;background:transparent;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 2px;cursor:pointer;font:600 10.5px var(--font);border-radius:14px}
 .tabbar button svg{width:22px;height:22px}
 .tabbar button.active{color:var(--accent)}
-.fab{position:fixed;right:max(18px,env(safe-area-inset-right));bottom:calc(86px + env(safe-area-inset-bottom));width:56px;height:56px;border:0;border-radius:19px;cursor:pointer;color:#fff;display:grid;place-items:center;background:linear-gradient(135deg,var(--accent),var(--accent2));box-shadow:0 12px 26px color-mix(in srgb,var(--accent) 45%,transparent);transition:transform .15s}
+.fab{position:fixed;z-index:7;right:max(18px,env(safe-area-inset-right));bottom:calc(86px + env(safe-area-inset-bottom));width:56px;height:56px;border:0;border-radius:19px;cursor:pointer;color:#fff;display:grid;place-items:center;background:linear-gradient(135deg,var(--accent),var(--accent2));box-shadow:0 12px 26px color-mix(in srgb,var(--accent) 45%,transparent);transition:transform .15s}
 .fab:active{transform:scale(.94)}
 .fab svg{width:26px;height:26px}
 /* modal */
@@ -174,6 +174,27 @@ label.flabel{display:block;font-size:12px;font-weight:700;color:var(--muted);mar
 .cat-pick .ci{width:36px;height:36px;border-radius:12px;display:grid;place-items:center;color:#fff}
 .cat-pick .ci svg{width:17px;height:17px}
 .cat-pick span{font-size:10px;font-weight:600;text-align:center;line-height:1.15}
+.money-hero{display:flex;align-items:center;justify-content:center;gap:8px;padding:20px 16px;border-radius:20px;background:var(--mat-thin);border:1px solid var(--border);margin-bottom:14px}
+.money-hero .cur{font-size:22px;font-weight:700;color:var(--muted)}
+.money-hero input{border:0;background:transparent;outline:none;font:800 34px var(--font);color:var(--ink);text-align:center;width:100%;font-variant-numeric:tabular-nums;-moz-appearance:textfield}
+.money-hero input::-webkit-outer-spin-button,.money-hero input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.money-hero input::placeholder{color:color-mix(in srgb,var(--muted) 55%,transparent)}
+.money-compact{position:relative}
+.money-compact .cur{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--muted);font-weight:700;font-size:14px;pointer-events:none}
+.money-compact input{padding-left:30px;font-weight:800;font-variant-numeric:tabular-nums}
+.cat-manage-row{display:flex;align-items:center;gap:12px;padding:12px;border-radius:16px;background:var(--mat-thin);border:1px solid var(--border);margin-bottom:8px;cursor:pointer}
+.cat-manage-row .ci{width:36px;height:36px;border-radius:12px;display:grid;place-items:center;color:#fff;flex:none}
+.cat-manage-row .ci svg{width:16px;height:16px}
+.subcat-chip{display:inline-flex;align-items:center;gap:6px;padding:7px 11px;border-radius:var(--r-pill);background:color-mix(in srgb,var(--ink) 7%,transparent);font:600 12px var(--font);margin:0 6px 6px 0}
+.subcat-chip button{border:0;background:none;color:var(--danger);cursor:pointer;padding:0;display:grid;place-items:center}
+.subcat-chip button svg{width:12px;height:12px}
+.color-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:14px}
+.color-pick{width:100%;aspect-ratio:1;border-radius:50%;border:2px solid transparent;cursor:pointer}
+.color-pick.active{border-color:var(--ink);box-shadow:0 0 0 2px var(--bg)}
+.icon-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-bottom:14px}
+.icon-pick{aspect-ratio:1;border-radius:13px;border:2px solid var(--border);background:var(--mat-thin);color:var(--ink);cursor:pointer;display:grid;place-items:center}
+.icon-pick svg{width:17px;height:17px}
+.icon-pick.active{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 14%,transparent);color:var(--accent)}
 #toast{position:fixed;top:calc(env(safe-area-inset-top) + 12px);left:50%;transform:translateX(-50%) translateY(-14px);z-index:50;background:color-mix(in srgb,var(--ink) 92%,transparent);color:var(--bg);padding:12px 18px;border-radius:14px;font:600 13px var(--font);opacity:0;transition:.28s;pointer-events:none;max-width:88vw;text-align:center}
 #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 .skel{position:relative;overflow:hidden;background:color-mix(in srgb,var(--ink) 7%,transparent);border-radius:10px}
@@ -275,23 +296,27 @@ const ICONS={
 function ic(name,cls){return `<span class="${cls||''}" aria-hidden="true">${ICONS[name]||''}</span>`}
 
 /* ============ CATEGORIAS & TIPOS (05-Design-System §2.3, 01-PRD §3.4/3.2) ============ */
+/* categorias são editáveis pelo usuário (estado), esta lista é só a semente inicial */
 const CATEGORIAS=[
- {id:'moradia',nome:'Moradia',cor:'#FF9F43',icone:'house'},
- {id:'alimentacao',nome:'Alimentação',cor:'#FF6B6B',icone:'fork'},
- {id:'transporte',nome:'Transporte',cor:'#5E8BFF',icone:'car'},
- {id:'lazer',nome:'Lazer',cor:'#A855F7',icone:'film'},
- {id:'saude',nome:'Saúde',cor:'#EC4899',icone:'heart'},
- {id:'educacao',nome:'Educação',cor:'#6366F1',icone:'book'},
- {id:'compras',nome:'Compras',cor:'#06B6D4',icone:'bag'},
- {id:'assinaturas',nome:'Assinaturas',cor:'#8D6E63',icone:'repeatIc'},
- {id:'viagem',nome:'Viagem',cor:'#F5A623',icone:'plane'},
- {id:'presentes',nome:'Presentes',cor:'#F43F5E',icone:'gift'},
- {id:'investimentos',nome:'Investimentos',cor:'#1FA971',icone:'trend'},
- {id:'impostos',nome:'Impostos',cor:'#64748B',icone:'receipt'},
- {id:'pets',nome:'Pets',cor:'#8AC926',icone:'paw'},
- {id:'outros',nome:'Outros',cor:'#94A3B8',icone:'dots'},
+ {id:'moradia',nome:'Moradia',cor:'#FF9F43',icone:'house',subcategorias:[{id:'aluguel',nome:'Aluguel'},{id:'condominio',nome:'Condomínio'},{id:'contas-casa',nome:'Água/Luz/Internet'}]},
+ {id:'alimentacao',nome:'Alimentação',cor:'#FF6B6B',icone:'fork',subcategorias:[{id:'mercado',nome:'Supermercado'},{id:'restaurante',nome:'Restaurante'}]},
+ {id:'transporte',nome:'Transporte',cor:'#5E8BFF',icone:'car',subcategorias:[{id:'combustivel',nome:'Combustível'},{id:'app-transporte',nome:'Uber/Táxi'}]},
+ {id:'lazer',nome:'Lazer',cor:'#A855F7',icone:'film',subcategorias:[]},
+ {id:'saude',nome:'Saúde',cor:'#EC4899',icone:'heart',subcategorias:[]},
+ {id:'educacao',nome:'Educação',cor:'#6366F1',icone:'book',subcategorias:[]},
+ {id:'compras',nome:'Compras',cor:'#06B6D4',icone:'bag',subcategorias:[]},
+ {id:'assinaturas',nome:'Assinaturas',cor:'#8D6E63',icone:'repeatIc',subcategorias:[]},
+ {id:'viagem',nome:'Viagem',cor:'#F5A623',icone:'plane',subcategorias:[]},
+ {id:'presentes',nome:'Presentes',cor:'#F43F5E',icone:'gift',subcategorias:[]},
+ {id:'investimentos',nome:'Investimentos',cor:'#1FA971',icone:'trend',subcategorias:[]},
+ {id:'impostos',nome:'Impostos',cor:'#64748B',icone:'receipt',subcategorias:[]},
+ {id:'pets',nome:'Pets',cor:'#8AC926',icone:'paw',subcategorias:[]},
+ {id:'outros',nome:'Outros',cor:'#94A3B8',icone:'dots',subcategorias:[]},
 ];
-const cat=id=>CATEGORIAS.find(c=>c.id===id)||CATEGORIAS.at(-1);
+const PALETA_CATEGORIA_CORES=['#FF6B6B','#FF9F43','#FFCA3A','#8AC926','#1FA971','#06B6D4','#5E8BFF','#6366F1','#A855F7','#EC4899','#F43F5E','#8D6E63','#64748B','#94A3B8'];
+const PALETA_CATEGORIA_ICONES=['house','fork','car','film','heart','book','bag','repeatIc','plane','gift','trend','receipt','paw','dots','cash','wallet2','gauge','target'];
+function cat(id){return (state.categorias||CATEGORIAS).find(c=>c.id===id)||(state.categorias||CATEGORIAS).find(c=>c.id==='outros')||CATEGORIAS.at(-1)}
+function subcat(categoriaId,subId){const c=cat(categoriaId);return c&&c.subcategorias&&c.subcategorias.find(s=>s.id===subId)}
 const TIPOS_CONTA={normal:{nome:'Conta normal',icone:'bank'},poupanca:{nome:'Poupança',icone:'piggy'},emprestimo:{nome:'Empréstimo',icone:'arrows'},dinheiro:{nome:'Dinheiro',icone:'cash'},outros:{nome:'Outros',icone:'wallet2'}};
 const TIPOS_ATIVO={fii:'FII',acao:'Ação',fundo:'Fundo',cripto:'Criptomoeda',stock:'Stock',reit:'REIT',bdr:'BDR',etf:'ETF',etf_internacional:'ETF internacional',tesouro_direto:'Tesouro Direto',renda_fixa:'Renda fixa',outros:'Outros'};
 const COTAVEIS=new Set(['fii','acao','cripto','stock','reit','bdr','etf','etf_internacional']);
@@ -320,7 +345,7 @@ function seed(){
    {id:contaExterior,tipo:'normal',nome:'Revolut',moeda:'EUR',saldo:1180,grupoId:gEx,incluida:true},
    {id:contaEmprestimo,tipo:'emprestimo',nome:'Financiamento notebook',moeda:'BRL',saldo:1800,grupoId:gBr,incluida:true},
   ],
-  categorias:CATEGORIAS,
+  categorias:CATEGORIAS.map(c=>({...c,subcategorias:c.subcategorias.map(s=>({...s}))})),
   transacoes:[
    {id:uid(),contaId:contaCorrente,categoriaId:'alimentacao',tipo:'gasto',valor:86.40,descricao:'Supermercado',data:'2026-07-30',hora:'19:20'},
    {id:uid(),contaId:contaCorrente,categoriaId:'transporte',tipo:'gasto',valor:42,descricao:'Combustível',data:'2026-07-30',hora:'08:05'},
@@ -367,7 +392,7 @@ function seed(){
    [ativoBtc]:{preco:372000,moeda:'BRL',atualizadoEm:Date.now()-1000*60*8},
   },
   fx:null,
-  widgetOrderGeral:['limiteDiario','objetivos','gastos7','gastosMes','patrimonioLiquido','contasWidget','horasTrabalho','distribuicaoTrabalho','simulador','evolucaoPatrimonio','ativosCarteira','patrimonioInvestido'],
+  widgetOrderGeral:['limiteDiario','objetivos','gastos','patrimonioLiquido','contasWidget','horasTrabalho','distribuicaoTrabalho','simulador','evolucaoPatrimonio','ativosCarteira','patrimonioInvestido'],
  };
 }
 (function(){
@@ -385,6 +410,14 @@ function seed(){
    if(legacy.profile)s.profile={...s.profile,...legacy.profile};
    if(legacy.prefs)s.prefs={...s.prefs,...legacy.prefs};
   }
+ }
+ if(Array.isArray(s.widgetOrderGeral)){
+  const o=s.widgetOrderGeral.filter(k=>k!=='gastos7'&&k!=='gastosMes');
+  if(!o.includes('gastos'))o.splice(2,0,'gastos');
+  s.widgetOrderGeral=o;
+ }
+ if(!s.categorias||!s.categorias.some(c=>Array.isArray(c.subcategorias))){
+  s.categorias=(s.categorias||CATEGORIAS).map(c=>({...c,subcategorias:c.subcategorias||[]}));
  }
  window.state=s;
 })();
@@ -411,6 +444,23 @@ function diaMes(iso){const d=new Date(iso+'T12:00');return d.getDate()}
 function nomeMes(iso,curto){const d=new Date(iso+'T12:00');return d.toLocaleDateString('pt-BR',{month:curto?'short':'long'}).replace('.','')}
 function toast(t){const el=$('#toast');el.textContent=t;el.classList.add('show');clearTimeout(window._toastT);window._toastT=setTimeout(()=>el.classList.remove('show'),2600)}
 function esc(s){return (s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+
+/* ============ MODAL SHELL — todo pop-up segue o mesmo padrão da aba Contas (05-Design-System §7.3) ============ */
+function modalShell(title,body,opts){
+ opts=opts||{};
+ return `<div class="modal" onclick="if(event.target===this){${opts.onClose||'modal=null;render()'}}"><div class="modal-panel"><div class="modal-head"><button class="modal-close" onclick="${opts.onClose||'modal=null;render()'}">${ic('close')}</button><h2>${esc(title)}</h2>${opts.headerRight||'<span style="width:32px"></span>'}</div>
+ ${body}
+ </div></div>`;
+}
+const CURRENCY_SYMBOLS={BRL:'R$',USD:'$',EUR:'€',GBP:'£',JPY:'¥',CAD:'CA$',AUD:'A$',CHF:'CHF',ARS:'AR$',MXN:'MX$',CNY:'¥',INR:'₹'};
+function moneyHero(id,value){
+ const v=(value===undefined||value===null||value==='')?'':value;
+ return `<div class="money-hero"><span class="cur">${CURRENCY_SYMBOLS[state.prefs.currency]||state.prefs.currency}</span><input id="${id}" type="number" inputmode="decimal" step="0.01" placeholder="0,00" value="${v}"></div>`;
+}
+function moneyCompact(id,value,label,attrs){
+ const v=(value===undefined||value===null||value==='')?'':value;
+ return `<div class="field-group"><label class="flabel">${esc(label)}</label><div class="money-compact"><span class="cur">${CURRENCY_SYMBOLS[state.prefs.currency]||state.prefs.currency}</span><input class="field" id="${id}" type="number" inputmode="decimal" step="0.01" placeholder="0,00" value="${v}" ${attrs||''}></div></div>`;
+}
 
 /* ============ CÂMBIO — Frankfurter.app, sem chave (01-PRD §3.7) ============ */
 function convert(valor,de,para){
@@ -650,10 +700,7 @@ function lineChart(pontos){
 
 /* ============ ABA GERAL — 01-PRD §3.1 ============ */
 function periodoAtual(){
- const p=state.periodoGeral||'semana';
- if(p==='dia')return [isoHoje(),isoHoje()];
- if(p==='mes')return [inicioMes(),isoHoje()];
- return [diasAtras(6),isoHoje()];
+ return state.periodoGeral==='mes'?[inicioMes(),isoHoje()]:[diasAtras(6),isoHoje()];
 }
 function contasIncluidasLabel(){const t=state.contas.length,inc=state.contas.filter(c=>c.incluida).length;return `Contas: ${inc}/${t}`}
 const WIDGET_DEFS={
@@ -670,13 +717,10 @@ const WIDGET_DEFS={
   const rows=state.objetivos.slice(0,3).map(o=>{const a=aporteObjetivo(o);return `<div class="row" style="cursor:pointer;margin-bottom:8px" onclick="event.stopPropagation();modalObjetivo('${o.id}')"><div class="row-icon" style="background:linear-gradient(135deg,#A855F7,#EC4899)">${ic('target')}</div><div class="row-main"><b>${esc(o.nome)}</b><span>${a.concluido?'Meta atingida':`${money(a.aporte)} / ${o.frequencia==='semanal'?'semana':'dia'}`}</span></div><div class="row-value"><b>${money(o.valorAcumulado)}</b><span>de ${money(o.valorAlvo)}</span></div></div>`}).join('');
   return widgetShell({title:'Objetivos inteligentes',pill:`<button class="icon-btn" style="width:30px;height:30px" onclick="event.stopPropagation();modalObjetivo()">${ic('plus')}</button>`,body:`<div style="margin-top:6px">${rows}</div>`});
  },
- gastos7(){
-  const [i,f]=[diasAtras(6),isoHoje()];const fatias=gastosPorCategoria(i,f);const total=fatias.reduce((s,x)=>s+x.valor,0);
-  return widgetShell({title:'Gastos — últimos 7 dias',value:money(total),body:fatias.length?donutWidget(fatias):emptyState('dots','Sem gastos nos últimos 7 dias.'),onExpand:"goTab('transacoes')"});
- },
- gastosMes(){
-  const fatias=gastosPorCategoria(inicioMes(),isoHoje());const total=fatias.reduce((s,x)=>s+x.valor,0);
-  return widgetShell({title:'Gastos do mês',value:money(total),body:fatias.length?donutWidget(fatias):emptyState('dots','Sem gastos neste mês ainda.'),onExpand:"goTab('transacoes')"});
+ gastos(){
+  const [i,f]=periodoAtual();const fatias=gastosPorCategoria(i,f);const total=fatias.reduce((s,x)=>s+x.valor,0);
+  const label=state.periodoGeral==='mes'?'Gastos do mês':'Gastos — últimos 7 dias';
+  return widgetShell({title:label,value:money(total),body:fatias.length?donutWidget(fatias):emptyState('dots','Sem gastos no período.'),onExpand:"goTab('transacoes')"});
  },
  patrimonioLiquido(){
   const pl=patrimonioLiquido();
@@ -687,7 +731,7 @@ const WIDGET_DEFS={
   return widgetShell({title:'Contas',pill:`<span class="pill neutral">${contasIncluidasLabel()}</span>`,body:`<div class="legend" style="margin-top:6px">${list||emptyState('contas','Cadastre uma conta em Contas.')}</div>`,onExpand:"goTab('contas')"});
  },
  horasTrabalho(){
-  const [i,f]=periodoAtual();const regs=registrosNoPeriodo(i,f,state.filtroTrabalho);const total=totalAReceber(regs),horas=totalHoras(regs);
+  const [i,f]=periodoAtual();const regs=registrosNoPeriodo(i,f);const total=totalAReceber(regs),horas=totalHoras(regs);
   const porTrabalho={};regs.forEach(r=>{const n=nomeRegistro(r);porTrabalho[n]=(porTrabalho[n]||0)+valorRegistro(r)});
   const fatias=Object.entries(porTrabalho).map(([nome,valor],i)=>({nome,valor,pct:total?valor/total*100:0,cor:PALETA_GRAFICO[i%PALETA_GRAFICO.length]}));
   return widgetShell({title:'Total a receber + horas',pill:`<span class="pill neutral">${Math.floor(horas)}h ${Math.round((horas%1)*60)}min</span>`,value:money(total),body:fatias.length?donutWidget(fatias):emptyState('clock','Sem registros de horas no período.'),onExpand:"goTab('calendario')"});
@@ -728,24 +772,18 @@ function evolucaoPatrimonioPontos(periodo){
  return pts;
 }
 function widgetOrderPanel(){
- const defs={limiteDiario:'Limite diário',objetivos:'Objetivos inteligentes',gastos7:'Gastos 7 dias',gastosMes:'Gastos do mês',patrimonioLiquido:'Patrimônio líquido',contasWidget:'Contas',horasTrabalho:'Total a receber + horas',distribuicaoTrabalho:'Distribuição por trabalho',simulador:'Simulação de salário',evolucaoPatrimonio:'Evolução do patrimônio',ativosCarteira:'Ativos na carteira',patrimonioInvestido:'Patrimônio total + investido'};
+ const defs={limiteDiario:'Limite diário',objetivos:'Objetivos inteligentes',gastos:'Gastos',patrimonioLiquido:'Patrimônio líquido',contasWidget:'Contas',horasTrabalho:'Total a receber + horas',distribuicaoTrabalho:'Distribuição por trabalho',simulador:'Simulação de salário',evolucaoPatrimonio:'Evolução do patrimônio',ativosCarteira:'Ativos na carteira',patrimonioInvestido:'Patrimônio total + investido'};
  const order=state.widgetOrderGeral;
- return `<div class="modal" onclick="if(event.target===this){modal=null;render()}"><div class="modal-panel"><div class="modal-head"><button class="modal-close" onclick="modal=null;render()">${ic('close')}</button><h2>Widgets do resumo</h2><span style="width:32px"></span></div>
- ${order.map((k,i)=>`<div class="reorder-row"><span style="color:var(--muted);font-size:18px;letter-spacing:-2px">⠿⠿</span><b>${defs[k]}</b><button class="icon-btn" ${i===0?'disabled':''} onclick="moveWidget(${i},-1)">${ic('up')}</button><button class="icon-btn" ${i===order.length-1?'disabled':''} onclick="moveWidget(${i},1)">${ic('chevron')}</button></div>`).join('')}
- </div></div>`;
+ const body=order.map((k,i)=>`<div class="reorder-row"><span style="color:var(--muted);font-size:18px;letter-spacing:-2px">⠿⠿</span><b>${defs[k]}</b><button class="icon-btn" ${i===0?'disabled':''} onclick="moveWidget(${i},-1)">${ic('up')}</button><button class="icon-btn" ${i===order.length-1?'disabled':''} onclick="moveWidget(${i},1)">${ic('chevron')}</button></div>`).join('');
+ return modalShell('Widgets do resumo',body);
 }
 function moveWidget(i,dir){const o=state.widgetOrderGeral;const j=i+dir;if(j<0||j>=o.length)return;[o[i],o[j]]=[o[j],o[i]];modal=widgetOrderPanel();render()}
 function openWidgetOrder(){modal=widgetOrderPanel();render()}
 function geral(){
- const periodos=[['dia','Dia'],['semana','Semana'],['mes','Mês']];
+ const periodos=[['semana','7 dias'],['mes','Mês']];
  return `${topbar(state.profile.name||'Você','Bom dia')}
  <div class="section-head"><div class="t-title">Visão geral</div>
  <div style="display:flex;gap:8px"><button class="icon-btn" onclick="refreshMarketData()" aria-label="Atualizar cotações">${ic('refresh')}</button><button class="icon-btn" onclick="openWidgetOrder()" aria-label="Reordenar widgets">${ic('sliders')}</button></div></div>
- <div class="selectbar">
-  <button class="chip ${!state.contasSelecionadas?'active':''}" onclick="state.contasSelecionadas=null;render()">${contasIncluidasLabel()}</button>
-  <button class="chip ${(state.filtroTrabalho||'all')==='all'?'active':''}" onclick="state.filtroTrabalho='all';render()">Todos os trabalhos</button>
-  ${state.trabalhos.map(w=>`<button class="chip ${state.filtroTrabalho===w.id?'active':''}" onclick="state.filtroTrabalho='${w.id}';render()">${esc(w.nome)}</button>`).join('')}
- </div>
  <div class="segmented" style="margin-bottom:16px">${periodos.map(([id,l])=>`<button class="${(state.periodoGeral||'semana')===id?'active':''}" onclick="state.periodoGeral='${id}';render()">${l}</button>`).join('')}</div>
  ${state.widgetOrderGeral.map(k=>WIDGET_DEFS[k]?WIDGET_DEFS[k]():'').join('')}
  `;
@@ -785,19 +823,17 @@ function contaRow(c){
 }
 function excluirConta(id){closeSwipes();state.contas=state.contas.filter(c=>c.id!==id);render();toast('Conta excluída.')}
 function modalConta(id){
- const c=id?state.contas.find(x=>x.id===id):{tipo:'normal',nome:'',moeda:state.prefs.currency,saldo:0,grupoId:state.gruposConta[0]?.id||null,incluida:true};
- modal=`<div class="modal" onclick="if(event.target===this){modal=null;render()}"><div class="modal-panel"><div class="modal-head"><button class="modal-close" onclick="modal=null;render()">${ic('close')}</button><h2>${id?'Editar conta':'Nova conta'}</h2><span style="width:32px"></span></div>
+ const c=id?state.contas.find(x=>x.id===id):{tipo:'normal',nome:'',moeda:state.prefs.currency,saldo:'',grupoId:state.gruposConta[0]?.id||null,incluida:true};
+ const body=`
  <div class="field-group"><label class="flabel">Tipo</label><select class="field" id="cf-tipo">${Object.entries(TIPOS_CONTA).map(([k,v])=>`<option value="${k}" ${c.tipo===k?'selected':''}>${v.nome}</option>`).join('')}</select></div>
  <div class="field-group"><label class="flabel">Nome da conta</label><input class="field" id="cf-nome" value="${esc(c.nome)}" placeholder="Ex.: Conta corrente"></div>
- <div class="field-row">
-  <div class="field-group"><label class="flabel">Moeda</label><select class="field" id="cf-moeda">${MOEDAS.map(m=>`<option ${c.moeda===m?'selected':''}>${m}</option>`).join('')}</select></div>
-  <div class="field-group"><label class="flabel">Saldo real</label><input class="field" id="cf-saldo" type="number" step="0.01" value="${c.saldo}"></div>
- </div>
+ <div class="field-group"><label class="flabel">Moeda</label><select class="field" id="cf-moeda">${MOEDAS.map(m=>`<option ${c.moeda===m?'selected':''}>${m}</option>`).join('')}</select></div>
+ <div class="field-group"><label class="flabel">Saldo real</label>${moneyHero('cf-saldo',c.saldo)}</div>
  <div class="field-group"><label class="flabel">Grupo</label><select class="field" id="cf-grupo"><option value="">Sem grupo</option>${state.gruposConta.map(g=>`<option value="${g.id}" ${c.grupoId===g.id?'selected':''}>${esc(g.nome)}</option>`).join('')}<option value="__novo">+ Novo grupo…</option></select></div>
  <div class="field-group" style="display:flex;align-items:center;gap:10px"><input type="checkbox" id="cf-incluida" ${c.incluida?'checked':''} style="width:18px;height:18px"><label class="flabel" style="margin:0;text-transform:none;font-size:13px" for="cf-incluida">Incluir no patrimônio líquido</label></div>
  <button class="modal-save" onclick="salvarConta('${id||''}')">Salvar</button>
- ${id?`<button class="modal-save danger" onclick="excluirConta('${id}');modal=null;render()">Excluir conta</button>`:''}
- </div></div>`;
+ ${id?`<button class="modal-save danger" onclick="excluirConta('${id}');modal=null;render()">Excluir conta</button>`:''}`;
+ modal=modalShell(id?'Editar conta':'Nova conta',body);
  render();
 }
 function salvarConta(id){
@@ -868,23 +904,31 @@ function modalRegistro(id,duplicarDeId){
  const inicio=base?base.inicio.slice(11,16):(state.trabalhos[0]?.inicioJornada||'09:00');
  const fim=base?base.fim.slice(11,16):(state.trabalhos[0]?.fimJornada||'18:00');
  const pausa=base?base.pausa:(state.trabalhos[0]?.pausa||0);
- const extra=base?base.valorExtra:0, notas=base?base.notas:'', avulso=base?base.nomeAvulso:'';
- modal=`<div class="modal" onclick="if(event.target===this){modal=null;render()}"><div class="modal-panel"><div class="modal-head"><button class="modal-close" onclick="modal=null;render()">${ic('close')}</button><h2>${id?'Editar registro':'Novo registro'}</h2><span style="width:32px"></span></div>
- <div class="field-group"><label class="flabel">Trabalho</label><select class="field" id="rf-trabalho" onchange="document.getElementById('rf-avulso-wrap').style.display=this.value==='__avulso'?'block':'none'">${state.trabalhos.map(w=>`<option value="${w.id}" ${trabalhoId===w.id&&!avulso?'selected':''}>${esc(w.nome)}</option>`).join('')}<option value="__avulso" ${avulso?'selected':''}>Trabalho avulso (digitar nome)</option></select></div>
+ const extra=base?base.valorExtra:'', notas=base?base.notas:'', avulso=base?base.nomeAvulso:'';
+ const body=`
+ <div class="field-group"><label class="flabel">Trabalho</label><select class="field" id="rf-trabalho" onchange="syncRegistroTrabalho(this,${!id})">${state.trabalhos.map(w=>`<option value="${w.id}" ${trabalhoId===w.id&&!avulso?'selected':''}>${esc(w.nome)}</option>`).join('')}<option value="__avulso" ${avulso?'selected':''}>Trabalho avulso (digitar nome)</option></select></div>
  <div class="field-group" id="rf-avulso-wrap" style="display:${avulso?'block':'none'}"><label class="flabel">Nome do cliente/trabalho</label><input class="field" id="rf-avulso" value="${esc(avulso||'')}"></div>
  <div class="field-group"><label class="flabel">Data</label><input class="field" id="rf-data" type="date" value="${data}"></div>
  <div class="field-row">
   <div class="field-group"><label class="flabel">Início</label><input class="field" id="rf-inicio" type="time" value="${inicio}"></div>
   <div class="field-group"><label class="flabel">Fim</label><input class="field" id="rf-fim" type="time" value="${fim}"></div>
  </div>
- <div class="field-row">
-  <div class="field-group"><label class="flabel">Pausa (min)</label><input class="field" id="rf-pausa" type="number" value="${pausa||0}"></div>
-  <div class="field-group"><label class="flabel">Valor extra</label><input class="field" id="rf-extra" type="number" step="0.01" value="${extra||0}"></div>
- </div>
+ <div class="field-group"><label class="flabel">Pausa (min)</label><input class="field" id="rf-pausa" type="number" value="${pausa||0}"></div>
+ ${moneyCompact('rf-extra',extra,'Valor extra')}
  <div class="field-group"><label class="flabel">Notas</label><textarea class="field" id="rf-notas" rows="2">${esc(notas||'')}</textarea></div>
- <button class="modal-save" onclick="salvarRegistro('${id||''}')">Salvar</button>
- </div></div>`;
+ <button class="modal-save" onclick="salvarRegistro('${id||''}')">Salvar</button>`;
+ modal=modalShell(id?'Editar registro':'Novo registro',body);
  render();
+}
+function syncRegistroTrabalho(select,isNew){
+ document.getElementById('rf-avulso-wrap').style.display=select.value==='__avulso'?'block':'none';
+ if(!isNew||select.value==='__avulso')return;
+ const w=state.trabalhos.find(x=>x.id===select.value);
+ if(!w)return;
+ $('#rf-inicio').value=w.inicioJornada;
+ $('#rf-fim').value=w.fimJornada;
+ $('#rf-pausa').value=w.pausa||0;
+ $('#rf-extra').value=w.valorExtraPadrao||'';
 }
 function salvarRegistro(id){
  const trabSel=$('#rf-trabalho').value;
@@ -902,15 +946,15 @@ function salvarRegistro(id){
 }
 function modalSimulador(){
  const s=state.simulador||{inicio:diasAtras(29),fim:isoHoje(),trabalhoId:'all',desconto:0};
- modal=`<div class="modal" onclick="if(event.target===this){modal=null;render()}"><div class="modal-panel"><div class="modal-head"><button class="modal-close" onclick="modal=null;render()">${ic('close')}</button><h2>Simulação de salário</h2><span style="width:32px"></span></div>
+ const body=`
  <div class="field-row">
   <div class="field-group"><label class="flabel">Data inicial</label><input class="field" id="sf-inicio" type="date" value="${s.inicio}"></div>
   <div class="field-group"><label class="flabel">Data final</label><input class="field" id="sf-fim" type="date" value="${s.fim}"></div>
  </div>
  <div class="field-group"><label class="flabel">Trabalho</label><select class="field" id="sf-trabalho"><option value="all" ${s.trabalhoId==='all'?'selected':''}>Todos os trabalhos</option>${state.trabalhos.map(w=>`<option value="${w.id}" ${s.trabalhoId===w.id?'selected':''}>${esc(w.nome)}</option>`).join('')}</select></div>
  <div class="field-group"><label class="flabel">Desconto (%)</label><input class="field" id="sf-desconto" type="number" min="0" max="100" value="${s.desconto||0}"></div>
- <button class="modal-save" onclick="salvarSimulador()">Calcular</button>
- </div></div>`;
+ <button class="modal-save" onclick="salvarSimulador()">Calcular</button>`;
+ modal=modalShell('Simulação de salário',body);
  render();
 }
 function salvarSimulador(){
@@ -953,7 +997,7 @@ function excluirAtivo(id){closeSwipes();state.ativosCarteira=state.ativosCarteir
 function modalAtivoOrigem(){modalMovimentacao('compra',null)}
 function modalMovimentacao(tipo,ativoId){
  const ativos=state.ativosCarteira;
- modal=`<div class="modal" onclick="if(event.target===this){modal=null;render()}"><div class="modal-panel"><div class="modal-head"><button class="modal-close" onclick="modal=null;render()">${ic('close')}</button><h2>${tipo==='compra'?'Compra':'Venda'} de ativo</h2><span style="width:32px"></span></div>
+ const body=`
  <div class="type-toggle">
   <button data-k="compra" class="${tipo==='compra'?'active':''}" onclick="modalMovimentacao('compra','${ativoId||''}')">Compra</button>
   <button data-k="venda" class="${tipo==='venda'?'active':''}" onclick="modalMovimentacao('venda','${ativoId||''}')">Venda</button>
@@ -967,14 +1011,12 @@ function modalMovimentacao(tipo,ativoId){
   </div>
  </div>
  <div class="field-group"><label class="flabel">Data</label><input class="field" id="mf-data" type="date" value="${isoHoje()}"></div>
- <div class="field-row">
-  <div class="field-group"><label class="flabel">Quantidade</label><input class="field" id="mf-qtd" type="number" step="any" value="1" oninput="calcMovTotal()"></div>
-  <div class="field-group"><label class="flabel">Preço unitário</label><input class="field" id="mf-preco" type="number" step="0.01" value="0" oninput="calcMovTotal()"></div>
- </div>
- <div class="field-group"><label class="flabel">Outros custos</label><input class="field" id="mf-custos" type="number" step="0.01" value="0" oninput="calcMovTotal()"></div>
+ <div class="field-group"><label class="flabel">Quantidade</label><input class="field" id="mf-qtd" type="number" step="any" placeholder="0" value="" oninput="calcMovTotal()"></div>
+ ${moneyCompact('mf-preco','','Preço unitário','oninput="calcMovTotal()"')}
+ ${moneyCompact('mf-custos','','Outros custos','oninput="calcMovTotal()"')}
  <div class="calc-row"><span class="t-caption">Valor total</span><b id="mf-total">${money(0)}</b></div>
- <button class="modal-save" onclick="salvarMovimentacao('${tipo}')">Confirmar ${tipo}</button>
- </div></div>`;
+ <button class="modal-save" onclick="salvarMovimentacao('${tipo}')">Confirmar ${tipo}</button>`;
+ modal=modalShell(`${tipo==='compra'?'Compra':'Venda'} de ativo`,body);
  render();calcMovTotal();
 }
 function calcMovTotal(){
@@ -1000,7 +1042,7 @@ function transacoes(){
  [...state.transacoes].sort((a,b)=>(b.data+b.hora).localeCompare(a.data+a.hora)).forEach(t=>{(grouped[t.data]=grouped[t.data]||[]).push(t)});
  const dias=Object.keys(grouped).sort().reverse();
  return `${topbar('Transações','Histórico')}
- <button class="glass card" style="width:100%;text-align:left;border:0;cursor:pointer;margin-bottom:16px;display:flex;align-items:center;gap:12px" onclick="modalGrupoConta()"><div class="row-icon" style="background:color-mix(in srgb, var(--accent) 20%, transparent);color:var(--accent)">${ic('sliders')}</div><div class="row-main"><b>Categorias</b><span>${state.categorias.length} categorias fixas do sistema</span></div></button>
+ <button class="glass card" style="width:100%;text-align:left;border:0;cursor:pointer;margin-bottom:16px;display:flex;align-items:center;gap:12px" onclick="modalCategorias()"><div class="row-icon" style="background:color-mix(in srgb, var(--accent) 20%, transparent);color:var(--accent)">${ic('sliders')}</div><div class="row-main"><b>Categorias</b><span>${state.categorias.length} categorias · toque para editar</span></div><span class="chev" style="color:var(--muted)">${ic('chevron')}</span></button>
  <div class="list">${dias.length?dias.map(d=>{
   const items=grouped[d];
   const subtotal=items.reduce((s,t)=>s+(t.tipo==='gasto'?-t.valor:t.tipo==='lucro'?t.valor:0),0);
@@ -1010,6 +1052,7 @@ function transacoes(){
 }
 function transacaoRow(t){
  const c=t.tipo==='transferencia'?null:cat(t.categoriaId||'outros');
+ const sc=c&&t.subcategoriaId?subcat(t.categoriaId,t.subcategoriaId):null;
  const contaOrigem=state.contas.find(a=>a.id===t.contaId);
  const isTransfer=t.tipo==='transferencia';
  const contaDestino=isTransfer?state.contas.find(a=>a.id===t.contaDestinoId):null;
@@ -1018,19 +1061,77 @@ function transacaoRow(t){
   <button class="swipe-action delete" onclick="excluirTransacao('${t.id}')">${ic('trash')}<span>Excluir</span></button>
  </div><div class="swipe-content"><div class="row" onclick="modalTransacao('${t.id}')">
   <div class="row-icon" style="background:${isTransfer?'linear-gradient(135deg,var(--accent),var(--accent2))':c.cor}">${ic(isTransfer?'arrows':c.icone)}</div>
-  <div class="row-main"><b>${esc(t.descricao||(isTransfer?'Transferência':c.nome))}</b><span>${isTransfer?`${esc(contaOrigem?.nome||'')} → ${esc(contaDestino?.nome||'')}`:`${esc(contaOrigem?.nome||'')} · ${esc(c.nome)}`} · ${t.hora}</span></div>
+  <div class="row-main"><b>${esc(t.descricao||(isTransfer?'Transferência':c.nome))}</b><span>${isTransfer?`${esc(contaOrigem?.nome||'')} → ${esc(contaDestino?.nome||'')}`:`${esc(contaOrigem?.nome||'')} · ${esc(c.nome)}${sc?' · '+esc(sc.nome):''}`} · ${t.hora}</span></div>
   <div class="row-value"><b class="${t.tipo==='gasto'?'money-neg':t.tipo==='lucro'?'money-pos':''}">${t.tipo==='gasto'?'-':t.tipo==='lucro'?'+':''}${money(t.valor,contaMoeda(t.contaId))}</b></div>
  </div></div></div>`;
 }
 function excluirTransacao(id){closeSwipes();state.transacoes=state.transacoes.filter(t=>t.id!==id);render();toast('Transação excluída.')}
-function modalGrupoConta(){toast('Categorias são fixas nesta versão — mantém consistência de cores e ícones.')}
+
+/* ============ CATEGORIAS EDITÁVEIS — 05-Design-System §2.3 (paleta e ícones fechados) ============ */
+function modalCategorias(){
+ const body=`<div class="list">${state.categorias.map(c=>`<div class="cat-manage-row" onclick="modalCategoria('${c.id}')"><span class="ci" style="background:${c.cor}">${ic(c.icone)}</span><div class="row-main"><b>${esc(c.nome)}</b><span>${c.subcategorias.length} subcategoria${c.subcategorias.length===1?'':'s'}</span></div><span class="chev" style="color:var(--muted)">${ic('chevron')}</span></div>`).join('')}</div>
+ <button class="modal-save" onclick="modalCategoria()">Nova categoria</button>`;
+ modal=modalShell('Categorias',body);
+ render();
+}
+function modalCategoria(id){
+ const c=id?cat(id):{id:null,nome:'',cor:PALETA_CATEGORIA_CORES[0],icone:PALETA_CATEGORIA_ICONES[0],subcategorias:[]};
+ const isOutros=id==='outros';
+ const body=`
+ <div class="field-group"><label class="flabel">Nome</label><input class="field" id="ctf-nome" value="${esc(c.nome)}" placeholder="Ex.: Farmácia" ${isOutros?'disabled':''}></div>
+ <div class="field-group"><label class="flabel">Cor</label><div class="color-grid" id="ctf-cores">${PALETA_CATEGORIA_CORES.map(cor=>`<button type="button" class="color-pick ${c.cor===cor?'active':''}" data-cor="${cor}" style="background:${cor}" onclick="pickCor(this)"></button>`).join('')}</div></div>
+ <div class="field-group"><label class="flabel">Ícone</label><div class="icon-grid" id="ctf-icones">${PALETA_CATEGORIA_ICONES.map(icn=>`<button type="button" class="icon-pick ${c.icone===icn?'active':''}" data-icone="${icn}" onclick="pickIcone(this)">${ic(icn)}</button>`).join('')}</div></div>
+ <div class="field-group"><label class="flabel">Subcategorias</label>
+  <div id="ctf-subcats">${(c.subcategorias||[]).map(s=>`<span class="subcat-chip" data-sub-id="${s.id}"><span>${esc(s.nome)}</span><button type="button" onclick="this.parentElement.remove()">${ic('close')}</button></span>`).join('')||`<span class="t-caption" id="ctf-subcats-empty">Nenhuma ainda.</span>`}</div>
+  <div style="display:flex;gap:8px;margin-top:8px"><input class="field" id="ctf-novasub" placeholder="Nova subcategoria"><button type="button" class="icon-btn" onclick="addSubcategoriaTemp()">${ic('plus')}</button></div>
+ </div>
+ <button class="modal-save" onclick="salvarCategoria('${id||''}')">Salvar</button>
+ ${id&&!isOutros?`<button class="modal-save danger" onclick="excluirCategoria('${id}')">Excluir categoria</button>`:''}`;
+ modal=modalShell(id?'Editar categoria':'Nova categoria',body,{onClose:'modalCategorias()'});
+ render();
+}
+function pickCor(btn){document.querySelectorAll('#ctf-cores .color-pick').forEach(b=>b.classList.remove('active'));btn.classList.add('active')}
+function pickIcone(btn){document.querySelectorAll('#ctf-icones .icon-pick').forEach(b=>b.classList.remove('active'));btn.classList.add('active')}
+function addSubcategoriaTemp(){
+ const input=$('#ctf-novasub');
+ const nome=input.value.trim();
+ if(!nome)return;
+ const wrap=$('#ctf-subcats');
+ const empty=document.getElementById('ctf-subcats-empty');
+ if(empty)empty.remove();
+ const chip=document.createElement('span');
+ chip.className='subcat-chip';chip.dataset.subId=uid();
+ chip.innerHTML=`<span>${esc(nome)}</span><button type="button" onclick="this.parentElement.remove()">${ICONS.close}</button>`;
+ wrap.appendChild(chip);
+ input.value='';
+}
+function salvarCategoria(id){
+ const nome=$('#ctf-nome').value.trim();
+ if(!id&&!nome){toast('Digite um nome para a categoria.');return}
+ const cor=document.querySelector('#ctf-cores .color-pick.active')?.dataset.cor||PALETA_CATEGORIA_CORES[0];
+ const icone=document.querySelector('#ctf-icones .icon-pick.active')?.dataset.icone||PALETA_CATEGORIA_ICONES[0];
+ const subcategorias=[...document.querySelectorAll('#ctf-subcats .subcat-chip')].map(el=>({id:el.dataset.subId,nome:el.querySelector('span').textContent}));
+ if(id){
+  const c=cat(id);
+  Object.assign(c,{nome:id==='outros'?c.nome:(nome||c.nome),cor,icone,subcategorias});
+ }else{
+  state.categorias.push({id:uid(),nome:nome||'Categoria',cor,icone,subcategorias});
+ }
+ modalCategorias();toast('Categoria salva.');
+}
+function excluirCategoria(id){
+ if(id==='outros'){toast('A categoria "Outros" não pode ser excluída.');return}
+ state.categorias=state.categorias.filter(c=>c.id!==id);
+ state.transacoes.forEach(t=>{if(t.categoriaId===id){t.categoriaId='outros';t.subcategoriaId=null}});
+ modalCategorias();toast('Categoria excluída.');
+}
 function modalTransacao(id){
- const t=id?state.transacoes.find(x=>x.id===id):{tipo:'gasto',valor:0,descricao:'',data:isoHoje(),hora:new Date().toTimeString().slice(0,5),contaId:state.contas[0]?.id,contaDestinoId:null,categoriaId:'outros'};
- modal=`<div class="modal" onclick="if(event.target===this){modal=null;render()}"><div class="modal-panel"><div class="modal-head"><button class="modal-close" onclick="modal=null;render()">${ic('close')}</button><h2>${id?'Editar transação':'Nova transação'}</h2><span style="width:32px"></span></div>
+ const t=id?state.transacoes.find(x=>x.id===id):{tipo:'gasto',valor:'',descricao:'',data:isoHoje(),hora:new Date().toTimeString().slice(0,5),contaId:state.contas[0]?.id,contaDestinoId:null,categoriaId:'outros',subcategoriaId:null};
+ const body=`
  <div class="type-toggle">
   ${['gasto','lucro','transferencia'].map(k=>`<button data-k="${k}" class="${t.tipo===k?'active':''}" onclick="setTransacaoTipo('${k}')">${k==='gasto'?'Gasto':k==='lucro'?'Lucro':'Transferência'}</button>`).join('')}
  </div>
- <div class="field-group"><label class="flabel">Valor</label><input class="field" id="tf-valor" type="number" step="0.01" value="${t.valor}"></div>
+ <div class="field-group"><label class="flabel">Valor</label>${moneyHero('tf-valor',t.valor)}</div>
  <div class="field-group"><label class="flabel">Descrição</label><input class="field" id="tf-desc" value="${esc(t.descricao||'')}" placeholder="Ex.: Supermercado"></div>
  <div class="field-row">
   <div class="field-group"><label class="flabel">Data</label><input class="field" id="tf-data" type="date" value="${t.data}"></div>
@@ -1040,26 +1141,41 @@ function modalTransacao(id){
  <div class="field-group" id="tf-destino-wrap" style="display:${t.tipo==='transferencia'?'block':'none'}"><label class="flabel">Conta de destino</label><select class="field" id="tf-destino">${state.contas.map(a=>`<option value="${a.id}" ${t.contaDestinoId===a.id?'selected':''}>${esc(a.nome)}</option>`).join('')}</select></div>
  <div class="field-group" id="tf-cat-wrap" style="display:${t.tipo==='transferencia'?'none':'block'}"><label class="flabel">Categoria</label>
   <div class="cat-grid">${state.categorias.map(c=>`<button type="button" class="cat-pick ${t.categoriaId===c.id?'active':''}" data-cat="${c.id}" onclick="pickCategoria('${c.id}')"><span class="ci" style="background:${c.cor}">${ic(c.icone)}</span><span>${esc(c.nome)}</span></button>`).join('')}</div>
+  <div id="tf-subcat-wrap" style="margin-top:10px">${subcatChips(t.categoriaId,t.subcategoriaId)}</div>
  </div>
- <button class="modal-save" onclick="salvarTransacao('${id||''}')">Salvar</button>
- </div></div>`;
+ <button class="modal-save" onclick="salvarTransacao('${id||''}')">Salvar</button>`;
+ modal=modalShell(id?'Editar transação':'Nova transação',body);
  render();
 }
+function subcatChips(categoriaId,selectedId){
+ const c=cat(categoriaId);
+ if(!c||!c.subcategorias.length)return '';
+ return `<div class="flabel" style="margin-bottom:8px">Subcategoria</div><div class="selectbar" style="overflow:visible;flex-wrap:wrap">
+  <button type="button" class="chip ${!selectedId?'active':''}" data-subcat="" onclick="pickSubcategoria('')">Nenhuma</button>
+  ${c.subcategorias.map(s=>`<button type="button" class="chip ${selectedId===s.id?'active':''}" data-subcat="${s.id}" onclick="pickSubcategoria('${s.id}')">${esc(s.nome)}</button>`).join('')}
+ </div>`;
+}
+function pickSubcategoria(id){document.querySelectorAll('#tf-subcat-wrap .chip').forEach(b=>b.classList.toggle('active',b.dataset.subcat===id))}
 function setTransacaoTipo(k){
  document.querySelectorAll('.type-toggle button').forEach(b=>b.classList.toggle('active',b.dataset.k===k));
  $('#tf-destino-wrap').style.display=k==='transferencia'?'block':'none';
  $('#tf-cat-wrap').style.display=k==='transferencia'?'none':'block';
  modal=modal.replace(/data-k="(gasto|lucro|transferencia)" class="active"/,'').replace(new RegExp(`data-k="${k}"`),`data-k="${k}" class="active"`);
 }
-function pickCategoria(id){document.querySelectorAll('.cat-pick').forEach(b=>b.classList.toggle('active',b.dataset.cat===id))}
+function pickCategoria(id){
+ document.querySelectorAll('.cat-pick').forEach(b=>b.classList.toggle('active',b.dataset.cat===id));
+ document.getElementById('tf-subcat-wrap').innerHTML=subcatChips(id,null);
+}
 function salvarTransacao(id){
  const tipo=document.querySelector('.type-toggle button.active')?.dataset.k||'gasto';
  const categoriaId=document.querySelector('.cat-pick.active')?.dataset.cat||'outros';
+ const subcategoriaId=document.querySelector('#tf-subcat-wrap .chip.active')?.dataset.subcat||null;
  const data={
   tipo,valor:parseFloat($('#tf-valor').value)||0,descricao:$('#tf-desc').value.trim(),
   data:$('#tf-data').value,hora:$('#tf-hora').value,contaId:$('#tf-conta').value,
   contaDestinoId:tipo==='transferencia'?$('#tf-destino').value:null,
   categoriaId:tipo==='transferencia'?null:categoriaId,
+  subcategoriaId:tipo==='transferencia'?null:(subcategoriaId||null),
  };
  if(id){Object.assign(state.transacoes.find(t=>t.id===id),data)}else{state.transacoes.push({id:uid(),...data})}
  modal=null;render();toast('Transação salva.');
@@ -1094,19 +1210,19 @@ function compartilharApp(){
 }
 function modalPerfil(){
  const p=state.profile;
- modal=`<div class="modal" onclick="if(event.target===this){modal=null;render()}"><div class="modal-panel"><div class="modal-head"><button class="modal-close" onclick="modal=null;render()">${ic('close')}</button><h2>Perfil</h2><span style="width:32px"></span></div>
+ const body=`
  <div class="field-group"><label class="flabel">Nome</label><input class="field" id="pf-nome" value="${esc(p.name||'')}"></div>
  <div class="field-group"><label class="flabel">Data de nascimento</label><input class="field" id="pf-nasc" type="date" value="${p.birthday||''}"></div>
  <div class="field-group"><label class="flabel">E-mail</label><input class="field" id="pf-email" type="email" value="${esc(p.email||'')}"></div>
- <button class="modal-save" onclick="salvarPerfil()">Salvar</button>
- </div></div>`;
+ <button class="modal-save" onclick="salvarPerfil()">Salvar</button>`;
+ modal=modalShell('Perfil',body);
  render();
 }
 function salvarPerfil(){state.profile={...state.profile,name:$('#pf-nome').value.trim(),birthday:$('#pf-nasc').value,email:$('#pf-email').value.trim()};modal=null;render();toast('Perfil atualizado.')}
 function modalPersonalizar(){
  const p=state.prefs;
  const presets=[['classico','Clássico'],['aurora','Aurora'],['violeta','Violeta']];
- modal=`<div class="modal" onclick="if(event.target===this){modal=null;render()}"><div class="modal-panel"><div class="modal-head"><button class="modal-close" onclick="modal=null;render()">${ic('close')}</button><h2>Personalizar</h2><span style="width:32px"></span></div>
+ const body=`
  <div class="field-group"><label class="flabel">Idioma</label><select class="field" id="pz-idioma">${[['pt','Português'],['en','English (em breve)']].map(([k,l])=>`<option value="${k}" ${p.language===k?'selected':''}>${l}</option>`).join('')}</select></div>
  <div class="field-group"><label class="flabel">Tema</label>
   <div class="segmented" id="pz-tema">${[['light','Claro'],['dark','Escuro'],['system','Sistema']].map(([k,l])=>`<button type="button" class="${p.theme===k?'active':''}" data-v="${k}" onclick="pickSeg('pz-tema',this)">${l}</button>`).join('')}</div>
@@ -1116,8 +1232,8 @@ function modalPersonalizar(){
  <div class="field-group"><label class="flabel">Preset de destaque (herdado do Horas)</label>
   <div class="segmented" id="pz-preset">${presets.map(([k,l])=>`<button type="button" class="${p.accentPreset===k?'active':''}" data-v="${k}" onclick="pickSeg('pz-preset',this)">${l}</button>`).join('')}</div>
  </div>
- <button class="modal-save" onclick="salvarPersonalizar()">Salvar</button>
- </div></div>`;
+ <button class="modal-save" onclick="salvarPersonalizar()">Salvar</button>`;
+ modal=modalShell('Personalizar',body);
  render();
 }
 function pickSeg(id,btn){document.querySelectorAll(`#${id} button`).forEach(b=>b.classList.remove('active'));btn.classList.add('active')}
@@ -1134,30 +1250,27 @@ function salvarPersonalizar(){
  if(moedaAntiga!==state.prefs.currency)refreshMarketData(true);
 }
 function modalTrabalhos(){
- modal=`<div class="modal" onclick="if(event.target===this){modal=null;render()}"><div class="modal-panel"><div class="modal-head"><button class="modal-close" onclick="modal=null;render()">${ic('close')}</button><h2>Trabalhos</h2><button class="icon-btn" onclick="modalTrabalho()">${ic('plus')}</button></div>
- <div class="list">${state.trabalhos.length?state.trabalhos.map(w=>`<div class="row" onclick="modalTrabalho('${w.id}')"><div class="row-icon" style="background:linear-gradient(135deg,var(--accent),var(--accent2))">${ic('contas')}</div><div class="row-main"><b>${esc(w.nome)}</b><span>${w.inicioJornada}–${w.fimJornada} · ${money(w.valorHora)}/h</span></div><span class="chev" style="color:var(--muted)">${ic('chevron')}</span></div>`).join(''):emptyState('contas','Nenhum trabalho cadastrado.')}</div>
- </div></div>`;
+ const body=`<div class="list">${state.trabalhos.length?state.trabalhos.map(w=>`<div class="row" onclick="modalTrabalho('${w.id}')"><div class="row-icon" style="background:linear-gradient(135deg,var(--accent),var(--accent2))">${ic('contas')}</div><div class="row-main"><b>${esc(w.nome)}</b><span>${w.inicioJornada}–${w.fimJornada} · ${money(w.valorHora)}/h</span></div><span class="chev" style="color:var(--muted)">${ic('chevron')}</span></div>`).join(''):emptyState('contas','Nenhum trabalho cadastrado.')}</div>`;
+ modal=modalShell('Trabalhos',body,{headerRight:`<button class="icon-btn" onclick="modalTrabalho()">${ic('plus')}</button>`});
  render();
 }
 function modalTrabalho(id){
- const w=id?state.trabalhos.find(x=>x.id===id):{nome:'',inicioJornada:'09:00',fimJornada:'18:00',pausa:0,valorHora:0,valorExtraPadrao:0,descricao:'',inicioSemana:'segunda'};
+ const w=id?state.trabalhos.find(x=>x.id===id):{nome:'',inicioJornada:'09:00',fimJornada:'18:00',pausa:0,valorHora:'',valorExtraPadrao:'',descricao:'',inicioSemana:'segunda'};
  const temRegistros=id&&state.registrosDeHoras.some(r=>r.trabalhoId===id);
- modal=`<div class="modal" onclick="if(event.target===this){modal=null;render()}"><div class="modal-panel"><div class="modal-head"><button class="modal-close" onclick="modalTrabalhos()">${ic('close')}</button><h2>${id?'Editar trabalho':'Novo trabalho'}</h2><span style="width:32px"></span></div>
+ const body=`
  <div class="field-group"><label class="flabel">Nome do trabalho</label><input class="field" id="wf-nome" value="${esc(w.nome)}"></div>
  <div class="field-row">
   <div class="field-group"><label class="flabel">Início de jornada</label><input class="field" id="wf-inicio" type="time" value="${w.inicioJornada}"></div>
   <div class="field-group"><label class="flabel">Fim de jornada</label><input class="field" id="wf-fim" type="time" value="${w.fimJornada}"></div>
  </div>
- <div class="field-row">
-  <div class="field-group"><label class="flabel">Pausa (min)</label><input class="field" id="wf-pausa" type="number" value="${w.pausa||0}"></div>
-  <div class="field-group"><label class="flabel">Valor por hora</label><input class="field" id="wf-valorhora" type="number" step="0.01" value="${w.valorHora}"></div>
- </div>
- <div class="field-group"><label class="flabel">Valor extra padrão</label><input class="field" id="wf-extra" type="number" step="0.01" value="${w.valorExtraPadrao||0}"></div>
+ <div class="field-group"><label class="flabel">Pausa (min)</label><input class="field" id="wf-pausa" type="number" value="${w.pausa||0}"></div>
+ ${moneyCompact('wf-valorhora',w.valorHora,'Valor por hora')}
+ ${moneyCompact('wf-extra',w.valorExtraPadrao,'Valor extra padrão')}
  <div class="field-group"><label class="flabel">Descrição</label><textarea class="field" id="wf-desc" rows="2">${esc(w.descricao||'')}</textarea></div>
  <div class="field-group"><label class="flabel">Início da semana</label><select class="field" id="wf-semana">${['domingo','segunda'].map(d=>`<option ${w.inicioSemana===d?'selected':''}>${d}</option>`).join('')}</select></div>
  <button class="modal-save" onclick="salvarTrabalho('${id||''}')">Salvar</button>
- ${id?`<button class="modal-save danger" onclick="excluirTrabalho('${id}')" ${temRegistros?'disabled style="opacity:.5"':''}>${temRegistros?'Resolva os registros vinculados para excluir':'Excluir trabalho'}</button>`:''}
- </div></div>`;
+ ${id?`<button class="modal-save danger" onclick="excluirTrabalho('${id}')" ${temRegistros?'disabled style="opacity:.5"':''}>${temRegistros?'Resolva os registros vinculados para excluir':'Excluir trabalho'}</button>`:''}`;
+ modal=modalShell(id?'Editar trabalho':'Novo trabalho',body,{onClose:'modalTrabalhos()'});
  render();
 }
 function salvarTrabalho(id){
@@ -1170,18 +1283,16 @@ function excluirTrabalho(id){
  state.trabalhos=state.trabalhos.filter(w=>w.id!==id);modalTrabalhos();toast('Trabalho excluído.');
 }
 function modalObjetivo(id){
- const o=id?state.objetivos.find(x=>x.id===id):{nome:'',valorAlvo:0,valorAcumulado:0,dataFinal:diasAtras(-90),frequencia:'semanal'};
- modal=`<div class="modal" onclick="if(event.target===this){modal=null;render()}"><div class="modal-panel"><div class="modal-head"><button class="modal-close" onclick="modal=null;render()">${ic('close')}</button><h2>${id?'Editar objetivo':'Novo objetivo'}</h2><span style="width:32px"></span></div>
+ const o=id?state.objetivos.find(x=>x.id===id):{nome:'',valorAlvo:'',valorAcumulado:'',dataFinal:diasAtras(-90),frequencia:'semanal'};
+ const body=`
  <div class="field-group"><label class="flabel">Nome do objetivo</label><input class="field" id="of-nome" value="${esc(o.nome)}" placeholder="Ex.: Reserva de emergência"></div>
- <div class="field-row">
-  <div class="field-group"><label class="flabel">Valor alvo</label><input class="field" id="of-alvo" type="number" step="0.01" value="${o.valorAlvo}"></div>
-  <div class="field-group"><label class="flabel">Já acumulado</label><input class="field" id="of-acum" type="number" step="0.01" value="${o.valorAcumulado}"></div>
- </div>
+ ${moneyCompact('of-alvo',o.valorAlvo,'Valor alvo')}
+ ${moneyCompact('of-acum',o.valorAcumulado,'Já acumulado')}
  <div class="field-group"><label class="flabel">Data final</label><input class="field" id="of-data" type="date" value="${o.dataFinal}"></div>
  <div class="field-group"><label class="flabel">Frequência do aporte</label><div class="segmented" id="of-freq"><button type="button" class="${o.frequencia==='diaria'?'active':''}" data-v="diaria" onclick="pickSeg('of-freq',this)">Diária</button><button type="button" class="${o.frequencia!=='diaria'?'active':''}" data-v="semanal" onclick="pickSeg('of-freq',this)">Semanal</button></div></div>
  <button class="modal-save" onclick="salvarObjetivo('${id||''}')">Salvar</button>
- ${id?`<button class="modal-save danger" onclick="excluirObjetivo('${id}')">Excluir objetivo</button>`:''}
- </div></div>`;
+ ${id?`<button class="modal-save danger" onclick="excluirObjetivo('${id}')">Excluir objetivo</button>`:''}`;
+ modal=modalShell(id?'Editar objetivo':'Novo objetivo',body);
  render();
 }
 function salvarObjetivo(id){
@@ -1191,22 +1302,22 @@ function salvarObjetivo(id){
 }
 function excluirObjetivo(id){state.objetivos=state.objetivos.filter(o=>o.id!==id);modal=null;render();toast('Objetivo excluído.')}
 function modalLimiteDiario(){
- modal=`<div class="modal" onclick="if(event.target===this){modal=null;render()}"><div class="modal-panel"><div class="modal-head"><button class="modal-close" onclick="modal=null;render()">${ic('close')}</button><h2>Limite diário</h2><span style="width:32px"></span></div>
- <div class="field-group"><label class="flabel">Valor do limite por dia</label><input class="field" id="lf-valor" type="number" step="0.01" value="${state.limiteDiario.valor||0}"></div>
- <button class="modal-save" onclick="salvarLimiteDiario()">Salvar</button>
- </div></div>`;
+ const body=`
+ <div class="field-group"><label class="flabel">Valor do limite por dia</label>${moneyHero('lf-valor',state.limiteDiario.valor||'')}</div>
+ <button class="modal-save" onclick="salvarLimiteDiario()">Salvar</button>`;
+ modal=modalShell('Limite diário',body);
  render();
 }
 function salvarLimiteDiario(){state.limiteDiario.valor=parseFloat($('#lf-valor').value)||0;modal=null;render();toast('Limite diário atualizado.')}
 function modalSobre(){
- modal=`<div class="modal" onclick="if(event.target===this){modal=null;render()}"><div class="modal-panel"><div class="modal-head"><button class="modal-close" onclick="modal=null;render()">${ic('close')}</button><h2>Sobre</h2><span style="width:32px"></span></div>
+ const body=`
  <p class="t-body">Horas reúne controle de gastos, contas, horas trabalhadas e carteira de investimentos em uma única experiência, com visual e interações inspirados no ecossistema Apple.</p>
- <p class="t-caption">Versão 0.3 (protótipo local) · dados salvos apenas neste navegador · cotações de câmbio via Frankfurter.app e cripto via CoinGecko, quando disponíveis.</p>
- </div></div>`;
+ <p class="t-caption">Versão 0.3 (protótipo local) · dados salvos apenas neste navegador · cotações de câmbio via Frankfurter.app e cripto via CoinGecko, quando disponíveis.</p>`;
+ modal=modalShell('Sobre',body);
  render();
 }
 function modalBackup(){
- modal=`<div class="modal" onclick="if(event.target===this){modal=null;render()}"><div class="modal-panel"><div class="modal-head"><button class="modal-close" onclick="modal=null;render()">${ic('close')}</button><h2>Relatórios / backup</h2><span style="width:32px"></span></div>
+ const body=`
  <p class="t-caption" style="margin-top:0">Exporta contas, transações, horas trabalhadas e carteira de investimentos.</p>
  <div style="display:flex;gap:10px;margin-top:14px">
   <button class="modal-save" onclick="exportarCSV()">Exportar CSV</button>
@@ -1214,8 +1325,8 @@ function modalBackup(){
  </div>
  <div style="display:flex;gap:10px;margin-top:10px">
   <button class="modal-save" style="background:var(--mat-thin);color:var(--ink);border:1px solid var(--border)" onclick="exportarJSON()">Exportar dados (.json)</button>
- </div>
- </div></div>`;
+ </div>`;
+ modal=modalShell('Relatórios / backup',body);
  render();
 }
 function baixarArquivo(nome,conteudo,tipo){
