@@ -4,11 +4,35 @@ import type { VercelRequest, VercelResponse } from '@vercel/node';
 // O cliente chama /api/brapi-quote?symbols=... sem nenhuma credencial; esta função é a
 // única que fala com a brapi.dev, usando o token lido de process.env.BRAPI_TOKEN.
 
+interface DividendoAtivo {
+  paymentDate?: string;
+  approvedOn?: string;
+  lastDatePrior?: string;
+  rate?: number;
+  relatedTo?: string;
+  label?: string;
+}
+
+interface DividendsData {
+  cashDividends?: DividendoAtivo[];
+  stockDividends?: DividendoAtivo[];
+}
+
 interface CotacaoAtivo {
   regularMarketPrice: number;
+  regularMarketChange?: number;
+  regularMarketChangePercent?: number;
+  regularMarketDayHigh?: number;
+  regularMarketDayLow?: number;
+  regularMarketTime?: string;
+  fiftyTwoWeekHigh?: number;
+  fiftyTwoWeekLow?: number;
+  marketCap?: number;
+  logourl?: string;
+  longName?: string;
   shortName?: string;
   currency?: string;
-  regularMarketTime?: string;
+  dividendsData?: DividendsData;
 }
 
 interface BrapiQuoteResult {
@@ -29,7 +53,7 @@ interface ErroResposta {
 }
 
 async function buscarCotacaoBrapi(symbols: string[], token: string): Promise<BrapiQuoteResult[]> {
-  const url = `https://brapi.dev/api/v2/stocks/quote?symbols=${symbols.map(encodeURIComponent).join(',')}`;
+  const url = `https://brapi.dev/api/v2/stocks/quote?symbols=${symbols.map(encodeURIComponent).join(',')}&dividends=true`;
   const resposta = await fetch(url, {
     headers: { Authorization: `Bearer ${token}` },
   });

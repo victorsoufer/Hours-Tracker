@@ -476,11 +476,11 @@ async function refreshMarketData(silent){
     const porCodigo={};
     (d.results||[]).forEach(res=>{
      const preco=res.data&&res.data.regularMarketPrice;
-     if(preco!=null)porCodigo[(res.symbol||res.requestedSymbol||'').toUpperCase()]=preco;
+     if(preco!=null)porCodigo[(res.symbol||res.requestedSymbol||'').toUpperCase()]=res.data;
     });
     for(const a of b3){
-     const precoBRL=porCodigo[a.codigo.toUpperCase()];
-     if(precoBRL!=null)state.marketCache[a.id]={preco:precoBRL,moeda:'BRL',atualizadoEm:Date.now()};
+     const dados=porCodigo[a.codigo.toUpperCase()];
+     if(dados!=null)state.marketCache[a.id]={preco:dados.regularMarketPrice,moeda:'BRL',atualizadoEm:Date.now(),detalhe:dados};
     }
     const semCotacao=b3.filter(a=>porCodigo[a.codigo.toUpperCase()]==null);
     if(semCotacao.length){
@@ -1038,7 +1038,7 @@ function carteira(){
  const alocacao=alocacaoCarteira();
  const periodos=[['6m','6 meses'],['1a','1 ano'],['5a','5 anos'],['10a','10 anos']];
  return `${topbar('Carteira','Investimentos')}
- <div class="section-head" style="margin-top:-4px"><span></span><button class="icon-btn" onclick="refreshMarketData()" aria-label="Atualizar cotações">${ic('refresh')}</button></div>
+ <div class="section-head" style="margin-top:-4px"><span></span><div style="display:flex;gap:8px"><button class="icon-btn" onclick="modalProventos()" aria-label="Proventos">${ic('gift')}</button><button class="icon-btn" onclick="refreshMarketData()" aria-label="Atualizar cotações">${ic('refresh')}</button></div></div>
  <div class="glass specular card" style="margin-bottom:14px">
   <div class="widget-head"><b>Patrimônio total</b>${pillFor(ganhoBRL>=0?'positivo':'negativo',(ganhoBRL>=0?'+':'')+moneyBRL(ganhoBRL))}</div>
   <div class="t-display hero-num">${money(patTotal)}</div>
@@ -1059,7 +1059,7 @@ function ativoRow(a){
  return `<div class="swipe-row" data-id="${a.id}"><div class="swipe-actions">
   <button class="swipe-action" onclick="closeSwipes();modalMovimentacao('venda','${a.id}')">${ic('arrows')}<span>Vender</span></button>
   <button class="swipe-action delete" onclick="excluirAtivo('${a.id}')">${ic('trash')}<span>Excluir</span></button>
- </div><div class="swipe-content"><div class="row" onclick="modalMovimentacao('compra','${a.id}')">
+ </div><div class="swipe-content"><div class="row" onclick="modalAtivoDetalhe('${a.id}')">
   <div class="row-icon" style="background:${cor};font:800 11px var(--font)">${TIPOS_ATIVO[a.tipo].slice(0,3).toUpperCase()}</div>
   <div class="row-main"><b>${esc(a.nome)}${a.codigo&&a.codigo!==a.nome?' · '+esc(a.codigo):''}</b><span>${qtd.toLocaleString('pt-BR',{maximumFractionDigits:6})} un. · ${money(precoBRL,'BRL')} ${badge}</span></div>
   <div class="row-value">${dualBRL(valorBRL)}<span>${TIPOS_ATIVO[a.tipo]}</span></div>
@@ -1107,6 +1107,85 @@ function salvarMovimentacao(tipo){
  state.movimentacoesAtivo.push(mov);
  modal=null;render();toast(tipo==='compra'?'Compra registrada.':'Venda registrada.');
  refreshMarketData(true);
+}
+
+/* ============ DETALHE DO ATIVO — dados de mercado (brapi) + posição do usuário + proventos ============ */
+function proventosDoAtivo(a){
+ const mc=state.marketCache[a.id];
+ const cd=mc&&mc.detalhe&&mc.detalhe.dividendsData&&mc.detalhe.dividendsData.cashDividends;
+ return Array.isArray(cd)?cd:[];
+}
+function dataProvento(d){return (d.paymentDate||d.approvedOn||d.lastDatePrior||'')}
+function fmtDataProvento(s){
+ if(!s)return '—';
+ const iso=s.slice(0,10);
+ return /^\d{4}-\d{2}-\d{2}$/.test(iso)?fmtDate(iso):s;
+}
+function modalAtivoDetalhe(id){
+ const a=state.ativosCarteira.find(x=>x.id===id);
+ if(!a)return;
+ const mc=state.marketCache[id];
+ const det=mc&&mc.detalhe;
+ const qtd=ativoQtd(id),precoBRL=ativoPrecoAtual(a),valorBRL=ativoValorMercado(a),custoMedio=ativoCustoMedio(id);
+ const investidoBRL=qtd*custoMedio,ganhoBRL=valorBRL-investidoBRL,ganhoPct=investidoBRL?ganhoBRL/investidoBRL*100:0;
+ const cor=ATIVO_CORES[a.tipo]||'#22B8CF';
+ const variacaoPct=det&&det.regularMarketChangePercent;
+ const stats=[];
+ if(det&&(det.regularMarketDayHigh!=null||det.regularMarketDayLow!=null))stats.push(['Máx./mín. do dia',`${money(det.regularMarketDayHigh||0,'BRL')} / ${money(det.regularMarketDayLow||0,'BRL')}`]);
+ if(det&&(det.fiftyTwoWeekHigh!=null||det.fiftyTwoWeekLow!=null))stats.push(['Máx./mín. 52 sem.',`${money(det.fiftyTwoWeekHigh||0,'BRL')} / ${money(det.fiftyTwoWeekLow||0,'BRL')}`]);
+ if(det&&det.marketCap!=null)stats.push(['Valor de mercado',money(det.marketCap,'BRL')]);
+ const proventos=proventosDoAtivo(a).slice().sort((x,y)=>dataProvento(y).localeCompare(dataProvento(x)));
+ const body=`
+ <div class="glass card" style="text-align:center;margin-bottom:14px">
+  ${det&&det.logourl?`<img src="${esc(det.logourl)}" alt="" style="width:44px;height:44px;border-radius:12px;margin-bottom:8px" onerror="this.style.display='none'">`:`<div class="row-icon" style="background:${cor};font:800 13px var(--font);margin:0 auto 8px">${TIPOS_ATIVO[a.tipo].slice(0,3).toUpperCase()}</div>`}
+  <div class="t-headline">${esc((det&&(det.longName||det.shortName))||a.nome)}</div>
+  <div class="t-caption">${esc(a.codigo||a.nome)} · ${TIPOS_ATIVO[a.tipo]}</div>
+  <div class="t-display hero-num" style="margin-top:10px">${money(precoBRL,'BRL')}</div>
+  ${variacaoPct!=null?pillFor(variacaoPct>=0?'positivo':'negativo',`${variacaoPct>=0?'+':''}${variacaoPct.toFixed(2)}%`):''}
+  <div class="t-caption" style="margin-top:6px">${mc?`atualizado ${new Date(mc.atualizadoEm).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})}`:'preço manual/custo médio'}</div>
+ </div>
+ ${stats.length?`<div class="glass card" style="margin-bottom:14px">${stats.map(([l,v])=>`<div class="calc-row"><span class="t-caption">${l}</span><b>${v}</b></div>`).join('')}</div>`:''}
+ <div class="glass card" style="margin-bottom:14px">
+  <div class="t-headline" style="margin-bottom:8px">Sua posição</div>
+  <div class="calc-row"><span class="t-caption">Quantidade</span><b>${qtd.toLocaleString('pt-BR',{maximumFractionDigits:6})}</b></div>
+  <div class="calc-row"><span class="t-caption">Preço médio</span><b>${money(custoMedio,'BRL')}</b></div>
+  <div class="calc-row"><span class="t-caption">Valor investido</span><b>${money(investidoBRL,'BRL')}</b></div>
+  <div class="calc-row"><span class="t-caption">Valor atual</span><b>${money(valorBRL,'BRL')}</b></div>
+  <div class="calc-row"><span class="t-caption">Lucro/prejuízo</span>${pillFor(ganhoBRL>=0?'positivo':'negativo',`${ganhoBRL>=0?'+':''}${money(ganhoBRL,'BRL')} (${ganhoPct>=0?'+':''}${ganhoPct.toFixed(1)}%)`)}</div>
+ </div>
+ <div style="display:flex;gap:10px;margin-bottom:14px">
+  <button class="modal-save" style="margin:0;flex:1" onclick="modalMovimentacao('compra','${id}')">Comprar</button>
+  <button class="modal-save danger" style="margin:0;flex:1" onclick="modalMovimentacao('venda','${id}')">Vender</button>
+ </div>
+ <div class="section-head"><div class="t-headline">Proventos recebidos</div><span class="t-caption">${proventos.length}</span></div>
+ <div class="list">${proventos.length?proventos.map(d=>`<div class="row"><div class="row-icon" style="background:var(--success)">${ic('gift')}</div><div class="row-main"><b>${esc(d.label||d.relatedTo||'Provento')}</b><span>${fmtDataProvento(dataProvento(d))}</span></div><div class="row-value"><b>${money(d.rate||0,'BRL')}/cota</b><span>${money((d.rate||0)*qtd,'BRL')} total</span></div></div>`).join(''):emptyState('gift','Sem histórico de proventos disponível pela brapi para este ativo.')}</div>
+ `;
+ modal=modalShell(a.codigo||a.nome,body);render();
+}
+
+/* ============ PROVENTOS DO MÊS — soma cashDividends com pagamento no mês corrente × posição atual (aproximação, 01-PRD §3.4) ============ */
+function proventosDoMes(a,ano,mes){
+ return proventosDoAtivo(a).reduce((s,d)=>{
+  const iso=dataProvento(d).slice(0,10);
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(iso))return s;
+  const [y,m]=iso.split('-').map(Number);
+  if(y!==ano||m!==mes)return s;
+  return s+(d.rate||0)*ativoQtd(a.id);
+ },0);
+}
+function modalProventos(){
+ const hoje=new Date();
+ const ano=hoje.getFullYear(),mes=hoje.getMonth()+1;
+ const linhas=state.ativosCarteira.map(a=>({a,total:proventosDoMes(a,ano,mes)})).filter(l=>l.total>0).sort((x,y)=>y.total-x.total);
+ const totalGeral=linhas.reduce((s,l)=>s+l.total,0);
+ const body=`
+ <div class="glass specular card" style="margin-bottom:14px;text-align:center">
+  <div class="t-caption">Proventos recebidos em ${hoje.toLocaleDateString('pt-BR',{month:'long',year:'numeric'})}</div>
+  <div class="t-display hero-num" style="margin-top:6px">${moneyBRL(totalGeral)}</div>
+ </div>
+ <div class="list">${linhas.length?linhas.map(l=>`<div class="row"><div class="row-icon" style="background:${ATIVO_CORES[l.a.tipo]||'#22B8CF'};font:800 11px var(--font)">${TIPOS_ATIVO[l.a.tipo].slice(0,3).toUpperCase()}</div><div class="row-main"><b>${esc(l.a.nome)}${l.a.codigo&&l.a.codigo!==l.a.nome?' · '+esc(l.a.codigo):''}</b><span>${TIPOS_ATIVO[l.a.tipo]}</span></div><div class="row-value"><b>${moneyBRL(l.total)}</b></div></div>`).join(''):emptyState('gift','Nenhum provento registrado pela brapi para os seus ativos neste mês.')}</div>
+ `;
+ modal=modalShell('Proventos do mês',body);render();
 }
 
 /* ============ ABA TRANSAÇÕES — 01-PRD §3.5 ============ */
