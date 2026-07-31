@@ -1,10 +1,10 @@
 {
-  "name": "Horas — Controle de tempo",
+  "name": "Horas — finanças, trabalho e investimentos",
   "short_name": "Horas",
-  "description": "Registre suas horas e acompanhe seus ganhos.",
+  "description": "Contas, gastos, horas trabalhadas e carteira de investimentos em um só lugar.",
   "start_url": "./",
   "display": "standalone",
-  "background_color": "#10213d",
-  "theme_color": "#10213d",
+  "background_color": "#0B0F0D",
+  "theme_color": "#0B0F0D",
   "icons": [{ "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }]
 }
