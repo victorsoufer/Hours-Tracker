@@ -325,7 +325,7 @@ function seed(){
   loggedIn:false,
   page:'geral', prevPage:'geral',
   profile:{name:'',birthday:'',email:''},
-  prefs:{theme:'system',currency:'BRL',dateFormat:'DD/MM/AAAA',language:'pt',accentPreset:'classico',brapiToken:''},
+  prefs:{theme:'system',currency:'BRL',dateFormat:'DD/MM/AAAA',language:'pt',accentPreset:'classico'},
   contasSelecionadas:null,
   gruposConta:[],
   contas:[],
@@ -464,13 +464,13 @@ async function refreshMarketData(silent){
    }
   }catch(e){console.warn('cotação cripto indisponível, mantendo cache',e);erros.push('cripto (rede)')}
  }
+ // cotação B3 via /api/brapi-quote — função de servidor que guarda o token, o cliente nunca fala com a brapi.dev diretamente
  const b3=state.ativosCarteira.filter(a=>['acao','fii','bdr','etf'].includes(a.tipo)&&a.codigo);
  if(b3.length){
   try{
    const codigos=[...new Set(b3.map(a=>a.codigo.toUpperCase()))];
    const symbolsParam=codigos.map(encodeURIComponent).join(',');
-   const headers=state.prefs.brapiToken?{Authorization:`Bearer ${state.prefs.brapiToken.trim()}`}:{};
-   const r=await fetch(`https://brapi.dev/api/v2/stocks/quote?symbols=${symbolsParam}`,{headers});
+   const r=await fetch(`/api/brapi-quote?symbols=${symbolsParam}`);
    if(r.ok){
     const d=await r.json();
     const porCodigo={};
@@ -484,15 +484,15 @@ async function refreshMarketData(silent){
     }
     const semCotacao=b3.filter(a=>porCodigo[a.codigo.toUpperCase()]==null);
     if(semCotacao.length){
-     console.warn('brapi.dev não retornou cotação para:',semCotacao.map(a=>a.codigo).join(', '),d);
+     console.warn('sem cotação para:',semCotacao.map(a=>a.codigo).join(', '),d);
      erros.push(`B3: sem dado p/ ${semCotacao.map(a=>a.codigo).join(', ')}`);
     }
    }else{
-    let corpo='';try{corpo=await r.text()}catch(e){}
-    console.warn('brapi.dev HTTP',r.status,corpo);
-    erros.push(r.status===401||r.status===403?'B3: token inválido/expirado':r.status===429?'B3: limite da brapi atingido':`B3 (${r.status})`);
+    let corpo={};try{corpo=await r.json()}catch(e){}
+    console.warn('/api/brapi-quote HTTP',r.status,corpo);
+    erros.push(corpo.mensagem?`B3: ${corpo.mensagem}`:r.status===404?'B3: função /api ainda não publicada':`B3 (${r.status})`);
    }
-  }catch(e){console.warn('cotação B3 (brapi.dev) indisponível — provável bloqueio de rede/CORS',e);erros.push('B3: falha de rede/CORS')}
+  }catch(e){console.warn('cotação B3 indisponível',e);erros.push('B3: falha de rede')}
  }
  save();
  if(!silent){render();toast(erros.length?`Cotações: ${erros.join(' · ')}`:'Cotações atualizadas.')}
@@ -1307,7 +1307,6 @@ function modalPersonalizar(){
  <div class="field-group"><label class="flabel">Preset de destaque (herdado do Horas)</label>
   <div class="segmented" id="pz-preset">${presets.map(([k,l])=>`<button type="button" class="${p.accentPreset===k?'active':''}" data-v="${k}" onclick="pickSeg('pz-preset',this)">${l}</button>`).join('')}</div>
  </div>
- <div class="field-group"><label class="flabel">Token brapi.dev (opcional)</label><input class="field" id="pz-brapi" value="${esc(p.brapiToken||'')}" placeholder="Cole aqui seu token gratuito"><p class="t-caption" style="margin:6px 3px 0">PETR4, VALE3, MGLU3 e ITUB4 têm cotação ao vivo sem token. Para outras ações, FIIs e BDRs, crie um token gratuito em brapi.dev e cole aqui — fica salvo só neste aparelho.</p></div>
  <button class="modal-save" onclick="salvarPersonalizar()">Salvar</button>`;
  modal=modalShell('Personalizar',body);
  render();
@@ -1320,7 +1319,6 @@ function salvarPersonalizar(){
   currency:$('#pz-moeda').value,
   dateFormat:$('#pz-data').value,
   accentPreset:document.querySelector('#pz-preset button.active').dataset.v,
-  brapiToken:$('#pz-brapi').value.trim(),
  };
  modal=null;render();toast('Preferências salvas.');
  refreshMarketData(true);
