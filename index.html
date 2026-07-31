@@ -325,73 +325,28 @@ const MOEDAS=['BRL','USD','EUR','GBP','JPY','CAD','AUD','CHF','ARS','MXN','CNY',
 
 /* ============ ESTADO ============ */
 const KEY='horas-wealth-v1';
+const SEED_VERSION=2; // v2: remove todos os dados de demonstração — estado inicial em branco
 function seed(){
- const uid=()=>Math.random().toString(36).slice(2,10);
- const gBr=uid(),gEx=uid();
- const wConsult=uid(),wAula=uid();
- const ativoPetr=uid(),ativoMxrf=uid(),ativoBtc=uid(),ativoTesouro=uid();
- const contaCorrente=uid(),contaPoup=uid(),contaCarteira=uid(),contaExterior=uid(),contaEmprestimo=uid();
  return {
+  seedVersion:SEED_VERSION,
   loggedIn:false,
   page:'geral', prevPage:'geral',
-  profile:{name:'Lorrany',birthday:'',email:'lorrany@email.com'},
+  profile:{name:'',birthday:'',email:''},
   prefs:{theme:'system',currency:'BRL',dateFormat:'DD/MM/AAAA',language:'pt',accentPreset:'classico'},
   contasSelecionadas:null,
-  gruposConta:[{id:gBr,nome:'Contas Brasil'},{id:gEx,nome:'Contas Irlanda'}],
-  contas:[
-   {id:contaCorrente,tipo:'normal',nome:'Conta corrente',moeda:'BRL',saldo:8214.50,grupoId:gBr,incluida:true},
-   {id:contaPoup,tipo:'poupanca',nome:'Poupança',moeda:'BRL',saldo:3400,grupoId:gBr,incluida:true},
-   {id:contaCarteira,tipo:'dinheiro',nome:'Carteira',moeda:'BRL',saldo:180,grupoId:gBr,incluida:true},
-   {id:contaExterior,tipo:'normal',nome:'Revolut',moeda:'EUR',saldo:1180,grupoId:gEx,incluida:true},
-   {id:contaEmprestimo,tipo:'emprestimo',nome:'Financiamento notebook',moeda:'BRL',saldo:1800,grupoId:gBr,incluida:true},
-  ],
-  categorias:CATEGORIAS.map(c=>({...c,subcategorias:c.subcategorias.map(s=>({...s}))})),
-  transacoes:[
-   {id:uid(),contaId:contaCorrente,categoriaId:'alimentacao',tipo:'gasto',valor:86.40,descricao:'Supermercado',data:'2026-07-30',hora:'19:20'},
-   {id:uid(),contaId:contaCorrente,categoriaId:'transporte',tipo:'gasto',valor:42,descricao:'Combustível',data:'2026-07-30',hora:'08:05'},
-   {id:uid(),contaId:contaCorrente,categoriaId:null,tipo:'lucro',valor:2080,descricao:'Recebimento consultoria',data:'2026-07-29',hora:'10:00'},
-   {id:uid(),contaId:contaCorrente,categoriaId:'assinaturas',tipo:'gasto',valor:39.90,descricao:'Streaming',data:'2026-07-28',hora:'12:00'},
-   {id:uid(),contaId:contaCorrente,categoriaId:'lazer',tipo:'gasto',valor:120,descricao:'Cinema com amigos',data:'2026-07-27',hora:'21:10'},
-   {id:uid(),contaId:contaCorrente,categoriaId:'moradia',tipo:'gasto',valor:1450,descricao:'Aluguel',data:'2026-07-26',hora:'09:00'},
-   {id:uid(),contaId:contaCorrente,contaDestinoId:contaPoup,categoriaId:null,tipo:'transferencia',valor:500,descricao:'Reserva do mês',data:'2026-07-25',hora:'18:30'},
-   {id:uid(),contaId:contaCorrente,categoriaId:'saude',tipo:'gasto',valor:65,descricao:'Farmácia',data:'2026-07-24',hora:'14:15'},
-   {id:uid(),contaId:contaCorrente,categoriaId:'compras',tipo:'gasto',valor:210,descricao:'Roupas',data:'2026-07-22',hora:'17:40'},
-   {id:uid(),contaId:contaCorrente,categoriaId:'educacao',tipo:'gasto',valor:75,descricao:'Curso online',data:'2026-07-20',hora:'20:00'},
-  ],
-  trabalhos:[
-   {id:wConsult,nome:'Consultoria UX',inicioJornada:'09:00',fimJornada:'18:00',pausa:60,valorHora:80,valorExtraPadrao:0,descricao:'Cliente recorrente',inicioSemana:'segunda'},
-   {id:wAula,nome:'Aulas particulares',inicioJornada:'19:00',fimJornada:'21:00',pausa:0,valorHora:60,valorExtraPadrao:0,descricao:'',inicioSemana:'segunda'},
-  ],
-  registrosDeHoras:[
-   {id:uid(),trabalhoId:wConsult,nomeAvulso:null,data:'2026-07-28',inicio:'2026-07-28T09:00',fim:'2026-07-28T18:00',pausa:60,valorExtra:0,notas:''},
-   {id:uid(),trabalhoId:wConsult,nomeAvulso:null,data:'2026-07-29',inicio:'2026-07-29T09:00',fim:'2026-07-29T17:00',pausa:60,valorExtra:0,notas:''},
-   {id:uid(),trabalhoId:wConsult,nomeAvulso:null,data:'2026-07-30',inicio:'2026-07-30T09:00',fim:'2026-07-30T18:30',pausa:60,valorExtra:40,notas:'Reunião extra'},
-   {id:uid(),trabalhoId:wAula,nomeAvulso:null,data:'2026-07-30',inicio:'2026-07-30T19:00',fim:'2026-07-30T21:00',pausa:0,valorExtra:0,notas:''},
-  ],
-  objetivos:[
-   {id:uid(),nome:'Reserva de emergência',valorAlvo:15000,valorAcumulado:6200,dataFinal:'2026-12-31',frequencia:'semanal'},
-   {id:uid(),nome:'Viagem de fim de ano',valorAlvo:6000,valorAcumulado:1400,dataFinal:'2026-11-15',frequencia:'diaria'},
-  ],
-  limiteDiario:{valor:120},
-  ativosCarteira:[
-   {id:ativoPetr,tipo:'acao',codigo:'PETR4',nome:'Petrobras PN'},
-   {id:ativoMxrf,tipo:'fii',codigo:'MXRF11',nome:'Maxi Renda FII'},
-   {id:ativoBtc,tipo:'cripto',codigo:'BTC',nome:'Bitcoin'},
-   {id:ativoTesouro,tipo:'tesouro_direto',codigo:null,nome:'Tesouro Selic 2029'},
-  ],
-  movimentacoesAtivo:[
-   {id:uid(),ativoId:ativoPetr,tipo:'compra',data:'2026-02-10',quantidade:120,preco:32.40,outrosCustos:6,valorTotal:120*32.40+6},
-   {id:uid(),ativoId:ativoPetr,tipo:'compra',data:'2026-05-14',quantidade:40,preco:35.10,outrosCustos:3,valorTotal:40*35.10+3},
-   {id:uid(),ativoId:ativoMxrf,tipo:'compra',data:'2026-03-02',quantidade:300,preco:9.85,outrosCustos:4,valorTotal:300*9.85+4},
-   {id:uid(),ativoId:ativoBtc,tipo:'compra',data:'2026-01-20',quantidade:0.015,preco:340000,outrosCustos:12,valorTotal:0.015*340000+12},
-   {id:uid(),ativoId:ativoTesouro,tipo:'compra',data:'2025-11-05',quantidade:1,preco:9200,outrosCustos:0,valorTotal:9200},
-  ],
-  marketCache:{
-   [ativoPetr]:{preco:38.60,moeda:'BRL',atualizadoEm:Date.now()-1000*60*22},
-   [ativoMxrf]:{preco:10.35,moeda:'BRL',atualizadoEm:Date.now()-1000*60*22},
-   [ativoBtc]:{preco:372000,moeda:'BRL',atualizadoEm:Date.now()-1000*60*8},
-  },
+  gruposConta:[],
+  contas:[],
+  categorias:CATEGORIAS.map(c=>({...c,subcategorias:[]})),
+  transacoes:[],
+  trabalhos:[],
+  registrosDeHoras:[],
+  objetivos:[],
+  limiteDiario:{valor:0},
+  ativosCarteira:[],
+  movimentacoesAtivo:[],
+  marketCache:{},
   fx:null,
+  periodoGastos:'semana',
   widgetOrderGeral:['limiteDiario','objetivos','gastos','patrimonioLiquido','contasWidget','horasTrabalho','distribuicaoTrabalho','simulador','evolucaoPatrimonio','ativosCarteira','patrimonioInvestido'],
  };
 }
@@ -410,6 +365,12 @@ function seed(){
    if(legacy.profile)s.profile={...s.profile,...legacy.profile};
    if(legacy.prefs)s.prefs={...s.prefs,...legacy.prefs};
   }
+ } else if(s.seedVersion!==SEED_VERSION){
+  // estado anterior ainda continha os dados de demonstração — reinicia em branco, preservando só sessão/preferências reais do usuário
+  const loggedIn=s.loggedIn,prefsAntigas=s.prefs;
+  s=seed();
+  s.loggedIn=!!loggedIn;
+  if(prefsAntigas)s.prefs={...s.prefs,...prefsAntigas};
  }
  if(Array.isArray(s.widgetOrderGeral)){
   const o=s.widgetOrderGeral.filter(k=>k!=='gastos7'&&k!=='gastosMes');
@@ -699,9 +660,7 @@ function lineChart(pontos){
 }
 
 /* ============ ABA GERAL — 01-PRD §3.1 ============ */
-function periodoAtual(){
- return state.periodoGeral==='mes'?[inicioMes(),isoHoje()]:[diasAtras(6),isoHoje()];
-}
+function periodo7Dias(){return [diasAtras(6),isoHoje()]}
 function contasIncluidasLabel(){const t=state.contas.length,inc=state.contas.filter(c=>c.incluida).length;return `Contas: ${inc}/${t}`}
 const WIDGET_DEFS={
  limiteDiario(){
@@ -718,9 +677,14 @@ const WIDGET_DEFS={
   return widgetShell({title:'Objetivos inteligentes',pill:`<button class="icon-btn" style="width:30px;height:30px" onclick="event.stopPropagation();modalObjetivo()">${ic('plus')}</button>`,body:`<div style="margin-top:6px">${rows}</div>`});
  },
  gastos(){
-  const [i,f]=periodoAtual();const fatias=gastosPorCategoria(i,f);const total=fatias.reduce((s,x)=>s+x.valor,0);
-  const label=state.periodoGeral==='mes'?'Gastos do mês':'Gastos — últimos 7 dias';
-  return widgetShell({title:label,value:money(total),body:fatias.length?donutWidget(fatias):emptyState('dots','Sem gastos no período.'),onExpand:"goTab('transacoes')"});
+  const periodo=state.periodoGastos||'semana';
+  const [i,f]=periodo==='mes'?[inicioMes(),isoHoje()]:periodo7Dias();
+  const fatias=gastosPorCategoria(i,f);const total=fatias.reduce((s,x)=>s+x.valor,0);
+  const toggle=`<div class="segmented">
+   <button class="${periodo!=='mes'?'active':''}" onclick="event.stopPropagation();state.periodoGastos='semana';render()">7 dias</button>
+   <button class="${periodo==='mes'?'active':''}" onclick="event.stopPropagation();state.periodoGastos='mes';render()">Mês</button>
+  </div>`;
+  return widgetShell({title:'Gastos',pill:toggle,value:money(total),sub:periodo==='mes'?'Este mês':'Últimos 7 dias',body:fatias.length?donutWidget(fatias):emptyState('dots','Sem gastos no período.'),onExpand:"goTab('transacoes')"});
  },
  patrimonioLiquido(){
   const pl=patrimonioLiquido();
@@ -731,17 +695,17 @@ const WIDGET_DEFS={
   return widgetShell({title:'Contas',pill:`<span class="pill neutral">${contasIncluidasLabel()}</span>`,body:`<div class="legend" style="margin-top:6px">${list||emptyState('contas','Cadastre uma conta em Contas.')}</div>`,onExpand:"goTab('contas')"});
  },
  horasTrabalho(){
-  const [i,f]=periodoAtual();const regs=registrosNoPeriodo(i,f);const total=totalAReceber(regs),horas=totalHoras(regs);
+  const [i,f]=periodo7Dias();const regs=registrosNoPeriodo(i,f);const total=totalAReceber(regs),horas=totalHoras(regs);
   const porTrabalho={};regs.forEach(r=>{const n=nomeRegistro(r);porTrabalho[n]=(porTrabalho[n]||0)+valorRegistro(r)});
   const fatias=Object.entries(porTrabalho).map(([nome,valor],i)=>({nome,valor,pct:total?valor/total*100:0,cor:PALETA_GRAFICO[i%PALETA_GRAFICO.length]}));
-  return widgetShell({title:'Total a receber + horas',pill:`<span class="pill neutral">${Math.floor(horas)}h ${Math.round((horas%1)*60)}min</span>`,value:money(total),body:fatias.length?donutWidget(fatias):emptyState('clock','Sem registros de horas no período.'),onExpand:"goTab('calendario')"});
+  return widgetShell({title:'Total a receber + horas',pill:`<span class="pill neutral">${Math.floor(horas)}h ${Math.round((horas%1)*60)}min</span>`,value:money(total),sub:'Últimos 7 dias',body:fatias.length?donutWidget(fatias):emptyState('clock','Sem registros de horas no período.'),onExpand:"goTab('calendario')"});
  },
  distribuicaoTrabalho(){
-  const [i,f]=periodoAtual();const regs=registrosNoPeriodo(i,f);
+  const [i,f]=periodo7Dias();const regs=registrosNoPeriodo(i,f);
   const porTrabalho={};regs.forEach(r=>{const n=nomeRegistro(r);porTrabalho[n]=(porTrabalho[n]||0)+valorRegistro(r)});
   const total=Object.values(porTrabalho).reduce((s,v)=>s+v,0);
   const fatias=Object.entries(porTrabalho).map(([nome,valor],i)=>({nome,valor,pct:total?valor/total*100:0,cor:PALETA_GRAFICO[i%PALETA_GRAFICO.length]}));
-  return widgetShell({title:'Distribuição por trabalho',body:fatias.length?donutWidget(fatias):emptyState('trend','Sem ganhos no período selecionado.')});
+  return widgetShell({title:'Distribuição por trabalho',sub:'Últimos 7 dias',body:fatias.length?donutWidget(fatias):emptyState('trend','Sem ganhos no período selecionado.')});
  },
  simulador(){
   const sim=state.simulador||{inicio:diasAtras(29),fim:isoHoje(),trabalhoId:'all',desconto:0};
@@ -780,11 +744,9 @@ function widgetOrderPanel(){
 function moveWidget(i,dir){const o=state.widgetOrderGeral;const j=i+dir;if(j<0||j>=o.length)return;[o[i],o[j]]=[o[j],o[i]];modal=widgetOrderPanel();render()}
 function openWidgetOrder(){modal=widgetOrderPanel();render()}
 function geral(){
- const periodos=[['semana','7 dias'],['mes','Mês']];
  return `${topbar(state.profile.name||'Você','Bom dia')}
  <div class="section-head"><div class="t-title">Visão geral</div>
  <div style="display:flex;gap:8px"><button class="icon-btn" onclick="refreshMarketData()" aria-label="Atualizar cotações">${ic('refresh')}</button><button class="icon-btn" onclick="openWidgetOrder()" aria-label="Reordenar widgets">${ic('sliders')}</button></div></div>
- <div class="segmented" style="margin-bottom:16px">${periodos.map(([id,l])=>`<button class="${(state.periodoGeral||'semana')===id?'active':''}" onclick="state.periodoGeral='${id}';render()">${l}</button>`).join('')}</div>
  ${state.widgetOrderGeral.map(k=>WIDGET_DEFS[k]?WIDGET_DEFS[k]():'').join('')}
  `;
 }
