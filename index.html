@@ -1038,6 +1038,7 @@ function carteira(){
  const alocacao=alocacaoCarteira();
  const periodos=[['6m','6 meses'],['1a','1 ano'],['5a','5 anos'],['10a','10 anos']];
  return `${topbar('Carteira','Investimentos')}
+ <div class="section-head" style="margin-top:-4px"><span></span><button class="icon-btn" onclick="refreshMarketData()" aria-label="Atualizar cotações">${ic('refresh')}</button></div>
  <div class="glass specular card" style="margin-bottom:14px">
   <div class="widget-head"><b>Patrimônio total</b>${pillFor(ganhoBRL>=0?'positivo':'negativo',(ganhoBRL>=0?'+':'')+moneyBRL(ganhoBRL))}</div>
   <div class="t-display hero-num">${money(patTotal)}</div>
