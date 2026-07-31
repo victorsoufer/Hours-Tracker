@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
 <meta name="theme-color" content="#0B0F0D" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
@@ -47,8 +47,8 @@
 [data-tab="transacoes"]{--accent:#5E8BFF;--accent2:#4169E1}
 [data-tab="ajustes"]{--accent:#8B8FA3;--accent2:#6B7086}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html{background:var(--bg)}
-body{margin:0;min-height:100dvh;color:var(--ink);font:400 15px/1.4 var(--font);background:var(--bg);overflow-x:hidden;padding-top:env(safe-area-inset-top);transition:background .25s}
+html{background:var(--bg);touch-action:manipulation}
+body{margin:0;min-height:100dvh;color:var(--ink);font:400 15px/1.4 var(--font);background:var(--bg);overflow-x:hidden;padding-top:env(safe-area-inset-top);transition:background .25s;touch-action:manipulation}
 h1,h2,h3{font-family:var(--font)}
 .t-display{font-size:clamp(30px,8vw,38px);font-weight:800;letter-spacing:-.5px;font-variant-numeric:tabular-nums}
 .t-title{font-size:21px;font-weight:700;letter-spacing:-.3px}

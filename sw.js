@@ -1,4 +1,4 @@
-const CACHE = 'horas-pwa-v30';
+const CACHE = 'horas-pwa-v31';
 const ASSETS = ['./','./index.html','./manifest.webmanifest','./icon.svg'];
 self.addEventListener('install', event => event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(ASSETS))));
 self.addEventListener('activate', event => event.waitUntil(self.clients.claim()));
