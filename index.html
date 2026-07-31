@@ -444,6 +444,7 @@ function convert(valor,de,para){
 }
 async function refreshMarketData(silent){
  const principal=state.prefs.currency;
+ const erros=[];
  try{
   const r=await fetch(`https://api.frankfurter.app/latest?from=${principal}`);
   if(r.ok){const d=await r.json();state.fx={base:d.base,rates:d.rates,updatedAt:Date.now()}}
@@ -457,15 +458,19 @@ async function refreshMarketData(silent){
    if(r.ok){
     const d=await r.json();
     for(const a of cripto){const cid=CRYPTO_IDS[a.codigo.toUpperCase()];const precoBRL=d[cid]&&d[cid].brl;if(precoBRL!=null)state.marketCache[a.id]={preco:precoBRL,moeda:'BRL',atualizadoEm:Date.now()}}
+   }else{
+    console.warn('cotação cripto (CoinGecko) HTTP',r.status);
+    erros.push(`cripto (${r.status})`);
    }
-  }catch(e){console.warn('cotação cripto indisponível, mantendo cache',e)}
+  }catch(e){console.warn('cotação cripto indisponível, mantendo cache',e);erros.push('cripto (rede)')}
  }
  const b3=state.ativosCarteira.filter(a=>['acao','fii','bdr','etf'].includes(a.tipo)&&a.codigo);
  if(b3.length){
   try{
-   const codigos=[...new Set(b3.map(a=>a.codigo.toUpperCase()))].join(',');
-   const headers=state.prefs.brapiToken?{Authorization:`Bearer ${state.prefs.brapiToken}`}:{};
-   const r=await fetch(`https://brapi.dev/api/v2/stocks/quote?symbols=${encodeURIComponent(codigos)}`,{headers});
+   const codigos=[...new Set(b3.map(a=>a.codigo.toUpperCase()))];
+   const symbolsParam=codigos.map(encodeURIComponent).join(',');
+   const headers=state.prefs.brapiToken?{Authorization:`Bearer ${state.prefs.brapiToken.trim()}`}:{};
+   const r=await fetch(`https://brapi.dev/api/v2/stocks/quote?symbols=${symbolsParam}`,{headers});
    if(r.ok){
     const d=await r.json();
     const porCodigo={};
@@ -477,11 +482,20 @@ async function refreshMarketData(silent){
      const precoBRL=porCodigo[a.codigo.toUpperCase()];
      if(precoBRL!=null)state.marketCache[a.id]={preco:precoBRL,moeda:'BRL',atualizadoEm:Date.now()};
     }
+    const semCotacao=b3.filter(a=>porCodigo[a.codigo.toUpperCase()]==null);
+    if(semCotacao.length){
+     console.warn('brapi.dev não retornou cotação para:',semCotacao.map(a=>a.codigo).join(', '),d);
+     erros.push(`B3: sem dado p/ ${semCotacao.map(a=>a.codigo).join(', ')}`);
+    }
+   }else{
+    let corpo='';try{corpo=await r.text()}catch(e){}
+    console.warn('brapi.dev HTTP',r.status,corpo);
+    erros.push(r.status===401||r.status===403?'B3: token inválido/expirado':r.status===429?'B3: limite da brapi atingido':`B3 (${r.status})`);
    }
-  }catch(e){console.warn('cotação B3 (brapi.dev) indisponível, mantendo cache/custo médio',e)}
+  }catch(e){console.warn('cotação B3 (brapi.dev) indisponível — provável bloqueio de rede/CORS',e);erros.push('B3: falha de rede/CORS')}
  }
  save();
- if(!silent){render();toast('Cotações atualizadas.')}
+ if(!silent){render();toast(erros.length?`Cotações: ${erros.join(' · ')}`:'Cotações atualizadas.')}
 }
 
 /* ============ DOMÍNIO — fórmulas da 01-PRD.md §4 ============ */
