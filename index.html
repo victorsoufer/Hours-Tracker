@@ -9,43 +9,47 @@
 <title>Horas — finanças, trabalho e investimentos</title>
 <link rel="manifest" href="manifest.webmanifest" />
 <style>
-/* ===== Tokens — 05-Design-System.md ===== */
+/* ===== Tokens — Liquid Glass (iOS 17), oklch ===== */
 :root{
   --font:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-  --bg:#F5F5F7;--glass:rgba(255,255,255,.6);--border:rgba(0,0,0,.08);
-  --ink:#111114;--muted:rgba(0,0,0,.55);
-  --success:#1FA971;--warning:#B9790A;--danger:#D23C3C;
-  --accent:#2FD180;--accent2:#12B76A;
+  --bg:oklch(0.985 0.003 240);--glass:oklch(1 0 0 / 0.72);--border:oklch(0.90 0.01 240 / 0.7);
+  --ink:oklch(0.14 0.02 250);--muted:oklch(0.52 0.02 250);
+  --success:oklch(0.72 0.18 158);--warning:oklch(0.78 0.16 60);--danger:oklch(0.62 0.22 25);
+  --accent:oklch(0.72 0.18 158);--accent2:oklch(0.60 0.18 158);
   --space-xs:4px;--space-sm:8px;--space-md:16px;--space-lg:24px;--space-xl:32px;
   --r-card:24px;--r-pill:999px;--r-control:14px;
-  --mat-ultrathin:rgba(255,255,255,.5);--mat-thin:rgba(255,255,255,.62);--mat-regular:rgba(255,255,255,.82);--mat-thick:rgba(255,255,255,.94);
+  --mat-ultrathin:oklch(1 0 0 / 0.55);--mat-thin:oklch(1 0 0 / 0.68);--mat-regular:oklch(1 0 0 / 0.85);--mat-thick:oklch(1 0 0 / 0.95);
   --blur-thin:20px;--blur-regular:28px;
+  --glass-inner:oklch(1 0 0 / 0.85);--glass-shadow:oklch(0.14 0.02 250 / 0.16);--hairline:oklch(0.14 0.02 250 / 0.10);
 }
 @media(prefers-color-scheme:dark){:root{
-  --bg:#0B0F0D;--glass:rgba(255,255,255,.06);--border:rgba(255,255,255,.12);
-  --ink:#FFFFFF;--muted:rgba(255,255,255,.62);
-  --success:#34D399;--warning:#F5A623;--danger:#F55B5B;
-  --mat-ultrathin:rgba(20,24,22,.55);--mat-thin:rgba(24,29,27,.58);--mat-regular:rgba(18,22,20,.78);--mat-thick:rgba(14,17,16,.92);
+  --bg:oklch(0.06 0.005 250);--glass:oklch(0.16 0.01 250 / 0.72);--border:oklch(1 0 0 / 0.10);
+  --ink:oklch(0.98 0.003 240);--muted:oklch(0.68 0.02 250);
+  --success:oklch(0.78 0.18 158);--warning:oklch(0.78 0.16 60);--danger:oklch(0.70 0.19 22);
+  --mat-ultrathin:oklch(0.18 0.01 250 / 0.55);--mat-thin:oklch(0.20 0.01 250 / 0.60);--mat-regular:oklch(0.16 0.01 250 / 0.80);--mat-thick:oklch(0.13 0.01 250 / 0.94);
+  --glass-inner:oklch(1 0 0 / 0.06);--glass-shadow:oklch(0 0 0 / 0.55);--hairline:oklch(1 0 0 / 0.10);
 }}
 :root[data-theme="dark"]{
-  --bg:#0B0F0D;--glass:rgba(255,255,255,.06);--border:rgba(255,255,255,.12);
-  --ink:#FFFFFF;--muted:rgba(255,255,255,.62);
-  --success:#34D399;--warning:#F5A623;--danger:#F55B5B;
-  --mat-ultrathin:rgba(20,24,22,.55);--mat-thin:rgba(24,29,27,.58);--mat-regular:rgba(18,22,20,.78);--mat-thick:rgba(14,17,16,.92);
+  --bg:oklch(0.06 0.005 250);--glass:oklch(0.16 0.01 250 / 0.72);--border:oklch(1 0 0 / 0.10);
+  --ink:oklch(0.98 0.003 240);--muted:oklch(0.68 0.02 250);
+  --success:oklch(0.78 0.18 158);--warning:oklch(0.78 0.16 60);--danger:oklch(0.70 0.19 22);
+  --mat-ultrathin:oklch(0.18 0.01 250 / 0.55);--mat-thin:oklch(0.20 0.01 250 / 0.60);--mat-regular:oklch(0.16 0.01 250 / 0.80);--mat-thick:oklch(0.13 0.01 250 / 0.94);
+  --glass-inner:oklch(1 0 0 / 0.06);--glass-shadow:oklch(0 0 0 / 0.55);--hairline:oklch(1 0 0 / 0.10);
 }
 :root[data-theme="light"]{
-  --bg:#F5F5F7;--glass:rgba(255,255,255,.6);--border:rgba(0,0,0,.08);
-  --ink:#111114;--muted:rgba(0,0,0,.55);
-  --success:#1FA971;--warning:#B9790A;--danger:#D23C3C;
-  --mat-ultrathin:rgba(255,255,255,.5);--mat-thin:rgba(255,255,255,.62);--mat-regular:rgba(255,255,255,.82);--mat-thick:rgba(255,255,255,.94);
+  --bg:oklch(0.985 0.003 240);--glass:oklch(1 0 0 / 0.72);--border:oklch(0.90 0.01 240 / 0.7);
+  --ink:oklch(0.14 0.02 250);--muted:oklch(0.52 0.02 250);
+  --success:oklch(0.72 0.18 158);--warning:oklch(0.78 0.16 60);--danger:oklch(0.62 0.22 25);
+  --mat-ultrathin:oklch(1 0 0 / 0.55);--mat-thin:oklch(1 0 0 / 0.68);--mat-regular:oklch(1 0 0 / 0.85);--mat-thick:oklch(1 0 0 / 0.95);
+  --glass-inner:oklch(1 0 0 / 0.85);--glass-shadow:oklch(0.14 0.02 250 / 0.16);--hairline:oklch(0.14 0.02 250 / 0.10);
 }
-/* accent por aba — 05-Design-System.md §2.2 */
-[data-tab="geral"]{--accent:#2FD180;--accent2:#12B76A}
-[data-tab="contas"]{--accent:#5E8BFF;--accent2:#4169E1}
-[data-tab="calendario"]{--accent:#F5A623;--accent2:#DB8A0A}
-[data-tab="carteira"]{--accent:#22B8CF;--accent2:#0E8CA6}
-[data-tab="transacoes"]{--accent:#5E8BFF;--accent2:#4169E1}
-[data-tab="ajustes"]{--accent:#8B8FA3;--accent2:#6B7086}
+/* tint por aba — cores herdadas do projeto de referência */
+[data-tab="geral"]{--accent:oklch(0.72 0.18 158);--accent2:oklch(0.60 0.18 158)}
+[data-tab="contas"]{--accent:oklch(0.72 0.15 175);--accent2:oklch(0.60 0.15 175)}
+[data-tab="calendario"]{--accent:oklch(0.75 0.16 60);--accent2:oklch(0.63 0.16 60)}
+[data-tab="carteira"]{--accent:oklch(0.68 0.15 235);--accent2:oklch(0.56 0.15 235)}
+[data-tab="transacoes"]{--accent:oklch(0.66 0.22 300);--accent2:oklch(0.54 0.22 300)}
+[data-tab="ajustes"]{--accent:oklch(0.60 0.02 250);--accent2:oklch(0.48 0.02 250)}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html{background:var(--bg);touch-action:manipulation}
 body{margin:0;min-height:100dvh;color:var(--ink);font:400 15px/1.4 var(--font);background:var(--bg);overflow-x:hidden;padding-top:env(safe-area-inset-top);transition:background .25s;touch-action:manipulation}
@@ -56,8 +60,7 @@ h1,h2,h3{font-family:var(--font)}
 .t-caption{font-size:13px;color:var(--muted)}
 .t-pill{font-size:12px;font-weight:600}
 .bg-tint{position:fixed;inset:0;z-index:-1;background:
-  radial-gradient(560px 380px at 15% -8%,color-mix(in srgb,var(--accent) 20%,transparent),transparent 60%),
-  radial-gradient(480px 420px at 110% 15%,color-mix(in srgb,var(--accent2) 14%,transparent),transparent 60%),
+  radial-gradient(120% 60% at 50% 0%,color-mix(in oklab,var(--accent) 26%,transparent) 0%,transparent 55%),
   var(--bg);transition:background .3s}
 .shell{max-width:560px;margin:0 auto;padding:calc(env(safe-area-inset-top) + 14px) var(--space-md) 128px}
 .topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--space-md)}
@@ -69,7 +72,7 @@ h1,h2,h3{font-family:var(--font)}
 svg{fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;width:1em;height:1em;flex:none}
 .chev svg,.modal-close svg{width:18px;height:18px}
 /* material */
-.glass{position:relative;background:var(--mat-thin);border:1px solid var(--border);border-radius:var(--r-card);backdrop-filter:blur(var(--blur-thin));-webkit-backdrop-filter:blur(var(--blur-thin));box-shadow:0 10px 30px rgba(10,20,15,.08)}
+.glass{position:relative;background:var(--mat-thin);border:1px solid var(--border);border-radius:var(--r-card);backdrop-filter:saturate(180%) blur(var(--blur-thin));-webkit-backdrop-filter:saturate(180%) blur(var(--blur-thin));box-shadow:0 1px 0 var(--glass-inner) inset,0 10px 30px -12px var(--glass-shadow)}
 .glass.specular::before{content:'';position:absolute;inset:0 0 auto 0;height:1px;border-radius:var(--r-card) var(--r-card) 0 0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.55),transparent)}
 .card{padding:18px}
 .section-head{display:flex;align-items:center;justify-content:space-between;margin:22px 0 10px;padding:0 2px}
@@ -121,13 +124,15 @@ label.flabel{display:block;font-size:12px;font-weight:700;color:var(--muted);mar
 .list-empty svg{width:30px;height:30px;margin-bottom:8px;opacity:.5}
 .group-head{display:flex;align-items:center;justify-content:space-between;padding:4px 4px 6px;font-size:12px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.4px}
 .group-head b{color:var(--ink);font-variant-numeric:tabular-nums;text-transform:none;letter-spacing:0}
-/* swipe rows */
+/* swipe rows — botões circulares coloridos por "tom", ao estilo do card de referência */
 .swipe-row{position:relative;overflow:hidden;border-radius:18px}
-.swipe-actions{position:absolute;inset:0 0 0 auto;display:flex;width:148px;z-index:0;background:color-mix(in srgb,var(--ink) 78%,transparent);border-radius:0 18px 18px 0;opacity:0;pointer-events:none;transition:opacity .16s}
+.swipe-actions{position:absolute;inset:0 0 0 auto;display:flex;align-items:center;justify-content:flex-end;gap:5px;width:148px;padding-right:8px;z-index:0;opacity:0;pointer-events:none;transition:opacity .16s}
 .swipe-row.open .swipe-actions{opacity:1;pointer-events:auto}
-.swipe-action{flex:1;border:0;background:transparent;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;cursor:pointer;font:600 11px var(--font)}
-.swipe-action svg{width:17px;height:17px}
-.swipe-action.delete{color:#ffd7dc}
+.swipe-action{flex:none;width:44px;border:0;background:transparent;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;font:600 9px var(--font);color:var(--muted)}
+.swipe-ic{width:38px;height:38px;border-radius:999px;display:grid;place-items:center;background:color-mix(in srgb,var(--accent) 16%,transparent);color:var(--accent)}
+.swipe-ic svg{width:17px;height:17px}
+.swipe-action.dup .swipe-ic{background:color-mix(in srgb,var(--success) 18%,transparent);color:var(--success)}
+.swipe-action.delete .swipe-ic{background:color-mix(in srgb,var(--danger) 15%,transparent);color:var(--danger)}
 .swipe-content{position:relative;z-index:1;transform:translateX(0);transition:transform .22s cubic-bezier(.2,.8,.2,1);touch-action:pan-y}
 .swipe-row.open .swipe-content{transform:translateX(-148px)}
 .row{display:flex;align-items:center;gap:12px;padding:13px;border-radius:18px;background:var(--mat-thin);border:1px solid var(--border);cursor:pointer}
@@ -141,13 +146,24 @@ label.flabel{display:block;font-size:12px;font-weight:700;color:var(--muted);mar
 .row-value span{display:block;font-size:11px;color:var(--muted);margin-top:2px}
 .money-pos{color:var(--success)}
 .money-neg{color:var(--danger)}
-/* tab bar */
-.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:6;padding:8px max(10px,env(safe-area-inset-left)) calc(8px + env(safe-area-inset-bottom));background:var(--mat-ultrathin);border-top:1px solid var(--border);backdrop-filter:blur(var(--blur-thin)) saturate(1.5);-webkit-backdrop-filter:blur(var(--blur-thin)) saturate(1.5);display:flex}
-.tabbar button{flex:1;border:0;background:transparent;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 2px;cursor:pointer;font:600 10.5px var(--font);border-radius:14px}
-.tabbar button svg{width:22px;height:22px}
-.tabbar button.active{color:var(--accent)}
-.fab{position:fixed;z-index:7;right:max(18px,env(safe-area-inset-right));bottom:calc(86px + env(safe-area-inset-bottom));width:56px;height:56px;border:0;border-radius:19px;cursor:pointer;color:#fff;display:grid;place-items:center;background:linear-gradient(135deg,var(--accent),var(--accent2));box-shadow:0 12px 26px color-mix(in srgb,var(--accent) 45%,transparent);transition:transform .15s}
-.fab:active{transform:scale(.94)}
+/* tab bar — pill flutuante Liquid Glass com lente que "acerta" a aba ativa */
+.tabbar{position:fixed;left:0;right:0;z-index:6;bottom:max(env(safe-area-inset-bottom),10px);display:flex;justify-content:center;padding:0 12px;pointer-events:none}
+.tabbar-glass{pointer-events:auto;position:relative;display:flex;width:100%;max-width:520px;height:72px;border-radius:999px;background:color-mix(in oklab,var(--glass) 92%,transparent);backdrop-filter:saturate(200%) blur(36px);-webkit-backdrop-filter:saturate(200%) blur(36px);border:1px solid var(--border);box-shadow:0 1px 0 var(--glass-inner) inset,0 20px 50px -12px var(--glass-shadow),0 8px 24px -8px var(--glass-shadow)}
+.tabbar-lens{position:absolute;top:6px;bottom:6px;z-index:2;border-radius:999px;pointer-events:none;
+  --lens-tint:color-mix(in oklab,var(--accent) 22%,transparent);
+  background:linear-gradient(180deg,rgba(255,255,255,.28) 0%,rgba(255,255,255,.06) 32%,rgba(255,255,255,0) 55%,rgba(0,0,0,.08) 100%),var(--lens-tint);
+  backdrop-filter:blur(2px) saturate(190%) brightness(1.08) contrast(1.05);-webkit-backdrop-filter:blur(2px) saturate(190%) brightness(1.08) contrast(1.05);
+  border:1px solid rgba(255,255,255,.22);
+  box-shadow:0 1px 0 rgba(255,255,255,.45) inset,0 -1px 0 rgba(255,255,255,.08) inset,0 8px 22px -10px rgba(0,0,0,.5),0 2px 6px -2px rgba(0,0,0,.35);
+  animation:lens-squish .62s cubic-bezier(.34,1.28,.36,1)}
+@keyframes lens-squish{0%{transform:scaleX(1) scaleY(1)}35%{transform:scaleX(1.06) scaleY(.94)}70%{transform:scaleX(.98) scaleY(1.02)}100%{transform:scaleX(1) scaleY(1)}}
+.tabbar-item{position:relative;z-index:3;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border:0;background:transparent;color:var(--muted);cursor:pointer;font:600 9.5px var(--font);letter-spacing:-.1px}
+.tabbar-item svg{width:21px;height:21px;transition:transform .38s cubic-bezier(.34,1.4,.4,1)}
+.tabbar-item.active{color:var(--accent)}
+.tabbar-item.active svg{transform:translateY(-2px) scale(1.08)}
+.tabbar-item:active{transform:scale(.92)}
+.fab{position:fixed;z-index:7;right:max(18px,env(safe-area-inset-right));bottom:calc(96px + env(safe-area-inset-bottom));width:56px;height:56px;border:0;border-radius:999px;cursor:pointer;color:#fff;display:grid;place-items:center;background:linear-gradient(135deg,var(--accent),var(--accent2));box-shadow:0 12px 26px color-mix(in srgb,var(--accent) 45%,transparent);transition:transform .15s}
+.fab:active{transform:scale(.9)}
 .fab svg{width:26px;height:26px}
 /* modal */
 .modal{position:fixed;inset:0;z-index:20;background:rgba(6,10,14,.42);backdrop-filter:blur(10px);display:flex;align-items:flex-end;justify-content:center;padding:0}
@@ -226,14 +242,26 @@ label.flabel{display:block;font-size:12px;font-weight:700;color:var(--muted);mar
 .fx-note{display:flex;align-items:center;gap:4px;font-size:11.5px;color:var(--muted);margin-top:2px}
 .fx-note svg{width:11px;height:11px;flex:none}
 .hr-nav{display:flex;align-items:center;gap:6px;margin-bottom:10px}
-.hr-nav b{flex:1;text-align:center;font-size:15px;font-weight:700}
+.hr-nav b{flex:1;text-align:center;font-size:15px;font-weight:700;background:none;border:0;cursor:pointer;color:var(--ink);font-family:var(--font)}
+.hoje-btn{border:0;cursor:pointer;border-radius:var(--r-pill);padding:6px 13px;font:600 12px var(--font);color:var(--ink);background:color-mix(in srgb,var(--ink) 7%,transparent)}
 .weekdays,.days{display:grid;grid-template-columns:repeat(7,1fr);text-align:center;gap:4px}
 .weekdays{font-size:10.5px;color:var(--muted);font-weight:700;margin-bottom:6px}
-.day{min-height:44px;border:0;background:transparent;border-radius:13px;color:var(--ink);font:600 13px var(--font);cursor:pointer;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
-.day.muted{color:color-mix(in srgb,var(--muted) 60%,transparent)}
-.day .dot{width:4px;height:4px;background:var(--accent)}
-.day.today{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff}
-.day.selected:not(.today){background:color-mix(in srgb,var(--accent) 18%,transparent)}
+.day{min-height:48px;border:0;background:transparent;color:var(--ink);cursor:pointer;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:2px;padding:0;font-family:var(--font)}
+.day-num{width:32px;height:32px;border-radius:999px;display:flex;align-items:center;justify-content:center;font:600 14px var(--font);transition:background .2s,color .2s}
+.day.today .day-num{background:color-mix(in srgb,var(--muted) 20%,transparent)}
+.day.selected .day-num{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff}
+.day-val{font-size:9px;font-weight:700;color:var(--accent);line-height:1;white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis}
+.day-dot{width:4px;height:4px;border-radius:999px;background:var(--accent)}
+.day-empty{height:9px}
+.resumo-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.resumo-card{background:var(--glass);border:1px solid var(--border);border-radius:16px;padding:12px;backdrop-filter:saturate(180%) blur(var(--blur-thin));-webkit-backdrop-filter:saturate(180%) blur(var(--blur-thin))}
+.resumo-card .t-caption{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.02em}
+.resumo-card .valor{margin-top:4px;font-size:17px;font-weight:700}
+.resumo-card .valor.accent{color:var(--accent)}
+.mini-toggle{position:relative;display:flex;align-items:center;height:22px;border-radius:999px;padding:2px;background:color-mix(in srgb,var(--ink) 7%,transparent);flex:none}
+.mini-toggle button{position:relative;z-index:1;border:0;background:transparent;padding:0 8px;font:700 9.5px var(--font);color:var(--muted);cursor:pointer;height:18px}
+.mini-toggle button.active{color:var(--ink)}
+.mini-toggle-thumb{position:absolute;top:2px;bottom:2px;width:calc(50% - 2px);border-radius:999px;background:var(--mat-thick);box-shadow:0 1px 3px rgba(0,0,0,.25);transition:transform .2s ease-out}
 .empty-cta{display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;padding:34px 16px}
 .empty-cta svg{width:36px;height:36px;color:var(--muted)}
 .empty-cta button{border:0;background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:13px;font:700 13px var(--font);cursor:pointer}
@@ -321,6 +349,11 @@ const MOEDAS=['BRL','USD','EUR','GBP','JPY','CAD','AUD','CHF','ARS','MXN','CNY',
 /* ============ I18N — tradução de UI ============ */
 const I18N_EN={
  "Hoje":"Today",
+ "Dia":"Day",
+ "Horas":"Hours",
+ "A receber":"To receive",
+ "Mês anterior":"Previous month",
+ "Próximo mês":"Next month",
  "Configure uma senha de bloqueio nesta demonstração.":"Set up a lock passcode in this demo.",
  "A página de avaliação será aberta na loja.":"The rating page will open in the store.",
  "Não foi possível conectar à nuvem agora":"Couldn't connect to the cloud right now",
@@ -747,6 +780,13 @@ function money(n,moeda){
  const num=new Intl.NumberFormat(locale,{minimumFractionDigits:digits,maximumFractionDigits:digits}).format(n||0);
  return `${CURRENCY_SYMBOLS[currency]||currency} ${num}`;
 }
+// versão compacta (sem decimais) para caber na célula pequena da grade do calendário
+function moneyCompactoDia(n){
+ const currency=state.prefs.currency||'BRL';
+ const num=new Intl.NumberFormat(idioma(),{maximumFractionDigits:0}).format(n||0);
+ return `${CURRENCY_SYMBOLS[currency]||currency} ${num}`;
+}
+function formatarDuracao(horas){return `${Math.floor(horas)}h ${Math.round((horas%1)*60)}min`}
 function fmtDate(iso){
  if(!iso)return '';
  const [y,m,d]=iso.split('-');
@@ -897,7 +937,7 @@ function gastosPorCategoria(inicio,fim){
  const total=Object.values(map).reduce((s,v)=>s+v,0)||1;
  return Object.entries(map).map(([id,valor])=>({...cat(id),valor,pct:valor/total*100})).sort((a,b)=>b.valor-a.valor);
 }
-function isoHoje(){return '2026-07-31'}
+function isoHoje(){const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
 function diasAtras(n){const d=new Date(isoHoje()+'T12:00');d.setDate(d.getDate()-n);return d.toISOString().slice(0,10)}
 function inicioMes(){return isoHoje().slice(0,8)+'01'}
 // limite diário — comparação simples
@@ -973,7 +1013,14 @@ function goTab(t){state.page=t;state.prevPage=t;closeSwipes();render()}
 function openAjustes(){state.page='ajustes';render()}
 function backFromAjustes(){state.page=state.prevPage||'geral';render()}
 function tabbar(){
- return `<nav class="tabbar">${TABS.map(([id,label])=>`<button class="${state.page===id?'active':''}" onclick="goTab('${id}')">${ic(id)}<span>${tr(label)}</span></button>`).join('')}</nav>`;
+ const idx=Math.max(0,TABS.findIndex(([id])=>id===state.page));
+ const slot=100/TABS.length;
+ return `<nav class="tabbar" aria-label="Navegação principal">
+  <div class="tabbar-glass">
+   <span class="tabbar-lens" style="left:calc(${idx*slot}% + 6px);width:calc(${slot}% - 12px)"></span>
+   ${TABS.map(([id,label])=>`<button class="tabbar-item ${state.page===id?'active':''}" onclick="goTab('${id}')">${ic(id)}<span>${tr(label)}</span></button>`).join('')}
+  </div>
+ </nav>`;
 }
 function topbar(title,eyebrow){
  return `<div class="topbar"><div><div class="greet">${esc(tr(eyebrow||''))}</div><h1>${esc(tr(title))}</h1></div><button class="icon-btn" aria-label="${tr('Ajustes')}" onclick="openAjustes()">${ic('ajustes')}</button></div>`;
@@ -1258,8 +1305,8 @@ function contaRow(c){
  const convertido=estrangeira?saldoContaConvertido(c):null;
  const estimado=estrangeira&&!fxIsLive(c.moeda,state.prefs.currency);
  return `<div class="swipe-row" data-id="${c.id}"><div class="swipe-actions">
-  <button class="swipe-action" onclick="closeSwipes();modalConta('${c.id}')">${ic('sliders')}<span>${tr('Editar')}</span></button>
-  <button class="swipe-action delete" onclick="excluirConta('${c.id}')">${ic('trash')}<span>${tr('Excluir')}</span></button>
+  <button class="swipe-action" onclick="closeSwipes();modalConta('${c.id}')">${ic('sliders','swipe-ic')}<span>${tr('Editar')}</span></button>
+  <button class="swipe-action delete" onclick="excluirConta('${c.id}')">${ic('trash','swipe-ic')}<span>${tr('Excluir')}</span></button>
  </div><div class="swipe-content"><div class="row" onclick="modalConta('${c.id}')">
   <div class="acc-badge" style="background:${c.tipo==='emprestimo'?'linear-gradient(135deg,#F55B5B,#B9302F)':'linear-gradient(135deg,var(--accent),var(--accent2))'}">${ic(t.icone)}</div>
   <div class="row-main"><b>${esc(c.nome)}</b><span>${tr(t.nome)}${c.incluida?'':' · '+tr('fora do patrimônio')}</span></div>
@@ -1309,6 +1356,25 @@ function salvarConta(id){
 }
 
 /* ============ ABA CALENDÁRIO — herdado do Horas (01-PRD §1.4/§3.3) ============ */
+function calHoje(){const h=isoHoje();state.calMes=h.slice(0,7);state.calDia=h;render()}
+function corTrabalho(t){
+ if(!t)return '#8e8e93';
+ const i=state.trabalhos.findIndex(x=>x.id===t.id);
+ return PALETA_GRAFICO[i%PALETA_GRAFICO.length]||'#8e8e93';
+}
+function resumoCard(label,valorTexto,isAccent,stateKey,escopo){
+ return `<div class="resumo-card">
+  <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+   <span class="t-caption" style="margin:0">${label}</span>
+   <div class="mini-toggle">
+    <span class="mini-toggle-thumb" style="transform:translateX(${escopo==='mes'?'100%':'0'})"></span>
+    <button type="button" class="${escopo==='dia'?'active':''}" onclick="state.${stateKey}='dia';render()">${tr('Dia')}</button>
+    <button type="button" class="${escopo==='mes'?'active':''}" onclick="state.${stateKey}='mes';render()">${tr('Mês')}</button>
+   </div>
+  </div>
+  <div class="valor${isAccent?' accent':''}">${valorTexto}</div>
+ </div>`;
+}
 function calendario(){
  const cur=state.calMes||isoHoje().slice(0,7);
  const [y,m]=cur.split('-').map(Number);
@@ -1320,16 +1386,25 @@ function calendario(){
  for(let d=1;d<=daysInMonth;d++)cells.push(d);
  const iso=d=>`${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
  const withRecords=new Set(state.registrosDeHoras.map(r=>r.data));
+ const valoresPorDia={};
+ state.registrosDeHoras.forEach(r=>{valoresPorDia[r.data]=(valoresPorDia[r.data]||0)+valorRegistro(r)});
  const selDay=state.calDia||isoHoje();
  const nomeMesAnoRaw=first.toLocaleDateString(idioma(),{month:'long',year:'numeric'});
  const nomeMesAno=nomeMesAnoRaw.charAt(0).toUpperCase()+nomeMesAnoRaw.slice(1);
  const dayRecords=state.registrosDeHoras.filter(r=>r.data===selDay).sort((a,b)=>a.inicio.localeCompare(b.inicio));
+ const mesRecords=state.registrosDeHoras.filter(r=>r.data.slice(0,7)===cur);
+ const mesHoras=mesRecords.reduce((s,r)=>s+horasRegistro(r),0);
+ const mesValor=mesRecords.reduce((s,r)=>s+valorRegistro(r),0);
+ const diaHoras=dayRecords.reduce((s,r)=>s+horasRegistro(r),0);
+ const diaValor=dayRecords.reduce((s,r)=>s+valorRegistro(r),0);
+ const escH=state.calEscopoHoras||'mes',escV=state.calEscopoValor||'mes';
  return `${topbar('Calendário','Registro de horas')}
+ <div class="section-head" style="margin-top:-4px"><span></span><button class="hoje-btn" onclick="calHoje()">${tr('Hoje')}</button></div>
  <div class="glass card" style="margin-bottom:14px">
   <div class="hr-nav">
-   <button class="icon-btn" onclick="calMoveMes(-1)">${ic('chevronL')}</button>
-   <b>${nomeMesAno}</b>
-   <button class="icon-btn" onclick="calMoveMes(1)">${ic('chevron')}</button>
+   <button class="icon-btn" onclick="calMoveMes(-1)" aria-label="${tr('Mês anterior')}">${ic('chevronL')}</button>
+   <b onclick="calHoje()">${nomeMesAno}</b>
+   <button class="icon-btn" onclick="calMoveMes(1)" aria-label="${tr('Próximo mês')}">${ic('chevron')}</button>
   </div>
   <div class="weekdays">${(state.prefs.language==='en'?['M','T','W','T','F','S','S']:['S','T','Q','Q','S','S','D']).map(l=>`<span>${l}</span>`).join('')}</div>
   <div class="days">${cells.map(d=>{
@@ -1337,8 +1412,14 @@ function calendario(){
    const dIso=iso(d);
    const isToday=dIso===isoHoje();
    const isSel=dIso===selDay;
-   return `<button class="day ${isToday?'today':''} ${isSel&&!isToday?'selected':''}" onclick="state.calDia='${dIso}';render()">${d}${withRecords.has(dIso)?'<span class="dot"></span>':''}</button>`;
+   const valor=valoresPorDia[dIso]||0;
+   const marcador=valor>0?`<span class="day-val">${moneyCompactoDia(valor)}</span>`:(withRecords.has(dIso)?'<span class="day-dot"></span>':'<span class="day-empty"></span>');
+   return `<button class="day ${isToday?'today':''} ${isSel?'selected':''}" onclick="state.calDia='${dIso}';render()"><span class="day-num">${d}</span>${marcador}</button>`;
   }).join('')}</div>
+ </div>
+ <div class="resumo-grid" style="margin-bottom:20px">
+  ${resumoCard(tr('Horas'),formatarDuracao(escH==='mes'?mesHoras:diaHoras),false,'calEscopoHoras',escH)}
+  ${resumoCard(tr('A receber'),money(escV==='mes'?mesValor:diaValor),true,'calEscopoValor',escV)}
  </div>
  <div class="section-head"><div class="t-headline">${fmtDate(selDay)}</div><span class="t-caption">${dayRecords.length===1?`1 ${tr('registro')}`:`${dayRecords.length} ${tr('registros')}`}</span></div>
  <div class="list">${dayRecords.length?dayRecords.map(r=>registroRow(r)).join(''):emptyState('clock',tr('Nenhum registro neste dia. Toque em + para adicionar.'))}</div>
@@ -1350,13 +1431,14 @@ function calMoveMes(dir){
 }
 function registroRow(r){
  const h=horasRegistro(r),v=valorRegistro(r);
+ const cor=corTrabalho(trabalhoDe(r));
  return `<div class="swipe-row" data-id="${r.id}"><div class="swipe-actions">
-  <button class="swipe-action" onclick="closeSwipes();duplicarRegistro('${r.id}')">${ic('dup')}<span>${tr('Duplicar')}</span></button>
-  <button class="swipe-action delete" onclick="excluirRegistro('${r.id}')">${ic('trash')}<span>${tr('Excluir')}</span></button>
+  <button class="swipe-action dup" onclick="closeSwipes();duplicarRegistro('${r.id}')">${ic('dup','swipe-ic')}<span>${tr('Duplicar')}</span></button>
+  <button class="swipe-action delete" onclick="excluirRegistro('${r.id}')">${ic('trash','swipe-ic')}<span>${tr('Excluir')}</span></button>
  </div><div class="swipe-content"><div class="row" onclick="modalRegistro('${r.id}')">
-  <div class="row-icon" style="background:linear-gradient(135deg,var(--accent),var(--accent2))">${ic('clock')}</div>
-  <div class="row-main"><b>${esc(nomeRegistro(r))}</b><span>${r.inicio.slice(11,16)}–${r.fim.slice(11,16)} · ${tr('pausa')} ${r.pausa||0}min</span></div>
-  <div class="row-value"><b>${money(v)}</b><span>${h.toFixed(1)}h</span></div>
+  <span style="width:5px;align-self:stretch;border-radius:999px;background:${cor};flex:none"></span>
+  <div class="row-main"><b>${esc(nomeRegistro(r))}</b><span>${r.inicio.slice(11,16)}–${r.fim.slice(11,16)}${r.pausa?` · ${tr('pausa')} ${r.pausa}min`:''}</span></div>
+  <div class="row-value"><b>${money(v)}</b><span>${formatarDuracao(h)}</span></div>
  </div></div></div>`;
 }
 function duplicarRegistro(id){closeSwipes();modalRegistro(null,id)}
@@ -1457,8 +1539,8 @@ function ativoRow(a){
  const badge=mc?`<span class="fx-note">${ic('refresh')} ${tr('atualizado')} ${new Date(mc.atualizadoEm).toLocaleTimeString(idioma(),{hour:'2-digit',minute:'2-digit'})}</span>`:(COTAVEIS.has(a.tipo)?`<span class="fx-note">${tr('preço manual/custo médio')}</span>`:'');
  const cor=ATIVO_CORES[a.tipo]||'#22B8CF';
  return `<div class="swipe-row" data-id="${a.id}"><div class="swipe-actions">
-  <button class="swipe-action" onclick="closeSwipes();modalMovimentacao('venda','${a.id}')">${ic('arrows')}<span>${tr('Vender')}</span></button>
-  <button class="swipe-action delete" onclick="excluirAtivo('${a.id}')">${ic('trash')}<span>${tr('Excluir')}</span></button>
+  <button class="swipe-action" onclick="closeSwipes();modalMovimentacao('venda','${a.id}')">${ic('arrows','swipe-ic')}<span>${tr('Vender')}</span></button>
+  <button class="swipe-action delete" onclick="excluirAtivo('${a.id}')">${ic('trash','swipe-ic')}<span>${tr('Excluir')}</span></button>
  </div><div class="swipe-content"><div class="row" onclick="modalAtivoDetalhe('${a.id}')">
   <div class="row-icon" style="background:${cor};font:800 11px var(--font)">${tr(TIPOS_ATIVO[a.tipo]).slice(0,3).toUpperCase()}</div>
   <div class="row-main"><b>${esc(a.nome)}${a.codigo&&a.codigo!==a.nome?' · '+esc(a.codigo):''}</b><span>${qtd.toLocaleString(idioma(),{maximumFractionDigits:6})} ${tr('un.')} · ${money(precoBRL,'BRL')} ${badge}</span></div>
@@ -1609,8 +1691,8 @@ function transacaoRow(t){
  const isTransfer=t.tipo==='transferencia';
  const contaDestino=isTransfer?state.contas.find(a=>a.id===t.contaDestinoId):null;
  return `<div class="swipe-row" data-id="${t.id}"><div class="swipe-actions">
-  <button class="swipe-action" onclick="closeSwipes();modalTransacao('${t.id}')">${ic('sliders')}<span>${tr('Editar')}</span></button>
-  <button class="swipe-action delete" onclick="excluirTransacao('${t.id}')">${ic('trash')}<span>${tr('Excluir')}</span></button>
+  <button class="swipe-action" onclick="closeSwipes();modalTransacao('${t.id}')">${ic('sliders','swipe-ic')}<span>${tr('Editar')}</span></button>
+  <button class="swipe-action delete" onclick="excluirTransacao('${t.id}')">${ic('trash','swipe-ic')}<span>${tr('Excluir')}</span></button>
  </div><div class="swipe-content"><div class="row" onclick="modalTransacao('${t.id}')">
   <div class="row-icon" style="background:${isTransfer?'linear-gradient(135deg,var(--accent),var(--accent2))':c.cor}">${ic(isTransfer?'arrows':c.icone)}</div>
   <div class="row-main"><b>${esc(t.descricao||(isTransfer?tr('Transferência'):c.nome))}</b><span>${isTransfer?`${esc(contaOrigem?.nome||'')} → ${esc(contaDestino?.nome||'')}`:`${esc(contaOrigem?.nome||'')} · ${esc(c.nome)}${sc?' · '+esc(sc.nome):''}`} · ${t.hora}</span></div>
@@ -1622,8 +1704,8 @@ function excluirTransacao(id){closeSwipes();state.transacoes=state.transacoes.fi
 /* ============ CATEGORIAS EDITÁVEIS — 05-Design-System §2.3 (paleta e ícones fechados) ============ */
 function modalCategorias(){
  const body=`<div class="list">${state.categorias.length?state.categorias.map(c=>`<div class="swipe-row" data-id="${c.id}"><div class="swipe-actions">
-  <button class="swipe-action" onclick="closeSwipes();modalCategoria('${c.id}')">${ic('sliders')}<span>${tr('Editar')}</span></button>
-  <button class="swipe-action delete" onclick="excluirCategoria('${c.id}')">${ic('trash')}<span>${tr('Excluir')}</span></button>
+  <button class="swipe-action" onclick="closeSwipes();modalCategoria('${c.id}')">${ic('sliders','swipe-ic')}<span>${tr('Editar')}</span></button>
+  <button class="swipe-action delete" onclick="excluirCategoria('${c.id}')">${ic('trash','swipe-ic')}<span>${tr('Excluir')}</span></button>
  </div><div class="swipe-content"><div class="cat-manage-row" onclick="modalCategoria('${c.id}')"><span class="ci" style="background:${c.cor}">${ic(c.icone)}</span><div class="row-main"><b>${esc(c.nome)}</b><span>${c.subcategorias.length===1?`1 ${tr('subcategoria')}`:`${c.subcategorias.length} ${tr('subcategorias')}`}</span></div><span class="chev" style="color:var(--muted)">${ic('chevron')}</span></div></div></div>`).join(''):emptyState('sliders',tr('Nenhuma categoria ainda. Toque em "Nova categoria" para criar a primeira.'))}</div>
  <button class="modal-save" onclick="modalCategoria()">${tr('Nova categoria')}</button>`;
  modal=modalShell(tr('Categorias'),body);
